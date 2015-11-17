@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<web-app version="2.4">
+
+    <display-name>appserver.io REST API</display-name>
+    <description>Webapp that provides the appserver.io API</description>
+
+    <servlet>
+        <description><![CDATA[Returns the VHost configuration data]]></description>
+        <display-name>VhostServlet</display-name>
+        <servlet-name>VhostServlet</servlet-name>
+        <servlet-class>\TechDivision\ApplicationServerApi\Servlets\VhostServlet</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <description><![CDATA[Returns the container configuration data]]></description>
+        <display-name>ContainerServlet</display-name>
+        <servlet-name>ContainerServlet</servlet-name>
+        <servlet-class>\TechDivision\ApplicationServerApi\Servlets\ContainerServlet</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <description><![CDATA[Returns the app configuration data]]></description>
+        <display-name>AppServlet</display-name>
+        <servlet-name>AppServlet</servlet-name>
+        <servlet-class>\TechDivision\ApplicationServerApi\Servlets\AppServlet</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <description><![CDATA[Returns the app's thumbnail]]></description>
+        <display-name>ThumbnailServlet</display-name>
+        <servlet-name>ThumbnailServlet</servlet-name>
+        <servlet-class>\TechDivision\ApplicationServerApi\Servlets\ThumbnailServlet</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>VhostServlet</servlet-name>
+        <url-pattern>/vhosts.do*</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ContainerServlet</servlet-name>
+        <url-pattern>/containers.do*</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>AppServlet</servlet-name>
+        <url-pattern>/apps.do*</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ThumbnailServlet</servlet-name>
+        <url-pattern>/thumbnails.do*</url-pattern>
+    </servlet-mapping>
+
+</web-app>
