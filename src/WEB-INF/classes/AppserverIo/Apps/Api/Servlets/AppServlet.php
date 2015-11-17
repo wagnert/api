@@ -32,6 +32,12 @@ use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io/appserver
  * @link      http://www.appserver.io
+ *
+ * @SWG\Swagger(
+ *   schemes={"http"},
+ *   host="localhost:9080",
+ *   basePath="/api"
+ * )
  */
 class AppServlet extends AbstractServlet
 {
@@ -68,6 +74,19 @@ class AppServlet extends AbstractServlet
      *
      * @return void
      * @see \AppserverIo\Psr\Servlet\Http\HttpServlet::doGet()
+     *
+     * @SWG\Get(
+     *   path="/apps.do",
+     *   summary="list apps",
+     *   @SWG\Response(
+     *     response=200,
+     *     description="A list with deployed apps"
+     *   ),
+     *   @SWG\Response(
+     *     response="default",
+     *     description="an ""unexpected"" error"
+     *   )
+     * )
      */
     public function doGet(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
     {

@@ -99,6 +99,11 @@ abstract class AbstractServlet extends HttpServlet
 
         // set the JSON encoded data in the response
         $servletResponse->addHeader(HttpProtocol::HEADER_CONTENT_TYPE, 'application/json');
+
+        $servletResponse->addHeader('Access-Control-Allow-Origin', '*');
+        $servletResponse->addHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, PUT, PATCH, OPTIONS');
+        $servletResponse->addHeader('Access-Control-Allow-Headers', 'Content-Type, api_key, Authorization');
+
         $servletResponse->appendBodyStream(json_encode($content));
     }
 

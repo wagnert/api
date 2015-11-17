@@ -1,0 +1,24 @@
+{
+    "swagger": "2.0",
+    "host": "localhost:9080",
+    "basePath": "/api",
+    "schemes": [
+        "http"
+    ],
+    "paths": {
+        "/apps.do": {
+            "get": {
+                "summary": "list apps",
+                "responses": {
+                    "200": {
+                        "description": "A list with deployed apps"
+                    },
+                    "default": {
+                        "description": "an \"unexpected\" error"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {}
+}
