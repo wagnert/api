@@ -1,7 +1,14 @@
 /target
-/.idea
+/vendor/
 /instance-src
+/src/vendor
+/src/components
+/.idea
 /.buildpath
 /.project
 /.settings
-/build.properties
+.sass-cache
+composer.lock
+build.properties
+jmeter.log
+.DS_Store

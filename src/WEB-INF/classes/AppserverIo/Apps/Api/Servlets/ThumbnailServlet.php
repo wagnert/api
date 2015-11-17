@@ -1,7 +1,7 @@
 <?php
 
 /**
- * TechDivision\ApplicationServerApi\Servlets\ThumbnailServlet
+ * AppserverIo\Apps\Api\Servlets\ThumbnailServlet
  *
  * NOTICE OF LICENSE
  *
@@ -11,37 +11,33 @@
  *
  * PHP version 5
  *
- * @category   Appserver
- * @package    TechDivision_ApplicationServerApi
- * @subpackage Servlets
- * @author     Tim Wagner <tw@techdivision.com>
- * @copyright  2014 TechDivision GmbH <info@techdivision.com>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io
+ * @author    Tim Wagner <tw@appserver.io>
+ * @copyright 2015 TechDivision GmbH <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/appserver
+ * @link      http://www.appserver.io
  */
 
-namespace TechDivision\ApplicationServerApi\Servlets;
+namespace AppserverIo\Apps\Api\Servlets;
 
-use TechDivision\Servlet\ServletConfig;
-use TechDivision\Servlet\Http\HttpServletRequest;
-use TechDivision\Servlet\Http\HttpServletResponse;
-use TechDivision\WebServer\Dictionaries\MimeTypes;
-use TechDivision\ApplicationServerApi\Service\AppService;
-use TechDivision\ApplicationServerApi\Servlets\AbstractServlet;
-use TechDivision\ApplicationServerApi\Exceptions\FileNotFoundException;
-use TechDivision\ApplicationServerApi\Exceptions\FileNotReadableException;
-use TechDivision\ApplicationServerApi\Exceptions\FoundDirInsteadOfFileException;
+use AppserverIo\Psr\Servlet\ServletConfig;
+use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
+use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
+use AppserverIo\WebServer\Dictionaries\MimeTypes;
+use AppserverIo\Apps\Api\Service\AppService;
+use AppserverIo\Apps\Api\Servlets\AbstractServlet;
+use AppserverIo\Apps\Api\Exceptions\FileNotFoundException;
+use AppserverIo\Apps\Api\Exceptions\FileNotReadableException;
+use AppserverIo\Apps\Api\Exceptions\FoundDirInsteadOfFileException;
 
 /**
  * Servlet that handles all thumbnail related requests.
  *
- * @category   Appserver
- * @package    TechDivision_ApplicationServerApi
- * @subpackage Servlets
- * @author     Tim Wagner <tw@techdivision.com>
- * @copyright  2014 TechDivision GmbH <info@techdivision.com>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io
+ * @author    Tim Wagner <tw@appserver.io>
+ * @copyright 2015 TechDivision GmbH <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/appserver
+ * @link      http://www.appserver.io
  */
 class ThumbnailServlet extends AbstractServlet
 {
@@ -51,7 +47,7 @@ class ThumbnailServlet extends AbstractServlet
      *
      * @var string
      */
-    const SERVICE_CLASS = '\TechDivision\ApplicationServerApi\Service\AppService';
+    const SERVICE_CLASS = '\AppserverIo\Apps\Api\Service\AppService';
 
     /**
      * Returns the servlets service class to use.
@@ -67,13 +63,13 @@ class ThumbnailServlet extends AbstractServlet
      * Tries to load the requested thumbnail from the applications WEB-INF directory
      * and adds it to the response.
      *
-     * @param \TechDivision\Servlet\Http\HttpServletRequest  $servletRequest  The request instance
-     * @param \TechDivision\Servlet\Http\HttpServletResponse $servletResponse The response instance
+     * @param \AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface  $servletRequest  The request instance
+     * @param \AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface $servletResponse The response instance
      *
      * @return void
-     * @see \TechDivision\Servlet\Http\HttpServlet::doGet()
+     * @see \AppserverIo\Psr\Servlet\Http\HttpServlet::doGet()
      */
-    public function doGet(HttpServletRequest $servletRequest, HttpServletResponse $servletResponse)
+    public function doGet(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
     {
 
         // explode the URI

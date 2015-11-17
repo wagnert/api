@@ -1,45 +1,125 @@
 <?xml version="1.0"?>
-<project name="TechDivision_ApplicationServerApi" default="deploy" basedir=".">
-	
+<project name="appserver-io-apps/api" default="composer-init" basedir=".">
+
+    <!-- initialize ENV variable -->
+    <property environment="env" />
+
+    <!-- ==================================================================== -->
+    <!-- Generate a time stamp for further use in build targets               -->
+    <!-- ==================================================================== --> 
+    <tstamp>
+        <format property="time.stamp" pattern="yyyy-MM-dd_HHmmss"/>
+    </tstamp>
+
+    <!-- initialize file based properties -->
     <property file="${basedir}/build.properties"/>
     <property file="${basedir}/build.default.properties"/>
-    
-	<property environment="env" />
-    
-	<property name="php-src.dir" value="${basedir}/src" />
-    <property name="php-test.dir" value="${basedir}/tests" />
+    <property file="${basedir}/build.${os.family}.properties"/>
+
+    <!-- initialize the library specific properties -->
+    <property name="codepool" value="vendor"/>
+
+    <!-- initialize the directory where we can find the real build files -->
+    <property name="vendor.dir" value ="${basedir}/src/${codepool}" />
+    <property name="build.dir" value="${vendor.dir}/appserver-io/build" />
     <property name="php-target.dir" value="${basedir}/target"/>
 
     <!-- ==================================================================== -->
-    <!-- Cleans the directories with the generated source files				  -->
+    <!-- Import the common build configuration file                           -->
     <!-- ==================================================================== -->
-    <target name="clean" description="Cleans almost everything, so use carefully.">
-        <delete dir="${php-target.dir}" includeemptydirs="true" quiet="false" verbose="true" failonerror="true"/>
+    <import file="${build.dir}/common.xml" optional="true"/>
+
+    <!-- ==================================================================== -->
+    <!-- Checks if composer has installed it's dependencies                   -->
+    <!-- ==================================================================== -->
+    <target name="is-composer-installed">
+        <condition property="composer.present">
+            <available file="${build.dir}" type="dir"/>
+        </condition>
     </target>
 
     <!-- ==================================================================== -->
-    <!-- Prepares all the required directories								  -->
+    <!-- Installs all dependencies defined in composer.json                   -->
     <!-- ==================================================================== -->
-    <target name="prepare" depends="clean" description="Prepares all the required directories.">
-        <mkdir dir="${php-target.dir}" />
+    <target name="composer-install" depends="is-composer-installed" unless="composer.present" description="Installs all dependencies defined in composer.json">
+        <exec dir="${basedir}" executable="composer">
+            <arg line="--no-interaction --dev install"/>
+        </exec>
     </target>
 
     <!-- ==================================================================== -->
-    <!-- Copies the sources to the target directory							  -->
+    <!-- Updates composer dependencies defined in composer.json               -->
     <!-- ==================================================================== -->
-    <target name="copy" depends="prepare" description="Copies the sources to the target directory.">
-        <copy todir="${php-target.dir}/${webapp.name}" preservelastmodified="true" overwrite="true">
+    <target name="composer-update" depends="is-composer-installed" if="composer.present" description="Updates composer dependencies defined in composer.json">
+        <exec dir="${basedir}" executable="composer">
+            <arg line="--no-interaction --dev update"/>
+        </exec>
+    </target>
+
+    <!-- ===================================================================== -->
+    <!-- Checks if the build- and deployment stub has already been initialized -->
+    <!-- ===================================================================== -->
+    <target name="composer-init">
+        <antcall target="composer-install"/>
+        <antcall target="composer-update"/>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Copies the sources to the target directory                           -->
+    <!-- ==================================================================== -->
+    <target name="copy" description="Copies the sources to the target directory.">
+        <!-- prepare the directory structure -->
+        <antcall target="prepare"/>
+        <!-- copy sources and resources to the target directory -->
+        <copy todir="${php-target.dir}/${appserver.webapp.name}" preservelastmodified="true" overwrite="true">
             <fileset dir="${php-src.dir}">
                 <include name="**/*" />
+                <exclude name="vendor/**" />
             </fileset>
         </copy>
+        <!-- install the composer library -->
+        <exec dir="${basedir}" executable="composer">
+            <env key="COMPOSER_VENDOR_DIR" value="${php-target.dir}/${appserver.webapp.name}/vendor" />
+            <arg line="--no-dev --optimize-autoloader install" />
+        </exec>
+        <!-- remove all .git directories -->
+        <delete includeemptydirs="true">
+            <fileset dir="${php-target.dir}/${appserver.webapp.name}" includes="**/.git/" defaultexcludes="false"/>
+        </delete>
     </target>
 
     <!-- ==================================================================== -->
-    <!-- Copies the sources to the deploy directory     					  -->
+    <!-- Copies any built package to the snapshot hosting server.             -->
+    <!-- ==================================================================== -->
+    <target name="copy-to-hub" description="Uploads any built package to the file-server.">
+        <echo message="Now try to upload all builds to file-server"/>
+        <exec executable="sh" failonerror="true">
+            <arg value="-c" />
+            <arg value="scp -o StrictHostKeyChecking=no -i ${user.home}/.ssh/id_rsa ${php-target.dir}/${package.filename} ${build.server.user}@${build.server.host}:${build.server.upload-path}" />
+        </exec>
+        <!-- update the latest remote package -->
+        <antcall target="update-latest-build" />
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Will update the remote package indicating the latest successful      -->
+    <!-- built unless the "omit.update-latest" property is true.              -->
+    <!-- ==================================================================== -->
+    <target name="update-latest-build" unless="${omit.update-latest}" description="Will update the remote package indicating the latest successful built">
+        <echo message="Now try to update latest remote package"/>
+        <exec executable="sh" failonerror="true">
+            <arg value="-c" />
+            <arg value="scp -o StrictHostKeyChecking=no -i ${user.home}/.ssh/id_rsa ${php-target.dir}/${package.filename} ${build.server.user}@${build.server.host}:${build.server.upload-path}/${appserver.webapp.name}-latest.phar" />
+        </exec>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Copies the sources to the deploy directory                           -->
     <!-- ==================================================================== -->
     <target name="deploy" depends="copy" description="Copies the sources to the deploy directory.">
-        <copy todir="${deploy.dir}" preservelastmodified="true" overwrite="true">
+        <!-- copy the sources to the deploy directory -->
+        <echo message="Copy sources to ${deploy.dir} ..."/>
+        <copy todir="${appserver.webapps.dir}" preservelastmodified="true" overwrite="true">
             <fileset dir="${php-target.dir}">
                 <include name="**/*"/>
             </fileset>
@@ -47,105 +127,24 @@
     </target>
 
     <!-- ==================================================================== -->
-    <!-- Creates a PHAR file for deployment     					  		  -->
+    <!-- Creates a PHAR file for deployment                                   -->
     <!-- ==================================================================== -->
-	<target name="create-phar" depends="copy" description="Creates a PHAR file for deployment.">
-		<exec executable="phar">
-			<arg line="pack -l 0 -f ${php-target.dir}/${webapp.name}.phar ${php-target.dir}/${webapp.name}"/>
-		</exec>
-	</target>
-	
-    <!-- ==================================================================== -->
-    <!-- Generates the API documentation                                      -->
-    <!-- ==================================================================== -->   
-    <target name="apidoc" description="Generates the API documentation.">
-         <exec executable="phpdoc">
-            <arg line="-t ${php-target.dir}/docs -d ${php-src.dir}"/>
-         </exec>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Runs the code sniffer and generates a report                         -->
-    <!-- ==================================================================== -->
-    <target name="phpcs" description="Runs the code sniffer and generates a report.">
-        <exec executable="phpcs" failonerror="true">
-            <!-- call phpcs without report-file to get error message on build console -->
-            <arg line="-n --extensions=php --standard=phpcs.xml src"/>
+    <target name="create-phar" depends="copy" description="Creates a PHAR file for deployment.">
+        <!-- create the PHAR archive itself from the backup sources -->
+        <exec dir="${php-target.dir}" executable="${vendor.dir}/bin/phar">
+            <arg line="-c create -n ${php-target.dir}/${package.filename} -d ${php-target.dir}/${appserver.webapp.name}"/>
         </exec>
     </target>
 
     <!-- ==================================================================== -->
-    <!-- Runs the copy and paste detection                                    -->
+    <!-- Deploys the PHAR file into the configured deployment directory       -->
     <!-- ==================================================================== -->
-    <target name="phpcpd" description="Runs the copy and paste detection.">
-        <exec executable="phpcpd">
-            <arg line="--log-pmd ${php-target.dir}/reports/pmd-cpd.xml ${php-src.dir}"/>
-        </exec>
-    </target>
+    <target name="deploy-phar" depends="create-phar"
+            description="Deploys the PHAR file into the configured deployment directory.">
+        <copy file="${php-target.dir}/${package.filename}" tofile="${appserver.deploy.dir}/${appserver.webapp.name}.phar" failonerror="true"/>
 
-    <!-- ==================================================================== -->
-    <!-- Generate phploc.csv                                                  -->
-    <!-- ==================================================================== -->
-    <target name="phploc" description="Generate phploc.csv">
-        <exec executable="phploc">
-            <arg line="--log-xml ${php-target.dir}/reports/phploc.xml ${php-src.dir}"/>
-        </exec>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Runs the PHPDepend tool and generats a graphs                        -->
-    <!-- ==================================================================== -->
-    <target name="pdepend" description="Runs the PHPDepend tool and generats a graphs.">
-        <exec executable="pdepend">
-            <arg line="--summary-xml=${php-target.dir}/reports/pdepend.xml --jdepend-xml=${php-target.dir}/reports/jdepend.xml --jdepend-chart=${php-target.dir}/reports/jdepend.svg --overview-pyramid=${php-target.dir}/reports/pdepend-pyramid.svg ${php-src.dir}" />
-        </exec>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Runs the PHP mess detector tool                                      -->
-    <!-- ==================================================================== -->
-    <target name="phpmd" description="Runs the PHP Mess detector tool.">
-        <exec executable="phpmd">
-            <arg line="${php-src.dir} xml codesize,unusedcode --reportfile ${php-target.dir}/reports/pmd.xml" />
-        </exec>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Copies the test sources to the target directory					  -->
-    <!-- ==================================================================== -->
-    <target name="copy-tests" depends="copy" description="Copies the test sources to the target directory.">
-        <copy todir="${php-target.dir}">
-            <fileset dir="${php-test.dir}">
-                <include name="**/*" />
-            </fileset>
-            <filterchain>
-                <expandproperties/>
-            </filterchain>
-        </copy>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Runs the PHPUnit tests and generates a report                        -->
-    <!-- ==================================================================== -->
-    <target name="run-tests" depends="copy-tests" description="Runs the PHPUnit tests and generates a report.">
-        <exec executable="phpunit" dir="${php-target.dir}">
-            <arg line="--bootstrap bootstrap.php --configuration phpunit.xml.dist" />
-        </exec>
-    </target>
-
-    <!-- ==================================================================== -->
-    <!-- Runs the PHPUnit tests and generates the code metrics				  -->
-    <!-- ==================================================================== -->
-    <target name="build" description="Runs the PHPUnit tests and generates the code metrics.">
-        <antcall target="phpcs"/>
-        <antcall target="run-tests"/>
-        <!--
-        <antcall target="apidoc"/>
-        <antcall target="phpcpd"/>
-        <antcall target="phploc"/>
-        <antcall target="pdepend"/>
-        <antcall target="phpmd"/>
-        -->
+        <!-- create dodeploy flag to be transmitted via scp and do deploy on target system if needed -->
+        <touch file="${appserver.deploy.dir}/${appserver.webapp.name}.phar.dodeploy"/>
     </target>
 
 </project>

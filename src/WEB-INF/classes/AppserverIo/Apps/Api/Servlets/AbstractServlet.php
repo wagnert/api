@@ -1,7 +1,7 @@
 <?php
 
 /**
- * TechDivision\ApplicationServerApi\Servlets\AbstractServlet
+ * AppserverIo\Apps\Api\Servlets\AbstractServlet
  *
  * NOTICE OF LICENSE
  *
@@ -11,36 +11,32 @@
  *
  * PHP version 5
  *
- * @category   Appserver
- * @package    TechDivision_ApplicationServerApi
- * @subpackage Servlets
- * @author     Tim Wagner <tw@techdivision.com>
- * @copyright  2014 TechDivision GmbH <info@techdivision.com>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io
+ * @author    Tim Wagner <tw@appserver.io>
+ * @copyright 2015 TechDivision GmbH <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/appserver
+ * @link      http://www.appserver.io
  */
 
-namespace TechDivision\ApplicationServerApi\Servlets;
+namespace AppserverIo\Apps\Api\Servlets;
 
-use TechDivision\Http\HttpProtocol;
-use TechDivision\Servlet\ServletConfig;
-use TechDivision\Servlet\Http\HttpServlet;
-use TechDivision\Servlet\Http\HttpServletRequest;
-use TechDivision\Servlet\Http\HttpServletResponse;
-use TechDivision\ApplicationServer\InitialContext;
-use TechDivision\ApplicationServerApi\Service\Service;
+use AppserverIo\Http\HttpProtocol;
+use AppserverIo\Psr\Servlet\ServletConfig;
+use AppserverIo\Psr\Servlet\Http\HttpServlet;
+use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
+use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
+use AppserverIo\Appserver\Core\InitialContext;
+use AppserverIo\Api\Service\Service;
 
 /**
  * Abstract servlet that provides basic functionality for
  * all other API servlets.
  *
- * @category   Appserver
- * @package    TechDivision_ApplicationServerApi
- * @subpackage Servlets
- * @author     Tim Wagner <tw@techdivision.com>
- * @copyright  2014 TechDivision GmbH <info@techdivision.com>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io
+ * @author    Tim Wagner <tw@appserver.io>
+ * @copyright 2015 TechDivision GmbH <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/appserver
+ * @link      http://www.appserver.io
  */
 abstract class AbstractServlet extends HttpServlet
 {
@@ -55,11 +51,11 @@ abstract class AbstractServlet extends HttpServlet
     /**
      * Returns the actual service instance to use.
      *
-     * @param \TechDivision\Servlet\Http\HttpServletRequest $servletRequest The request instance
+     * @param \AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface $servletRequest The request instance
      *
-     * @return \TechDivision\ApplicationServerApi\Service\Service The requested service instance
+     * @return \AppserverIo\Apps\Api\Service\Service The requested service instance
      */
-    public function getService(HttpServletRequest $servletRequest)
+    public function getService(HttpServletRequestInterface $servletRequest)
     {
         $service = $servletRequest->getContext()->newService($this->getServiceClass());
         $service->setWebappPath($servletRequest->getContext()->getWebappPath());
@@ -69,14 +65,14 @@ abstract class AbstractServlet extends HttpServlet
     /**
      * Generic finder implementation using the actual service instance.
      *
-     * @param \TechDivision\Servlet\Http\HttpServletRequest  $servletRequest  The request instance
-     * @param \TechDivision\Servlet\Http\HttpServletResponse $servletResponse The response instance
+     * @param \AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface  $servletRequest  The request instance
+     * @param \AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface $servletResponse The response instance
      *
      * @return void
-     * @see \TechDivision\ApplicationServerApi\Service\Service::load();
-     * @see \TechDivision\ApplicationServerApi\Service\Service::findAll();
+     * @see \AppserverIo\Apps\Api\Service\Service::load();
+     * @see \AppserverIo\Apps\Api\Service\Service::findAll();
      */
-    public function find(HttpServletRequest $servletRequest, HttpServletResponse $servletResponse)
+    public function find(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
     {
 
         // load the requested URI
@@ -84,15 +80,14 @@ abstract class AbstractServlet extends HttpServlet
 
         // first check if a collection of ID's has been requested
         if ($ids = $servletRequest->getParameter('ids')) {
-
             // load all entities with the passed ID's
             $content = array();
             foreach ($ids as $id) {
                 $content[] = $this->getService($servletRequest)->load($id);
             }
 
-        } else { // then check if all entities has to be loaded or exactly one
-
+        // then check if all entities has to be loaded or exactly one
+        } else {
             // extract the ID of available, and load the requested OR all entities
             list ($applicationName, $entity, $id) = explode('/', $uri, 3);
             if ($id == null) {
@@ -110,11 +105,11 @@ abstract class AbstractServlet extends HttpServlet
     /**
      * Returns the application's base URL for html base tag
      *
-     * @param \TechDivision\Servlet\Http\HttpServletRequest $servletRequest The request instance
+     * @param \AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface $servletRequest The request instance
      *
      * @return string The applications base URL
      */
-    public function getBaseUrl(HttpServletRequest $servletRequest)
+    public function getBaseUrl(HttpServletRequestInterface $servletRequest)
     {
         // initialize the base URL
         $baseUrl = '/';
