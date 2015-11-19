@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Apps\Api\Servlets\AppServlet
+ * AppserverIo\Apps\Api\Servlets\ApplicationServlet
  *
  * NOTICE OF LICENSE
  *
@@ -20,9 +20,9 @@
 
 namespace AppserverIo\Apps\Api\Servlets;
 
-use AppserverIo\Psr\Servlet\ServletConfig;
 use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
+use AppserverIo\Http\HttpProtocol;
 
 /**
  * Servlet that handles all app related requests.
@@ -41,22 +41,16 @@ use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
  *   basePath="/api"
  * )
  */
-class AppServlet extends AbstractServlet
+class ApplicationServlet extends AbstractServlet
 {
 
     /**
-     * Filename of the uploaded file with the webapp PHAR.
+     * The ApplicationProcessor instance.
      *
-     * @var string
+     * @var \AppserverIo\Apps\Api\Services\ApplicationProcessor
+     * @EnterpriseBean
      */
-    const UPLOADED_PHAR_FILE = 'file';
-
-    /**
-     * The service class name to use.
-     *
-     * @var string
-     */
-    const SERVICE_CLASS = '\AppserverIo\Apps\Api\Service\AppService';
+    protected $applicationProcessor;
 
     /**
      * Returns the servlets service class to use.
@@ -65,7 +59,6 @@ class AppServlet extends AbstractServlet
      */
     public function getServiceClass()
     {
-        return AppServlet::SERVICE_CLASS;
     }
 
     /**
@@ -78,7 +71,7 @@ class AppServlet extends AbstractServlet
      * @see \AppserverIo\Psr\Servlet\Http\HttpServlet::doGet()
      *
      * @SWG\Get(
-     *   path="/apps.do",
+     *   path="/applications.do",
      *   summary="list applications",
      *   @SWG\Response(
      *     response=200,
@@ -92,7 +85,28 @@ class AppServlet extends AbstractServlet
      */
     public function doGet(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
     {
-        $this->find($servletRequest, $servletResponse);
+
+        // load the requested path info, e. g. /api/applications.do/example/
+        $pathInfo = trim($servletRequest->getPathInfo(), '/');
+
+        // extract the entity and the ID, if available
+        list ($entity, $id) = explode('/', $pathInfo);
+
+        // query whether we've found an ID or not
+        if ($id == null) {
+            $content = $this->applicationProcessor->findAll();
+        } else {
+            $content = $this->applicationProcessor->load($id);
+        }
+
+        // set the JSON encoded data in the response
+        $servletResponse->addHeader(HttpProtocol::HEADER_CONTENT_TYPE, 'application/vnd.api+json');
+        $servletResponse->addHeader('Access-Control-Allow-Origin', '*');
+        $servletResponse->addHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, PUT, PATCH, OPTIONS');
+        $servletResponse->addHeader('Access-Control-Allow-Headers', 'Content-Type, api_key, Authorization');
+
+        // return the JSON encoded response
+        $servletResponse->appendBodyStream(json_encode($content));
     }
 
     /**
@@ -105,7 +119,7 @@ class AppServlet extends AbstractServlet
      * @see \AppserverIo\Psr\Servlet\Http\HttpServlet::doPost()
      *
      * @SWG\Post(
-     *   path="/apps.do",
+     *   path="/applications.do",
      *   summary="creates a new application",
      *   @SWG\Response(
      *     response=200,
@@ -119,7 +133,6 @@ class AppServlet extends AbstractServlet
      */
     public function doPost(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
     {
-        $this->getService($servletRequest)->upload($servletRequest->getPart(AppServlet::UPLOADED_PHAR_FILE));
     }
 
     /**
@@ -132,7 +145,7 @@ class AppServlet extends AbstractServlet
      * @see \AppserverIo\Psr\Servlet\Http\HttpServlet::doPut()
      *
      * @SWG\Put(
-     *   path="/apps.do",
+     *   path="/applications.do",
      *   summary="updates an existing application",
      *   @SWG\Response(
      *     response=200,
@@ -146,8 +159,6 @@ class AppServlet extends AbstractServlet
      */
     public function doPut(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
     {
-        $content = json_decode($servletRequest->getContent());
-        $this->getService($servletRequest)->update($content);
     }
 
     /**
@@ -160,7 +171,7 @@ class AppServlet extends AbstractServlet
      * @see \AppserverIo\Psr\Servlet\Http\HttpServlet::doDelete()
      *
      * @SWG\Delete(
-     *   path="/apps.do",
+     *   path="/applications.do",
      *   summary="deletes an existing application",
      *   @SWG\Response(
      *     response=200,
@@ -174,8 +185,5 @@ class AppServlet extends AbstractServlet
      */
     public function doDelete(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
     {
-        $uri = trim($servletRequest->getUri(), '/');
-        list ($applicationName, $entity, $id) = explode('/', $uri, 3);
-        $this->getService($servletRequest)->delete($id);
     }
 }

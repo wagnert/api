@@ -32,6 +32,20 @@
         <servlet-class>\AppserverIo\Apps\Api\Servlets\ThumbnailServlet</servlet-class>
     </servlet>
     
+    <servlet>
+        <description><![CDATA[Returns the persistence unit configuration data]]></description>
+        <display-name>PersistenceUnitServlet</display-name>
+        <servlet-name>PersistenceUnitServlet</servlet-name>
+        <servlet-class>\AppserverIo\Apps\Api\Servlets\PersistenceUnitServlet</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <description><![CDATA[Returns the application configuration data]]></description>
+        <display-name>ApplicationServlet</display-name>
+        <servlet-name>ApplicationServlet</servlet-name>
+        <servlet-class>\AppserverIo\Apps\Api\Servlets\ApplicationServlet</servlet-class>
+    </servlet>
+    
     <servlet-mapping>
         <servlet-name>VirtualHostServlet</servlet-name>
         <url-pattern>/virtualHosts.do*</url-pattern>
@@ -50,6 +64,16 @@
     <servlet-mapping>
         <servlet-name>ThumbnailServlet</servlet-name>
         <url-pattern>/thumbnails.do*</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>PersistenceUnitServlet</servlet-name>
+        <url-pattern>/persistenceUnits.do*</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ApplicationServlet</servlet-name>
+        <url-pattern>/applications.do*</url-pattern>
     </servlet-mapping>
 
 </web-app>

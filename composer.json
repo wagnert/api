@@ -2,6 +2,9 @@
 	"name" : "appserver-io-apps/api",
 	"description" : "The appserver.io API",
 	"version" : "1.0.0",
+	"require" : {
+		"tobscure/json-api" : "0.2.*"
+	},
 	"require-dev" : {
 		"appserver-io/phar" : "~1.0",
 		"appserver-io/build" : "~1.0",
@@ -11,7 +14,7 @@
 		"appserver-io-psr/mop" : "~1.0",
 		"appserver-io-psr/epb" : "~1.0",
 		"appserver-io-psr/servlet" : "~1.0",
-		"zircote/swagger-php": "*"
+		"zircote/swagger-php" : "*"
 	},
 	"config" : {
 		"vendor-dir" : "src/vendor"
