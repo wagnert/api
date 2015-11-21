@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Apps\Api\Service\ApplicationProcessor
+ * AppserverIo\Apps\Api\Service\DatasourceProcessor
  *
  * NOTICE OF LICENSE
  *
@@ -22,11 +22,13 @@ namespace AppserverIo\Apps\Api\Service;
 
 use Tobscure\JsonApi\Document;
 use Tobscure\JsonApi\Collection;
+use AppserverIo\Psr\Naming\NamingDirectoryInterface;
 use AppserverIo\Psr\Application\ApplicationInterface;
-use AppserverIo\Apps\Api\Serializer\ApplicationSerializer;
+use AppserverIo\Appserver\Core\Api\Node\DatasourceNode;
+use AppserverIo\Apps\Api\Serializer\DatasourceSerializer;
 
 /**
- * A SLSB implementation providing the business logic to handle applications.
+ * A SLSB implementation providing the business logic to handle datasources.
  *
  * @author    Tim Wagner <tw@appserver.io>
  * @copyright 2015 TechDivision GmbH <info@appserver.io>
@@ -36,7 +38,7 @@ use AppserverIo\Apps\Api\Serializer\ApplicationSerializer;
  *
  * @Stateless
  */
-class ApplicationProcessor implements ApplicationProcessorInterface
+class DatasourceProcessor implements DatasourceProcessorInterface
 {
 
     /**
@@ -48,21 +50,21 @@ class ApplicationProcessor implements ApplicationProcessorInterface
     protected $application;
 
     /**
-     * Initializes the stdClass representation of the application with
+     * Initializes the stdClass representation of the datasource with
      * the ID passed as parameter.
      *
-     * @param string $id The ID of the requested application
+     * @param string $id The ID of the requested datasource
      *
-     * @return \stdClass The application as \stdClass representation
+     * @return \stdClass The datasource as \stdClass representation
      */
     public function load($id)
     {
     }
 
     /**
-     * Returns an stdClass representation of all applications.
+     * Returns an stdClass representation of all datasources.
      *
-     * @return Tobscure\JsonApi\Document A document representation of the applications
+     * @return Tobscure\JsonApi\Document A document representation of the datasources
      */
     public function findAll()
     {
@@ -70,17 +72,28 @@ class ApplicationProcessor implements ApplicationProcessorInterface
         // create a local naming directory instance
         $namingDirectory = $this->application->getNamingDirectory();
 
-        $applications = array();
+        // initialize the array with the datasources
+        $datasources = array();
 
         // convert the application nodes into stdClass representation
-        foreach ($namingDirectory->search('php:global')->getAllKeys() as $key) {
+        foreach ($namingDirectory->search('php:env')->getAllKeys() as $key) {
             try {
-                // try to load the application
-                $value = $namingDirectory->search(sprintf('php:global/%s/env/ApplicationInterface', $key));
 
-                // query whether we've found an application instance or not
-                if ($value instanceof ApplicationInterface) {
-                    $applications[] = $value;
+                $val = $namingDirectory->search(sprintf('php:env/%s/ds', $key));
+
+                if ($val instanceof NamingDirectoryInterface) {
+
+                    // try to load the application
+                    foreach ($val->getAllKeys() as $dsKey) {
+
+                        // try to load the datasource
+                        $value = $namingDirectory->search(sprintf('php:env/%s/ds/%s', $key, $dsKey));
+
+                        // query whether we've found a datasource instance or not
+                        if ($value instanceof DatasourceNode) {
+                            $datasources[] = $value;
+                        }
+                    }
                 }
 
             } catch (\Exception $e) {
@@ -88,17 +101,17 @@ class ApplicationProcessor implements ApplicationProcessorInterface
             }
         }
 
-        // create a new collection of applications, and specify relationships to be included
-        $collection = (new Collection($applications, new ApplicationSerializer()))->with(['persistenceUnits']);
+        // create a new collection of datasources
+        $collection = (new Collection($datasources, new DatasourceSerializer()))->with(['database']);
 
         // create a new JSON-API document with that collection as the data
         $document = new Document($collection);
 
         // add metadata and links.
-        $document->addMeta('total', count($applications));
-        $document->addLink('self', 'http://localhost:9080/api/applications.do');
+        $document->addMeta('total', count($datasources));
+        $document->addLink('self', 'http://localhost:9080/api/datasources.do');
 
-        // return the stdClass representation of the apps
+        // return the stdClass representation of the datasources
         return $document;
     }
 }

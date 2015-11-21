@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Apps\Api\Serializer\ApplicationSerializer
+ * AppserverIo\Apps\Api\Serializer\PersistenceUnitSerializer
  *
  * NOTICE OF LICENSE
  *
@@ -21,7 +21,6 @@
 namespace AppserverIo\Apps\Api\Serializer;
 
 use Tobscure\JsonApi\Collection;
-use Tobscure\JsonApi\Relationship;
 use Tobscure\JsonApi\AbstractSerializer;
 
 /**
@@ -33,7 +32,7 @@ use Tobscure\JsonApi\AbstractSerializer;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  */
-class ApplicationSerializer extends AbstractSerializer
+class PersistenceUnitSerializer extends AbstractSerializer
 {
 
     /**
@@ -41,7 +40,7 @@ class ApplicationSerializer extends AbstractSerializer
      *
      * @var string
      */
-    protected $type = 'applications';
+    protected $type = 'persistenceUnits';
 
     /**
      * Get the attributes array.
@@ -56,23 +55,8 @@ class ApplicationSerializer extends AbstractSerializer
     {
         return [
             'name' => $model->getName(),
-            'webappPath' => $model->getWebappPath()
+            'datasource' => $model->getDataSource()
         ];
-    }
-
-    /**
-     * Returns the relationship definition for the persistence units.
-     *
-     * @param mixed $model The model to load the relationships from
-     *
-     * @param \Tobscure\JsonApi\Relationship The relationship instance
-     */
-    public function persistenceUnits($model)
-    {
-
-        $persistenceManager = $model->search('PersistenceContextInterface');
-
-        return new Relationship(new Collection($persistenceManager->getEntityManagers(), new PersistenceUnitSerializer()));
     }
 
     /**
