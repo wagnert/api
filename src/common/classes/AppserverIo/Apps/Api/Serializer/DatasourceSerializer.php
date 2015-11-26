@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Apps\Api\Serializer\ApplicationSerializer
+ * AppserverIo\Apps\Api\Serializer\DatasourceSerializer
  *
  * NOTICE OF LICENSE
  *
@@ -20,12 +20,12 @@
 
 namespace AppserverIo\Apps\Api\Serializer;
 
-use Tobscure\JsonApi\Collection;
+use Tobscure\JsonApi\Resource;
 use Tobscure\JsonApi\Relationship;
 use Tobscure\JsonApi\AbstractSerializer;
 
 /**
- * A SLSB implementation providing the business logic to handle applications.
+ * A SLSB implementation providing the business logic to handle datasoures.
  *
  * @author    Tim Wagner <tw@appserver.io>
  * @copyright 2015 TechDivision GmbH <info@appserver.io>
@@ -33,7 +33,7 @@ use Tobscure\JsonApi\AbstractSerializer;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  */
-class ApplicationSerializer extends AbstractSerializer
+class DatasourceSerializer extends AbstractSerializer
 {
 
     /**
@@ -41,7 +41,7 @@ class ApplicationSerializer extends AbstractSerializer
      *
      * @var string
      */
-    protected $type = 'applications';
+    protected $type = 'datasources';
 
     /**
      * Get the attributes array.
@@ -55,8 +55,7 @@ class ApplicationSerializer extends AbstractSerializer
     public function getAttributes($model, array $fields = null)
     {
         return [
-            'name' => $model->getName(),
-            'webappPath' => $model->getWebappPath()
+            'name' => $model->getName()
         ];
     }
 
@@ -67,12 +66,9 @@ class ApplicationSerializer extends AbstractSerializer
      *
      * @param \Tobscure\JsonApi\Relationship The relationship instance
      */
-    public function persistenceUnits($model)
+    public function database($model)
     {
-
-        $persistenceManager = $model->search('PersistenceContextInterface');
-
-        return new Relationship(new Collection($persistenceManager->getEntityManagers(), new PersistenceUnitSerializer()));
+        return new Relationship(new Resource($model->getDatabase(), new DatabaseSerializer()));
     }
 
     /**

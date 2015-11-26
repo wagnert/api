@@ -46,6 +46,13 @@
         <servlet-class>\AppserverIo\Apps\Api\Servlets\ApplicationServlet</servlet-class>
     </servlet>
     
+    <servlet>
+        <description><![CDATA[Returns the datasource configuration data]]></description>
+        <display-name>DatasourceServlet</display-name>
+        <servlet-name>DatasourceServlet</servlet-name>
+        <servlet-class>\AppserverIo\Apps\Api\Servlets\DatasourceServlet</servlet-class>
+    </servlet>
+    
     <servlet-mapping>
         <servlet-name>VirtualHostServlet</servlet-name>
         <url-pattern>/virtualHosts.do*</url-pattern>
@@ -74,6 +81,11 @@
     <servlet-mapping>
         <servlet-name>ApplicationServlet</servlet-name>
         <url-pattern>/applications.do*</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>DatasourceServlet</servlet-name>
+        <url-pattern>/datasources.do*</url-pattern>
     </servlet-mapping>
 
 </web-app>

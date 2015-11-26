@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Apps\Api\Serializer\ApplicationSerializer
+ * AppserverIo\Apps\Api\Serializer\DatabaseSerializer
  *
  * NOTICE OF LICENSE
  *
@@ -20,12 +20,10 @@
 
 namespace AppserverIo\Apps\Api\Serializer;
 
-use Tobscure\JsonApi\Collection;
-use Tobscure\JsonApi\Relationship;
 use Tobscure\JsonApi\AbstractSerializer;
 
 /**
- * A SLSB implementation providing the business logic to handle applications.
+ * A SLSB implementation providing the business logic to handle databases.
  *
  * @author    Tim Wagner <tw@appserver.io>
  * @copyright 2015 TechDivision GmbH <info@appserver.io>
@@ -33,7 +31,7 @@ use Tobscure\JsonApi\AbstractSerializer;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  */
-class ApplicationSerializer extends AbstractSerializer
+class DatabaseSerializer extends AbstractSerializer
 {
 
     /**
@@ -41,7 +39,7 @@ class ApplicationSerializer extends AbstractSerializer
      *
      * @var string
      */
-    protected $type = 'applications';
+    protected $type = 'databases';
 
     /**
      * Get the attributes array.
@@ -55,24 +53,18 @@ class ApplicationSerializer extends AbstractSerializer
     public function getAttributes($model, array $fields = null)
     {
         return [
-            'name' => $model->getName(),
-            'webappPath' => $model->getWebappPath()
+            'charset' => (string) $model->getCharset(),
+            'databaseHost' => (string) $model->getDatabaseHost(),
+            'databaseName' => (string) $model->getDatabaseName(),
+            'databasePort' => (string) $model->getDatabasePort(),
+            'driver' => (string) $model->getDriver(),
+            'driverOptions' => (string) $model->getDriverOptions(),
+            'memory' => (string) $model->getMemory(),
+            'password' => (string) $model->getPassword(),
+            'path' => (string) $model->getPath(),
+            'unixSocket' => (string) $model->getUnixSocket(),
+            'user' => (string) $model->getUser()
         ];
-    }
-
-    /**
-     * Returns the relationship definition for the persistence units.
-     *
-     * @param mixed $model The model to load the relationships from
-     *
-     * @param \Tobscure\JsonApi\Relationship The relationship instance
-     */
-    public function persistenceUnits($model)
-    {
-
-        $persistenceManager = $model->search('PersistenceContextInterface');
-
-        return new Relationship(new Collection($persistenceManager->getEntityManagers(), new PersistenceUnitSerializer()));
     }
 
     /**
@@ -81,6 +73,6 @@ class ApplicationSerializer extends AbstractSerializer
      */
     public function getId($model)
     {
-        return $model->getName();
+        return $model->getPrimaryKey();
     }
 }
