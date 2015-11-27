@@ -5,6 +5,13 @@
     <description>Webapp that provides the appserver.io API</description>
 
     <servlet>
+        <description><![CDATA[Returns the welcome page data]]></description>
+        <display-name>IndexServlet</display-name>
+        <servlet-name>IndexServlet</servlet-name>
+        <servlet-class>\AppserverIo\Apps\Api\Servlets\IndexServlet</servlet-class>
+    </servlet>
+
+    <servlet>
         <description><![CDATA[Returns the Virtual Host configuration data]]></description>
         <display-name>VirtualHostServlet</display-name>
         <servlet-name>VirtualHostServlet</servlet-name>
@@ -52,6 +59,11 @@
         <servlet-name>NamingDirectoryServlet</servlet-name>
         <servlet-class>\AppserverIo\Apps\Api\Servlets\NamingDirectoryServlet</servlet-class>
     </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>IndexServlet</servlet-name>
+        <url-pattern>/index.do*</url-pattern>
+    </servlet-mapping>
     
     <servlet-mapping>
         <servlet-name>VirtualHostServlet</servlet-name>

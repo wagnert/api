@@ -33,14 +33,6 @@ use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io/appserver
  * @link      http://www.appserver.io
- *
- * @SWG\Info(title="My First API", version="0.1")
- *
- * @SWG\Swagger(
- *   schemes={"http"},
- *   host="localhost:9080",
- *   basePath="/api"
- * )
  */
 class NamingDirectoryServlet extends HttpServlet
 {

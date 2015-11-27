@@ -57,6 +57,19 @@ class ThumbnailServlet extends HttpServlet
      *
      * @return void
      * @see \AppserverIo\Psr\Servlet\Http\HttpServlet::doGet()
+     *
+     * @SWG\Get(
+     *   path="/thumbnails.do",
+     *   summary="The application's thumbnail",
+     *   @SWG\Response(
+     *     response=200,
+     *     description="The application's thumbnail"
+     *   ),
+     *   @SWG\Response(
+     *     response="default",
+     *     description="an ""unexpected"" error"
+     *   )
+     * )
      */
     public function doGet(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
     {
