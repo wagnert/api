@@ -53,6 +53,13 @@
         <servlet-class>\AppserverIo\Apps\Api\Servlets\DatasourceServlet</servlet-class>
     </servlet>
     
+    <servlet>
+        <description><![CDATA[Returns the naming directory data]]></description>
+        <display-name>NamingDirectoryServlet</display-name>
+        <servlet-name>NamingDirectoryServlet</servlet-name>
+        <servlet-class>\AppserverIo\Apps\Api\Servlets\NamingDirectoryServlet</servlet-class>
+    </servlet>
+    
     <servlet-mapping>
         <servlet-name>VirtualHostServlet</servlet-name>
         <url-pattern>/virtualHosts.do*</url-pattern>
@@ -86,6 +93,11 @@
     <servlet-mapping>
         <servlet-name>DatasourceServlet</servlet-name>
         <url-pattern>/datasources.do*</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>NamingDirectoryServlet</servlet-name>
+        <url-pattern>/namingDirectories.do*</url-pattern>
     </servlet-mapping>
 
 </web-app>

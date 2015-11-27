@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Apps\Api\Serializer\ApplicationSerializer
+ * AppserverIo\Apps\Api\Serializer\NamingDirectorySerializer
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@ namespace AppserverIo\Apps\Api\Serializer;
 use Tobscure\JsonApi\Collection;
 use Tobscure\JsonApi\Relationship;
 use Tobscure\JsonApi\AbstractSerializer;
+use AppserverIo\Psr\Naming\NamingDirectoryInterface;
 
 /**
  * A SLSB implementation providing the business logic to handle applications.
@@ -33,7 +34,7 @@ use Tobscure\JsonApi\AbstractSerializer;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  */
-class ApplicationSerializer extends AbstractSerializer
+class NamingDirectorySerializer extends AbstractSerializer
 {
 
     /**
@@ -41,7 +42,14 @@ class ApplicationSerializer extends AbstractSerializer
      *
      * @var string
      */
-    protected $type = 'applications';
+    protected $type = 'namingDirectories';
+
+    /**
+     * Array that contains the naming directory structure as string representation.
+     *
+     * @var array
+     */
+    protected $buffer = array();
 
     /**
      * Get the attributes array.
@@ -54,27 +62,7 @@ class ApplicationSerializer extends AbstractSerializer
      */
     public function getAttributes($model, array $fields = null)
     {
-        return [
-            'name' => $model->getName(),
-            'webappPath' => $model->getWebappPath()
-        ];
-    }
-
-    /**
-     * Returns the relationship definition for the persistence units.
-     *
-     * @param mixed $model The model to load the relationships from
-     *
-     * @param \Tobscure\JsonApi\Relationship The relationship instance
-     */
-    public function persistenceUnits($model)
-    {
-        // load the persistence manager
-        /** \AppserverIo\Psr\EnterpriseBeans\PersistenceContextInterface $persistenceManager */
-        $persistenceManager = $model->search('PersistenceContextInterface');
-
-        // load the availaibe entity managers from the persistence manager
-        return new Relationship(new Collection($persistenceManager->getEntityManagers(), new PersistenceUnitSerializer()));
+        return $model->toArray();
     }
 
     /**
@@ -83,6 +71,6 @@ class ApplicationSerializer extends AbstractSerializer
      */
     public function getId($model)
     {
-        return $model->getName();
+        return $model->getSerial();
     }
 }
