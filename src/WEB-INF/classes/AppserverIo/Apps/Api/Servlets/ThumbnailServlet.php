@@ -20,12 +20,10 @@
 
 namespace AppserverIo\Apps\Api\Servlets;
 
-use AppserverIo\Psr\Servlet\ServletConfig;
+use AppserverIo\Psr\Servlet\Http\HttpServlet;
 use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
-use AppserverIo\WebServer\Dictionaries\MimeTypes;
-use AppserverIo\Apps\Api\Service\AppService;
-use AppserverIo\Apps\Api\Servlets\AbstractServlet;
+use AppserverIo\Server\Dictionaries\MimeTypes;
 use AppserverIo\Apps\Api\Exceptions\FileNotFoundException;
 use AppserverIo\Apps\Api\Exceptions\FileNotReadableException;
 use AppserverIo\Apps\Api\Exceptions\FoundDirInsteadOfFileException;
@@ -39,25 +37,16 @@ use AppserverIo\Apps\Api\Exceptions\FoundDirInsteadOfFileException;
  * @link      https://github.com/appserver-io/appserver
  * @link      http://www.appserver.io
  */
-class ThumbnailServlet extends AbstractServlet
+class ThumbnailServlet extends HttpServlet
 {
 
     /**
-     * The service class name to use.
+     * The ApplicationProcessor instance.
      *
-     * @var string
+     * @var \AppserverIo\Apps\Api\Services\ApplicationProcessor
+     * @EnterpriseBean
      */
-    const SERVICE_CLASS = '\AppserverIo\Apps\Api\Service\AppService';
-
-    /**
-     * Returns the servlets service class to use.
-     *
-     * @return string The servlets service class
-     */
-    public function getServiceClass()
-    {
-        return ThumbnailServlet::SERVICE_CLASS;
-    }
+    protected $applicationProcessor;
 
     /**
      * Tries to load the requested thumbnail from the applications WEB-INF directory
@@ -72,16 +61,14 @@ class ThumbnailServlet extends AbstractServlet
     public function doGet(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
     {
 
-        // explode the URI
-        $uri = trim($servletRequest->getUri(), '/');
-        list ($applicationName, $entity, $id) = explode('/', $uri, 3);
+        // load the requested path info, e. g. /api/thumbnails.do/example/
+        $pathInfo = trim($servletRequest->getPathInfo(), '/');
 
-        // set the base URL for rendering images/thumbnails
-        $this->getService($servletRequest)->setBaseUrl($this->getBaseUrl($servletRequest));
-        $this->getService($servletRequest)->setWebappPath($servletRequest->getContext()->getWebappPath());
+        // extract the entity and the ID, if available
+        list ($id, ) = explode('/', $pathInfo);
 
         // load file information and return the file object if possible
-        $fileInfo = new \SplFileInfo($path = $this->getService($servletRequest)->thumbnail($id));
+        $fileInfo = new \SplFileInfo($path = $this->applicationProcessor->thumbnail($id));
         if ($fileInfo->isDir()) {
             throw new FoundDirInsteadOfFileException(sprintf("Requested file %s is a directory", $path));
         }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Apps\Example\Service\NamingDirectoryProcessorInterface
+ * AppserverIo\Apps\Api\Assembler\NamingDirectoryAssemblerInterface
  *
  * NOTICE OF LICENSE
  *
@@ -18,11 +18,12 @@
  * @link      http://www.appserver.io
  */
 
-namespace AppserverIo\Apps\Api\Service;
+namespace AppserverIo\Apps\Api\Assembler;
+
+use AppserverIo\Psr\NamingDirectory\NamingDirectoryInterface;
 
 /**
- * An interface for SLSB implementations providing the business logic
- * to handle naming directories.
+ * Interface for naming directory assemblers.
  *
  * @author    Tim Wagner <tw@appserver.io>
  * @copyright 2015 TechDivision GmbH <info@appserver.io>
@@ -30,22 +31,24 @@ namespace AppserverIo\Apps\Api\Service;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  */
-interface NamingDirectoryProcessorInterface
+interface NamingDirectoryAssemblerInterface
 {
 
     /**
-     * Returns the document representation of the naming directory with the passed ID.
+     * Returns the a new JSON-API document with the naming directory data.
      *
-     * @param string $id The ID of the naming directory to be returned
+     * @param AppserverIo\Psr\NamingDirectory\NamingDirectoryInterface $namingDirectory The naming directory to assemble
      *
      * @return \Tobscure\JsonApi\Document The document representation of the naming directory
      */
-    public function load($id);
+    public function getNamingDirectoryViewData(NamingDirectoryInterface $namingDirectory);
 
     /**
-     * Returns the document representation of all naming directories.
+     * Returns the a new JSON-API document with the naming directory array as the data.
      *
-     * @return \Tobscure\JsonApi\Document A document representation of the naming directories
+     * @param array $namingDirectories The array with the naming directories to assemble
+     *
+     * @return Tobscure\JsonApi\Document The document representation of the naming directories
      */
-    public function findAll();
+    public function getNamingDirectoryOverviewData(array $namingDirectories);
 }

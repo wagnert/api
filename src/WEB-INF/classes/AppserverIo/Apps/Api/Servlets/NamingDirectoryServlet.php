@@ -21,7 +21,7 @@
 namespace AppserverIo\Apps\Api\Servlets;
 
 use AppserverIo\Http\HttpProtocol;
-use AppserverIo\Psr\Servlet\ServletConfig;
+use AppserverIo\Psr\Servlet\Http\HttpServlet;
 use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
 
@@ -42,7 +42,7 @@ use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
  *   basePath="/api"
  * )
  */
-class NamingDirectoryServlet extends AbstractServlet
+class NamingDirectoryServlet extends HttpServlet
 {
 
     /**
@@ -52,15 +52,6 @@ class NamingDirectoryServlet extends AbstractServlet
      * @EnterpriseBean
      */
     protected $namingDirectoryProcessor;
-
-    /**
-     * Returns the servlets service class to use.
-     *
-     * @return string The servlets service class
-     */
-    public function getServiceClass()
-    {
-    }
 
     /**
      * Tries to load the content of the naming directory and adds it to the response.
@@ -87,8 +78,18 @@ class NamingDirectoryServlet extends AbstractServlet
     public function doGet(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
     {
 
+        // load the requested path info, e. g. /api/namingDirectories.do/5e83e3e6-b1d5-49de-92ae-7fca480593b8
+        $pathInfo = trim($servletRequest->getPathInfo(), '/');
+
+        // extract the entity and the ID, if available
+        list (, $id) = explode('/', $pathInfo);
+
         // query whether we've found an ID or not
-        $content = $this->namingDirectoryProcessor->load();
+        if ($id == null) {
+            $content = $this->namingDirectoryProcessor->findAll();
+        } else {
+            $content = $this->namingDirectoryProcessor->load($id);
+        }
 
         // set the JSON encoded data in the response
         $servletResponse->addHeader(HttpProtocol::HEADER_CONTENT_TYPE, 'application/json');

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Apps\Example\Service\DatasourceProcessorInterface
+ * AppserverIo\Apps\Api\Utils\RequestKeys
  *
  * NOTICE OF LICENSE
  *
@@ -18,11 +18,10 @@
  * @link      http://www.appserver.io
  */
 
-namespace AppserverIo\Apps\Api\Service;
+namespace AppserverIo\Apps\Api\Utils;
 
 /**
- * An interface for SLSB implementations providing the business logic
- * to handle datasources.
+ * Provides keys with the available service names.
  *
  * @author    Tim Wagner <tw@appserver.io>
  * @copyright 2015 TechDivision GmbH <info@appserver.io>
@@ -30,23 +29,34 @@ namespace AppserverIo\Apps\Api\Service;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  */
-interface DatasourceProcessorInterface
+class ServiceKeys
 {
 
     /**
-     * Returns the document representation of the datasource node with the passed ID.
-     *
-     * @param string $id The ID of the datasource node to be returned
-     *
-     * @return \Tobscure\JsonApi\Document The document representation of the datasource node
+     * Private to constructor to avoid instancing this class.
      */
-    public function load($id);
-
+    private function __construct()
+    {
+    }
 
     /**
-     * Returns the document representation of all datasource nodes.
+     * The class name of the application service.
      *
-     * @return \Tobscure\JsonApi\Document A document representation of the datasource nodes
+     * @return string
      */
-    public function findAll();
+    const APPLICATION = 'AppserverIo\Appserver\Core\Api\AppService';
+
+    /**
+     * The class name of the container service.
+     *
+     * @return string
+     */
+    const CONTAINER = 'AppserverIo\Appserver\Core\Api\ContainerService';
+
+    /**
+     * The class name of the virual host service.
+     *
+     * @return string
+     */
+    const VIRTUAL_HOST = 'AppserverIo\Appserver\Core\Api\VirtualHostService';
 }

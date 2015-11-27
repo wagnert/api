@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Apps\Example\Service\DatasourceProcessorInterface
+ * AppserverIo\Apps\Api\Repository\PersistenceUnitRepositoryInterface
  *
  * NOTICE OF LICENSE
  *
@@ -18,11 +18,11 @@
  * @link      http://www.appserver.io
  */
 
-namespace AppserverIo\Apps\Api\Service;
+namespace AppserverIo\Apps\Api\Repository;
 
 /**
  * An interface for SLSB implementations providing the business logic
- * to handle datasources.
+ * to handle persistence units.
  *
  * @author    Tim Wagner <tw@appserver.io>
  * @copyright 2015 TechDivision GmbH <info@appserver.io>
@@ -30,23 +30,31 @@ namespace AppserverIo\Apps\Api\Service;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  */
-interface DatasourceProcessorInterface
+interface PersistenceUnitRepositoryInterface
 {
 
     /**
-     * Returns the document representation of the datasource node with the passed ID.
+     * Returns the naming directory with the passed ID.
      *
-     * @param string $id The ID of the datasource node to be returned
+     * @param string $id The ID of the naming directory to be returned
      *
-     * @return \Tobscure\JsonApi\Document The document representation of the datasource node
+     * @return \stdClass The requested naming directory \stdClass representation
      */
     public function load($id);
 
-
     /**
-     * Returns the document representation of all datasource nodes.
+     * Returns an array with the available naming directories.
      *
-     * @return \Tobscure\JsonApi\Document A document representation of the datasource nodes
+     * @return array The array with the available naming directories
      */
     public function findAll();
+
+    /**
+     * Returns an array with the persistence units of the application with the passed name.
+     *
+     * @param string $applicationName The name of the application to return the persistence units for
+     *
+     * @return array The array with the application's persistence units
+     */
+    public function findAllByApplicationName($applicationName);
 }

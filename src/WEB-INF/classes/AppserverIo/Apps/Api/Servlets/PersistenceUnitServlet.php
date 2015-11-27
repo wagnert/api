@@ -21,6 +21,7 @@
 namespace AppserverIo\Apps\Api\Servlets;
 
 use AppserverIo\Http\HttpProtocol;
+use AppserverIo\Psr\Servlet\Http\HttpServlet;
 use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
 
@@ -41,7 +42,7 @@ use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
  *   basePath="/api"
  * )
  */
-class PersistenceUnitServlet extends AbstractServlet
+class PersistenceUnitServlet extends HttpServlet
 {
 
     /**
@@ -51,15 +52,6 @@ class PersistenceUnitServlet extends AbstractServlet
      * @EnterpriseBean
      */
     protected $persistenceUnitProcessor;
-
-    /**
-     * Returns the servlets service class to use.
-     *
-     * @return string The servlets service class
-     */
-    public function getServiceClass()
-    {
-    }
 
     /**
      * Tries to load the available persistence units and adds them to the response.
@@ -89,7 +81,7 @@ class PersistenceUnitServlet extends AbstractServlet
         // load the requested path info, e. g. /api/persistenceUnits.do/example/
         $pathInfo = trim($servletRequest->getPathInfo(), '/');
 
-        list ($applicationName, $id) = explode('/', $pathInfo);
+        list ($applicationName, ) = explode('/', $pathInfo);
 
         $content = $this->persistenceUnitProcessor->findAll($applicationName);
 

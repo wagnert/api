@@ -20,9 +20,10 @@
 
 namespace AppserverIo\Apps\Api\Servlets;
 
+use AppserverIo\Http\HttpProtocol;
+use AppserverIo\Psr\Servlet\Http\HttpServlet;
 use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
-use AppserverIo\Http\HttpProtocol;
 
 /**
  * Servlet that handles all app related requests.
@@ -41,7 +42,7 @@ use AppserverIo\Http\HttpProtocol;
  *   basePath="/api"
  * )
  */
-class DatasourceServlet extends AbstractServlet
+class DatasourceServlet extends HttpServlet
 {
 
     /**
@@ -51,15 +52,6 @@ class DatasourceServlet extends AbstractServlet
      * @EnterpriseBean
      */
     protected $datasourceProcessor;
-
-    /**
-     * Returns the servlets service class to use.
-     *
-     * @return string The servlets service class
-     */
-    public function getServiceClass()
-    {
-    }
 
     /**
      * Tries to load the requested datasources and adds them to the response.
@@ -90,7 +82,7 @@ class DatasourceServlet extends AbstractServlet
         $pathInfo = trim($servletRequest->getPathInfo(), '/');
 
         // extract the entity and the ID, if available
-        list ($entity, $id) = explode('/', $pathInfo);
+        list (, $id) = explode('/', $pathInfo);
 
         // query whether we've found an ID or not
         if ($id == null) {
@@ -107,83 +99,5 @@ class DatasourceServlet extends AbstractServlet
 
         // return the JSON encoded response
         $servletResponse->appendBodyStream(json_encode($content));
-    }
-
-    /**
-     * Creates a new datasource.
-     *
-     * @param \AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface  $servletRequest  The request instance
-     * @param \AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface $servletResponse The response instance
-     *
-     * @return void
-     * @see \AppserverIo\Psr\Servlet\Http\HttpServlet::doPost()
-     *
-     * @SWG\Post(
-     *   path="/datasources.do",
-     *   summary="creates a new datasource",
-     *   @SWG\Response(
-     *     response=200,
-     *     description="a ""success"" message"
-     *   ),
-     *   @SWG\Response(
-     *     response="default",
-     *     description="an ""unexpected"" error"
-     *   )
-     * )
-     */
-    public function doPost(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
-    {
-    }
-
-    /**
-     * Updates the datasource with the passed content.
-     *
-     * @param \AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface  $servletRequest  The request instance
-     * @param \AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface $servletResponse The response instance
-     *
-     * @return void
-     * @see \AppserverIo\Psr\Servlet\Http\HttpServlet::doPut()
-     *
-     * @SWG\Put(
-     *   path="/datasources.do",
-     *   summary="updates an existing datasource",
-     *   @SWG\Response(
-     *     response=200,
-     *     description="a ""success"" message"
-     *   ),
-     *   @SWG\Response(
-     *     response="default",
-     *     description="an ""unexpected"" error"
-     *   )
-     * )
-     */
-    public function doPut(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
-    {
-    }
-
-    /**
-     * Delete the requested datasource.
-     *
-     * @param \AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface  $servletRequest  The request instance
-     * @param \AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface $servletResponse The response instance
-     *
-     * @return void
-     * @see \AppserverIo\Psr\Servlet\Http\HttpServlet::doDelete()
-     *
-     * @SWG\Delete(
-     *   path="/applications.do",
-     *   summary="deletes an existing datasource",
-     *   @SWG\Response(
-     *     response=200,
-     *     description="a ""success"" message"
-     *   ),
-     *   @SWG\Response(
-     *     response="default",
-     *     description="an ""unexpected"" error"
-     *   )
-     * )
-     */
-    public function doDelete(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
-    {
     }
 }

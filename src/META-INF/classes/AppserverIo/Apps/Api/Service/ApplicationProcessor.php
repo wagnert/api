@@ -20,11 +20,6 @@
 
 namespace AppserverIo\Apps\Api\Service;
 
-use Tobscure\JsonApi\Document;
-use Tobscure\JsonApi\Collection;
-use AppserverIo\Psr\Application\ApplicationInterface;
-use AppserverIo\Apps\Api\Serializer\ApplicationSerializer;
-
 /**
  * A SLSB implementation providing the business logic to handle applications.
  *
@@ -36,69 +31,109 @@ use AppserverIo\Apps\Api\Serializer\ApplicationSerializer;
  *
  * @Stateless
  */
-class ApplicationProcessor implements ApplicationProcessorInterface
+class ApplicationProcessor extends AbstractProcessor implements ApplicationProcessorInterface
 {
 
     /**
-     * The application instance that provides the entity manager.
+     * The application assembler instance.
      *
-     * @var \AppserverIo\Psr\Application\ApplicationInterface
-     * @Resource(name="ApplicationInterface")
+     * @var \AppserverIo\Apps\Api\Assembler\JsonApi\ApplicationAssembler
+     * @EnterpriseBean
      */
-    protected $application;
+    protected $applicationAssembler;
 
     /**
-     * Initializes the stdClass representation of the application with
-     * the ID passed as parameter.
+     * The application repository instance.
      *
-     * @param string $id The ID of the requested application
-     *
-     * @return \stdClass The application as \stdClass representation
+     * @var \AppserverIo\Apps\Api\Repository\ApplicationRepositoryInterface
+     * @EnterpriseBean
      */
-    public function load($id)
+    protected $applicationRepository;
+
+    /**
+     * Return's the application respository instance.
+     *
+     * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The assembler instance
+     * @see \AppserverIo\Apps\Api\Repository\ApplicationRepositoryInterface
+     */
+    protected function getApplicationRepository()
     {
+        return $this->applicationRepository;
     }
 
     /**
-     * Returns an stdClass representation of all applications.
+     * Return's the application assembler instance.
      *
-     * @return Tobscure\JsonApi\Document A document representation of the applications
+     * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The assembler instance
+     * @see \AppserverIo\Apps\Api\Assembler\ApplicationAssemblerInterface
+     */
+    protected function getApplicationAssembler()
+    {
+        return $this->applicationAssembler;
+    }
+
+    /**
+     * Returns the document representation of the application with the passed ID.
+     *
+     * @param string $id The ID of the application to be returned
+     *
+     * @return \Tobscure\JsonApi\Document The document representation of the application
+     * @see \AppserverIo\Apps\Example\Service\ApplicationProcessorInterface::load()
+     */
+    public function load($id)
+    {
+        return $this->getApplicationAssembler()->getApplicationViewData($this->getApplicationRepository()->load($id));
+    }
+
+    /**
+     * Returns the document representation of all applications.
+     *
+     * @return \Tobscure\JsonApi\Document A document representation of the applications
+     * @see \AppserverIo\Apps\Example\Service\ApplicationProcessorInterface::findAll()
      */
     public function findAll()
     {
+        return $this->getApplicationAssembler()->getApplicationOverviewData($this->getApplicationRepository()->findAll());
+    }
 
-        // create a local naming directory instance
-        $namingDirectory = $this->application->getNamingDirectory();
+    /**
+     * Returns the path to the thumbnail image of the app with the
+     * passed ID.
+     *
+     * @param string $id ID of the app to return the thumbnail for
+     *
+     * @return string The absolute path the thumbnail
+     * @see \AppserverIo\Apps\Example\Service\ApplicationProcessorInterface::thumbnail()
+     */
+    public function thumbnail($id)
+    {
+        return $this->getApplicationRepository()->thumbnail($id);
+    }
 
-        $applications = array();
+    /**
+     * Uploads the passed file to the application servers deploy directory.
+     *
+     * @param string $filename The filename
+     * @param string $data     The file data
+     *
+     * @return void
+     * @see \AppserverIo\Apps\Example\Service\ApplicationProcessorInterface::upload()
+     */
+    public function upload($filename, $data)
+    {
+        $this->getApplicationRepository()->upload($filename, $data);
+    }
 
-        // convert the application nodes into stdClass representation
-        foreach ($namingDirectory->search('php:global')->getAllKeys() as $key) {
-            try {
-                // try to load the application
-                $value = $namingDirectory->search(sprintf('php:global/%s/env/ApplicationInterface', $key));
-
-                // query whether we've found an application instance or not
-                if ($value instanceof ApplicationInterface) {
-                    $applications[] = $value;
-                }
-
-            } catch (\Exception $e) {
-                // do nothing here, because
-            }
-        }
-
-        // create a new collection of applications, and specify relationships to be included
-        $collection = (new Collection($applications, new ApplicationSerializer()))->with(['persistenceUnits']);
-
-        // create a new JSON-API document with that collection as the data
-        $document = new Document($collection);
-
-        // add metadata and links.
-        $document->addMeta('total', count($applications));
-        $document->addLink('self', 'http://localhost:9080/api/applications.do');
-
-        // return the stdClass representation of the apps
-        return $document;
+    /**
+     * Deletes the app node with the passed ID from the system configuration.
+     *
+     * @param string $id The ID of the app node to delete
+     *
+     * @return void
+     * @see \AppserverIo\Apps\Example\Service\ApplicationProcessorInterface::delete()
+     */
+    public function delete($id)
+    {
+        $this->getApplicationRepository()->delete($id);
     }
 }

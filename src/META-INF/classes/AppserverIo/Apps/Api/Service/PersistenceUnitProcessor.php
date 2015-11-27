@@ -32,54 +32,82 @@ namespace AppserverIo\Apps\Api\Service;
  *
  * @Stateless
  */
-class PersistenceUnitProcessor implements PersistenceUnitProcessorInterface
+class PersistenceUnitProcessor extends AbstractProcessor implements PersistenceUnitProcessorInterface
 {
 
     /**
-     * The application instance that provides the entity manager.
+     * The persistence unit assembler instance.
      *
-     * @var \AppserverIo\Psr\Application\ApplicationInterface
-     * @Resource(name="ApplicationInterface")
+     * @var \AppserverIo\Apps\Api\Assembler\JsonApi\PersistenceUnitAssembler
+     * @EnterpriseBean
      */
-    protected $application;
+    protected $persistenceUnitAssembler;
 
     /**
-     * Initializes the stdClass representation of the persistence unit node with
-     * the ID passed as parameter.
+     * The persistence unit repository instance.
      *
-     * @param string $id The ID of the requested persistence unit node
-     *
-     * @return \stdClass The persistence unit node as \stdClass representation
+     * @var \AppserverIo\Apps\Api\Repository\PersistenceUnitRepositoryInterface
+     * @EnterpriseBean
      */
-    public function load($id)
+    protected $persistenceUnitRepository;
+
+    /**
+     * Return's the persistence unit respository instance.
+     *
+     * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The assembler instance
+     * @see \AppserverIo\Apps\Api\Repository\PersistenceUnitRepositoryInterface
+     */
+    protected function getPersistenceUnitRepository()
     {
+        return $this->persistenceUnitRepository;
     }
 
     /**
-     * Returns all persistence units registered by the passed
-     * application instance.
+     * Return's the persistence unit assembler instance.
      *
-     * @param string|null $applicationName The name of the application to return the persistence units for
-     *
-     * @return array The array with the application's persistence units
+     * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The assembler instance
+     * @see \AppserverIo\Apps\Api\Assembler\PersistenceUnitAssemblerInterface
      */
-    public function findAll($applicationName = null)
+    protected function getPersistenceUnitAssembler()
     {
+        return $this->persistenceUnitAssembler;
+    }
 
-        // initialize class container
-        $stdClass = new \stdClass();
-        $stdClass->persistenceUnits = array();
+    /**
+     * Returns the document representation of the persistence unit with the passed ID.
+     *
+     * @param string $id The ID of the persistence unit to be returned
+     *
+     * @return \Tobscure\JsonApi\Document The document representation of the persistence unit
+     * @see \AppserverIo\Apps\Example\Service\PersistenceUnitProcessorInterface::load()
+     */
+    public function load($id)
+    {
+        return $this->getPersistenceUnitAssembler()->getPersistenceUnitViewData($this->getPersistenceUnitRepository()->load($id));
+    }
 
-        $application = $this->application->getNamingDirectory()->search(sprintf('php:global/%s', $applicationName));
+    /**
+     * Returns the document representation of all persistence units.
+     *
+     * @return \Tobscure\JsonApi\Document A document representation of the persistence units
+     * @see \AppserverIo\Apps\Example\Service\PersistenceUnitProcessorInterface::findAll()
+     */
+    public function findAll()
+    {
+        return $this->getPersistenceUnitAssembler()->getPersistenceUnitOverviewData($this->getPersistenceUnitRepository()->findAll());
+    }
 
-        $persistenceManager = $application->search('PersistenceContextInterface');
-
-        // convert the application nodes into stdClass representation
-        foreach ($persistenceManager->getEntityManagers() as $entityManager) {
-            $stdClass->persistenceUnits[] = $entityManager->toStdClass();
-        }
-
-        // return the stdClass representation of the apps
-        return $stdClass;
+    /**
+     * Returns the document representation of all persistence units
+     * of the application with the passed name.
+     *
+     * @param string $applicationName The name of the application to return the persistence units for
+     *
+     * @return \Tobscure\JsonApi\Document A document representation of the persistence units
+     * @see \AppserverIo\Apps\Example\Service\PersistenceUnitProcessorInterface::findAll()
+     */
+    public function findAllByApplicationName($applicationName)
+    {
+        return $this->getPersistenceUnitAssembler()->getPersistenceUnitOverviewData($this->getPersistenceUnitRepository()->findAllByApplicationName($applicationName));
     }
 }

@@ -20,7 +20,8 @@
 
 namespace AppserverIo\Apps\Api\Servlets;
 
-use AppserverIo\Psr\Servlet\ServletConfig;
+use AppserverIo\Http\HttpProtocol;
+use AppserverIo\Psr\Servlet\Http\HttpServlet;
 use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
 
@@ -32,26 +33,25 @@ use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io/appserver
  * @link      http://www.appserver.io
+ *
+ * @SWG\Info(title="My First API", version="0.1")
+ *
+ * @SWG\Swagger(
+ *   schemes={"http"},
+ *   host="localhost:9080",
+ *   basePath="/api"
+ * )
  */
-class VirtualHostServlet extends AbstractServlet
+class VirtualHostServlet extends HttpServlet
 {
 
     /**
-     * The service class name to use.
+     * The VirtualHostProcessor instance.
      *
-     * @var string
+     * @var \AppserverIo\Apps\Api\Services\VirtualHostProcessor
+     * @EnterpriseBean
      */
-    const SERVICE_CLASS = '\AppserverIo\Apps\Api\Service\VirtualHostService';
-
-    /**
-     * Returns the servlets service class to use.
-     *
-     * @return string The servlets service class
-     */
-    public function getServiceClass()
-    {
-        return VirtualHostServlet::SERVICE_CLASS;
-    }
+    protected $virtualHostProcessor;
 
     /**
      * Tries to load the requested vhosts and adds them to the response.
@@ -61,9 +61,43 @@ class VirtualHostServlet extends AbstractServlet
      *
      * @return void
      * @see \AppserverIo\Psr\Servlet\Http\HttpServlet::doGet()
+     *
+     * @SWG\Get(
+     *   path="/applications.do",
+     *   summary="list applications",
+     *   @SWG\Response(
+     *     response=200,
+     *     description="A list with deployed apps"
+     *   ),
+     *   @SWG\Response(
+     *     response="default",
+     *     description="an ""unexpected"" error"
+     *   )
+     * )
      */
     public function doGet(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
     {
-        $this->find($servletRequest, $servletResponse);
+
+        // load the requested path info, e. g. /api/applications.do/example/
+        $pathInfo = trim($servletRequest->getPathInfo(), '/');
+
+        // extract the entity and the ID, if available
+        list (, $id) = explode('/', $pathInfo);
+
+        // query whether we've found an ID or not
+        if ($id == null) {
+            $content = $this->virtualHostProcessor->findAll();
+        } else {
+            $content = $this->virtualHostProcessor->load($id);
+        }
+
+        // set the JSON encoded data in the response
+        $servletResponse->addHeader(HttpProtocol::HEADER_CONTENT_TYPE, 'application/json');
+        $servletResponse->addHeader('Access-Control-Allow-Origin', '*');
+        $servletResponse->addHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, PUT, PATCH, OPTIONS');
+        $servletResponse->addHeader('Access-Control-Allow-Headers', 'Content-Type, api_key, Authorization');
+
+        // return the JSON encoded response
+        $servletResponse->appendBodyStream(json_encode($content));
     }
 }

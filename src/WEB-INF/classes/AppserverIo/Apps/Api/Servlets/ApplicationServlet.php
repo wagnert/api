@@ -21,8 +21,10 @@
 namespace AppserverIo\Apps\Api\Servlets;
 
 use AppserverIo\Http\HttpProtocol;
+use AppserverIo\Psr\Servlet\Http\HttpServlet;
 use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
+
 /**
  * Servlet that handles all app related requests.
  *
@@ -40,8 +42,15 @@ use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
  *   basePath="/api"
  * )
  */
-class ApplicationServlet extends AbstractServlet
+class ApplicationServlet extends HttpServlet
 {
+
+    /**
+     * Filename of the uploaded file with the webapp PHAR.
+     *
+     * @var string
+     */
+    const UPLOADED_PHAR_FILE = 'file';
 
     /**
      * The ApplicationProcessor instance.
@@ -52,16 +61,7 @@ class ApplicationServlet extends AbstractServlet
     protected $applicationProcessor;
 
     /**
-     * Returns the servlets service class to use.
-     *
-     * @return string The servlets service class
-     */
-    public function getServiceClass()
-    {
-    }
-
-    /**
-     * Tries to load the requested apps and adds them to the response.
+     * Tries to load the requested applications and adds them to the response.
      *
      * @param \AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface  $servletRequest  The request instance
      * @param \AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface $servletResponse The response instance
@@ -89,7 +89,7 @@ class ApplicationServlet extends AbstractServlet
         $pathInfo = trim($servletRequest->getPathInfo(), '/');
 
         // extract the entity and the ID, if available
-        list ($entity, $id) = explode('/', $pathInfo);
+        list ($id, ) = explode('/', $pathInfo);
 
         // query whether we've found an ID or not
         if ($id == null) {
@@ -132,36 +132,16 @@ class ApplicationServlet extends AbstractServlet
      */
     public function doPost(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
     {
+
+        // load the HTTP part
+        $part = $servletRequest->getPart(ApplicationServlet::UPLOADED_PHAR_FILE);
+
+        // upload the file
+        $this->applicationProcessor->upload($part->getFilename(), $part->getInputStream());
     }
 
     /**
-     * Updates the app with the passed content.
-     *
-     * @param \AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface  $servletRequest  The request instance
-     * @param \AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface $servletResponse The response instance
-     *
-     * @return void
-     * @see \AppserverIo\Psr\Servlet\Http\HttpServlet::doPut()
-     *
-     * @SWG\Put(
-     *   path="/applications.do",
-     *   summary="updates an existing application",
-     *   @SWG\Response(
-     *     response=200,
-     *     description="a ""success"" message"
-     *   ),
-     *   @SWG\Response(
-     *     response="default",
-     *     description="an ""unexpected"" error"
-     *   )
-     * )
-     */
-    public function doPut(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
-    {
-    }
-
-    /**
-     * Delete the requested app.
+     * Delete the requested application.
      *
      * @param \AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface  $servletRequest  The request instance
      * @param \AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface $servletResponse The response instance
@@ -184,5 +164,14 @@ class ApplicationServlet extends AbstractServlet
      */
     public function doDelete(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
     {
+
+        // load the requested path info, e. g. /api/applications.do/example/
+        $pathInfo = trim($servletRequest->getPathInfo(), '/');
+
+        // extract the entity and the ID, if available
+        list ($id, ) = explode('/', $pathInfo);
+
+        // undeploy the application
+        $this->applicationProcessor->delete($id);
     }
 }

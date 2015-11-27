@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Apps\Example\Service\DatasourceProcessorInterface
+ * AppserverIo\Apps\Example\Repository\DatasourceRepositoryInterface
  *
  * NOTICE OF LICENSE
  *
@@ -18,11 +18,11 @@
  * @link      http://www.appserver.io
  */
 
-namespace AppserverIo\Apps\Api\Service;
+namespace AppserverIo\Apps\Api\Repository;
 
 /**
  * An interface for SLSB implementations providing the business logic
- * to handle datasources.
+ * to handle datasource nodes.
  *
  * @author    Tim Wagner <tw@appserver.io>
  * @copyright 2015 TechDivision GmbH <info@appserver.io>
@@ -30,23 +30,24 @@ namespace AppserverIo\Apps\Api\Service;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  */
-interface DatasourceProcessorInterface
+interface DatasourceRepositoryInterface
 {
 
     /**
-     * Returns the document representation of the datasource node with the passed ID.
+     * Returns the datasource node with the passed ID.
      *
      * @param string $id The ID of the datasource node to be returned
      *
-     * @return \Tobscure\JsonApi\Document The document representation of the datasource node
+     * @return \AppserverIo\Appserver\Core\Api\DatasourceNodeInterface The requested datasource node
+     * @see \AppserverIo\Apps\Api\Service\DatasourceRepositoryInterface::load()
      */
     public function load($id);
 
-
     /**
-     * Returns the document representation of all datasource nodes.
+     * Returns an array with the available datasource nodes.
      *
-     * @return \Tobscure\JsonApi\Document A document representation of the datasource nodes
+     * @return array The array with the available datasource nodes
+     * @see \AppserverIo\Apps\Api\Service\DatasourceRepositoryInterface::findAll()
      */
     public function findAll();
 }

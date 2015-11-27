@@ -20,13 +20,6 @@
 
 namespace AppserverIo\Apps\Api\Service;
 
-use Tobscure\JsonApi\Document;
-use Tobscure\JsonApi\Collection;
-use AppserverIo\Psr\Naming\NamingDirectoryInterface;
-use AppserverIo\Psr\Application\ApplicationInterface;
-use AppserverIo\Appserver\Core\Api\Node\DatasourceNode;
-use AppserverIo\Apps\Api\Serializer\DatasourceSerializer;
-
 /**
  * A SLSB implementation providing the business logic to handle datasources.
  *
@@ -38,80 +31,68 @@ use AppserverIo\Apps\Api\Serializer\DatasourceSerializer;
  *
  * @Stateless
  */
-class DatasourceProcessor implements DatasourceProcessorInterface
+class DatasourceProcessor extends AbstractProcessor implements DatasourceProcessorInterface
 {
 
     /**
-     * The application instance that provides the entity manager.
+     * The application assembler instance.
      *
-     * @var \AppserverIo\Psr\Application\ApplicationInterface
-     * @Resource(name="ApplicationInterface")
+     * @var \AppserverIo\Apps\Api\Assembler\JsonApi\DatasourceAssembler
+     * @EnterpriseBean
      */
-    protected $application;
+    protected $datasourceAssembler;
 
     /**
-     * Initializes the stdClass representation of the datasource with
-     * the ID passed as parameter.
+     * The application repository instance.
      *
-     * @param string $id The ID of the requested datasource
-     *
-     * @return \stdClass The datasource as \stdClass representation
+     * @var \AppserverIo\Apps\Api\Repository\DatasourceRepositoryInterface
+     * @EnterpriseBean
      */
-    public function load($id)
+    protected $datasourceRepository;
+
+    /**
+     * Return's the application respository instance.
+     *
+     * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The assembler instance
+     * @see \AppserverIo\Apps\Api\Assembler\ApplicationRepositoryInterface
+     */
+    protected function getDatasourceRepository()
     {
+        return $this->datasourceRepository;
     }
 
     /**
-     * Returns an stdClass representation of all datasources.
+     * Return's the application assembler instance.
      *
-     * @return Tobscure\JsonApi\Document A document representation of the datasources
+     * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The assembler instance
+     * @see \AppserverIo\Apps\Api\Assembler\ApplicationAssemblerInterface
+     */
+    protected function getDatasourceAssembler()
+    {
+        return $this->datasourceAssembler;
+    }
+
+    /**
+     * Returns the document representation of the datasource node with the passed ID.
+     *
+     * @param string $id The ID of the datasource node to be returned
+     *
+     * @return \Tobscure\JsonApi\Document The document representation of the datasource node
+     * @see \AppserverIo\Apps\Example\Service\DatasourceProcessorInterface::load()
+     */
+    public function load($id)
+    {
+        return $this->getDatasourceAssembler()->getDatasourceViewData($this->getDatasourceRepository()->load($id));
+    }
+
+    /**
+     * Returns the document representation of all datasource nodes.
+     *
+     * @return \Tobscure\JsonApi\Document A document representation of the datasource nodes
+     * @see \AppserverIo\Apps\Example\Service\DatasourceProcessorInterface::findAll()
      */
     public function findAll()
     {
-
-        // create a local naming directory instance
-        $namingDirectory = $this->application->getNamingDirectory();
-
-        // initialize the array with the datasources
-        $datasources = array();
-
-        // convert the application nodes into stdClass representation
-        foreach ($namingDirectory->search('php:env')->getAllKeys() as $key) {
-            try {
-
-                $val = $namingDirectory->search(sprintf('php:env/%s/ds', $key));
-
-                if ($val instanceof NamingDirectoryInterface) {
-
-                    // try to load the application
-                    foreach ($val->getAllKeys() as $dsKey) {
-
-                        // try to load the datasource
-                        $value = $namingDirectory->search(sprintf('php:env/%s/ds/%s', $key, $dsKey));
-
-                        // query whether we've found a datasource instance or not
-                        if ($value instanceof DatasourceNode) {
-                            $datasources[] = $value;
-                        }
-                    }
-                }
-
-            } catch (\Exception $e) {
-                // do nothing here, because
-            }
-        }
-
-        // create a new collection of datasources
-        $collection = (new Collection($datasources, new DatasourceSerializer()))->with(['database']);
-
-        // create a new JSON-API document with that collection as the data
-        $document = new Document($collection);
-
-        // add metadata and links.
-        $document->addMeta('total', count($datasources));
-        $document->addLink('self', 'http://localhost:9080/api/datasources.do');
-
-        // return the stdClass representation of the datasources
-        return $document;
+        return $this->getDatasourceAssembler()->getDatasourceOverviewData($this->getDatasourceRepository()->findAll());
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Apps\Example\Service\DatasourceProcessorInterface
+ * AppserverIo\Apps\Api\Assembler\DatasourceAssemblerInterface
  *
  * NOTICE OF LICENSE
  *
@@ -18,11 +18,12 @@
  * @link      http://www.appserver.io
  */
 
-namespace AppserverIo\Apps\Api\Service;
+namespace AppserverIo\Apps\Api\Assembler;
+
+use AppserverIo\Appserver\Core\Api\DatasourceNodeInterface;
 
 /**
- * An interface for SLSB implementations providing the business logic
- * to handle datasources.
+ * Interface for datasource assemblers.
  *
  * @author    Tim Wagner <tw@appserver.io>
  * @copyright 2015 TechDivision GmbH <info@appserver.io>
@@ -30,23 +31,24 @@ namespace AppserverIo\Apps\Api\Service;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  */
-interface DatasourceProcessorInterface
+interface DatasourceAssemblerInterface
 {
 
     /**
-     * Returns the document representation of the datasource node with the passed ID.
+     * Returns the a new JSON-API document with the datasource node data.
      *
-     * @param string $id The ID of the datasource node to be returned
+     * @param \AppserverIo\Appserver\Core\Api\DatasourceNodeInterface $datasourceNode The datasource node to assemble
      *
      * @return \Tobscure\JsonApi\Document The document representation of the datasource node
      */
-    public function load($id);
-
+    public function getDatasourceViewData(DatasourceNodeInterface $datasourceNode);
 
     /**
-     * Returns the document representation of all datasource nodes.
+     * Returns the a new JSON-API document with the datasource node array as the data.
      *
-     * @return \Tobscure\JsonApi\Document A document representation of the datasource nodes
+     * @param array $datasourceNodes The array with the datasource nodes to assemble
+     *
+     * @return Tobscure\JsonApi\Document The document representation of the datasource nodes
      */
-    public function findAll();
+    public function getDatasourceOverviewData(array $datasourceNodes);
 }

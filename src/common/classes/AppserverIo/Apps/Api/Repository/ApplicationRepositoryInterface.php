@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Apps\Example\Service\ApplicationProcessorInterface
+ * AppserverIo\Apps\Example\Repository\ApplicationRepositoryInterface
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * @link      http://www.appserver.io
  */
 
-namespace AppserverIo\Apps\Api\Service;
+namespace AppserverIo\Apps\Api\Repository;
 
 /**
  * An interface for SLSB implementations providing the business logic
@@ -30,34 +30,24 @@ namespace AppserverIo\Apps\Api\Service;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  */
-interface ApplicationProcessorInterface
+interface ApplicationRepositoryInterface
 {
 
     /**
-     * Returns the document representation of the application with the passed ID.
+     * Returns the application with the passed ID.
      *
      * @param string $id The ID of the application to be returned
      *
-     * @return \Tobscure\JsonApi\Document The document representation of the application
+     * @return \AppserverIo\Psr\Application\ApplicationInterface The requested application
      */
     public function load($id);
 
     /**
-     * Returns the document representation of all applications.
+     * Returns an array with the available applications.
      *
-     * @return \Tobscure\JsonApi\Document A document representation of the applications
+     * @return array The array with the available applications
      */
     public function findAll();
-
-    /**
-     * Returns the path to the thumbnail image of the app with the
-     * passed ID.
-     *
-     * @param string $id ID of the app to return the thumbnail for
-     *
-     * @return string The absolute path the thumbnail
-     */
-    public function thumbnail($id);
 
     /**
      * Uploads the passed file to the application servers deploy directory.
@@ -77,4 +67,14 @@ interface ApplicationProcessorInterface
      * @return void
      */
     public function delete($id);
+
+    /**
+     * Returns the path to the thumbnail image of the app with the
+     * passed ID.
+     *
+     * @param string $id ID of the app to return the thumbnail for
+     *
+     * @return string The absolute path the thumbnail
+     */
+    public function thumbnail($id);
 }

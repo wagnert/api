@@ -20,10 +20,6 @@
 
 namespace AppserverIo\Apps\Api\Service;
 
-use Tobscure\JsonApi\Document;
-use Tobscure\JsonApi\Resource;
-use AppserverIo\Apps\Api\Serializer\NamingDirectorySerializer;
-
 /**
  * A SLSB implementation providing the business logic to handle naming directories.
  *
@@ -35,36 +31,68 @@ use AppserverIo\Apps\Api\Serializer\NamingDirectorySerializer;
  *
  * @Stateless
  */
-class NamingDirectoryProcessor implements NamingDirectoryProcessorInterface
+class NamingDirectoryProcessor extends AbstractProcessor implements NamingDirectoryProcessorInterface
 {
 
     /**
-     * The application instance that provides access to the naming directory.
+     * The naming directory assembler instance.
      *
-     * @var \AppserverIo\Psr\Application\ApplicationInterface
-     * @Resource(name="ApplicationInterface")
+     * @var \AppserverIo\Apps\Api\Assembler\JsonApi\NamingDirectoryAssembler
+     * @EnterpriseBean
      */
-    protected $application;
+    protected $namingDirectoryAssembler;
 
     /**
-     * Initializes the stdClass representation of the naming directory with
-     * the ID passed as parameter.
+     * The naming directory repository instance.
      *
-     * @return \Tobscure\JsonApi\Document The naming directory representation
+     * @var \AppserverIo\Apps\Api\Repository\NamingDirectoryRepositoryInterface
+     * @EnterpriseBean
      */
-    public function load()
+    protected $namingDirectoryRepository;
+
+    /**
+     * Return's the naming directory respository instance.
+     *
+     * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The assembler instance
+     * @see \AppserverIo\Apps\Api\Repository\NamingDirectoryRepositoryInterface
+     */
+    protected function getNamingDirectoryRepository()
     {
+        return $this->namingDirectoryRepository;
+    }
 
-        // create a local naming directory instance
-        $namingDirectory = $this->application->getNamingDirectory();
+    /**
+     * Return's the naming directory assembler instance.
+     *
+     * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The assembler instance
+     * @see \AppserverIo\Apps\Api\Assembler\NamingDirectoryAssemblerInterface
+     */
+    protected function getNamingDirectoryAssembler()
+    {
+        return $this->namingDirectoryAssembler;
+    }
 
-        // create a new JSON-API document with that collection as the data
-        $document = new Document(new Resource($namingDirectory, new NamingDirectorySerializer()));
+    /**
+     * Returns the document representation of the naming directory with the passed ID.
+     *
+     * @param string $id The ID of the naming directory to be returned
+     *
+     * @return \Tobscure\JsonApi\Document The document representation of the naming directory
+     * @see \AppserverIo\Apps\Example\Service\NamingDirectoryProcessorInterface::load()
+     */
+    public function load($id)
+    {
+        return $this->getNamingDirectoryAssembler()->getNamingDirectoryViewData($this->getNamingDirectoryRepository()->load($id));
+    }
 
-        // add metadata and links
-        $document->addLink('self', 'http://localhost:9080/api/namingDirectories.do');
-
-        // serialize and return the naming directory
-        return $document;
+    /**
+     * Returns the document representation of all naming directories.
+     *
+     * @return \Tobscure\JsonApi\Document A document representation of the naming directories
+     * @see \AppserverIo\Apps\Example\Service\NamingDirectoryProcessorInterface::findAll()
+     */
+    public function findAll()
+    {
+        return $this->getNamingDirectoryAssembler()->getNamingDirectoryOverviewData($this->getNamingDirectoryRepository()->findAll());
     }
 }

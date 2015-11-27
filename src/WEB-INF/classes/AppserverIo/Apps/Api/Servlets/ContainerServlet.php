@@ -20,7 +20,8 @@
 
 namespace AppserverIo\Apps\Api\Servlets;
 
-use AppserverIo\Psr\Servlet\ServletConfig;
+use AppserverIo\Http\HttpProtocol;
+use AppserverIo\Psr\Servlet\Http\HttpServlet;
 use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
 
@@ -32,84 +33,71 @@ use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io/appserver
  * @link      http://www.appserver.io
+ *
+ * @SWG\Info(title="My First API", version="0.1")
+ *
+ * @SWG\Swagger(
+ *   schemes={"http"},
+ *   host="localhost:9080",
+ *   basePath="/api"
+ * )
  */
-class ContainerServlet extends AbstractServlet
+class ContainerServlet extends HttpServlet
 {
 
     /**
-     * The service class name to use.
+     * The ContainerProcessor instance.
      *
-     * @var string
+     * @var \AppserverIo\Apps\Api\Services\ContainerProcessor
+     * @EnterpriseBean
      */
-    const SERVICE_CLASS = '\AppserverIo\Apps\Api\Service\ContainerService';
-
-    /**
-     * Returns the servlets service class to use.
-     *
-     * @return string The servlets service class
-     */
-    public function getServiceClass()
-    {
-        return ContainerServlet::SERVICE_CLASS;
-    }
+    protected $containerProcessor;
 
     /**
      * Tries to load the requested containers and adds them to the response.
      *
-     * @param \AppserverIo\Psr\Servlet\Http\HttpServletRequest  $servletRequest  The request instance
-     * @param \AppserverIo\Psr\Servlet\Http\HttpServletResponse $servletResponse The response instance
+     * @param \AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface  $servletRequest  The request instance
+     * @param \AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface $servletResponse The response instance
      *
      * @return void
      * @see \AppserverIo\Psr\Servlet\Http\HttpServlet::doGet()
+     *
+     * @SWG\Get(
+     *   path="/containers.do",
+     *   summary="list containers",
+     *   @SWG\Response(
+     *     response=200,
+     *     description="A list with the available containers"
+     *   ),
+     *   @SWG\Response(
+     *     response="default",
+     *     description="an ""unexpected"" error"
+     *   )
+     * )
      */
     public function doGet(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
     {
-        $this->find($servletRequest, $servletResponse);
-    }
 
-    /**
-     * Creates a new container.
-     *
-     * @param \AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface  $servletRequest  The request instance
-     * @param \AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface $servletResponse The response instance
-     *
-     * @return void
-     * @see \AppserverIo\Psr\Servlet\Http\HttpServlet::doPost()
-     */
-    public function doPost(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
-    {
-        $content = json_decode($servletRequest->getContent());
-        $this->getService($servletRequest)->create($content);
-    }
+        // load the requested path info, e. g. /api/applications.do/example/
+        $pathInfo = trim($servletRequest->getPathInfo(), '/');
 
-    /**
-     * Updates the container with the passed content.
-     *
-     * @param \AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface  $servletRequest  The request instance
-     * @param \AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface $servletResponse The response instance
-     *
-     * @return void
-     * @see \AppserverIo\Psr\Servlet\Http\HttpServlet::doPut()
-     */
-    public function doPut(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
-    {
-        $content = json_decode($servletRequest->getContent());
-        $this->getService($servletRequest)->update($content);
-    }
+        // extract the entity and the ID, if available
+        list ($id, ) = explode('/', $pathInfo);
 
-    /**
-     * Delete the requested container.
-     *
-     * @param \AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface  $servletRequest  The request instance
-     * @param \AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface $servletResponse The response instance
-     *
-     * @return void
-     * @see \AppserverIo\Psr\Servlet\Http\HttpServlet::doDelete()
-     */
-    public function doDelete(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
-    {
-        $uri = trim($servletRequest->getUri(), '/');
-        list ($applicationName, $entity, $id) = explode('/', $uri, 3);
-        $this->getService($servletRequest)->delete($id);
+        // query whether we've found an ID or not
+        if ($id == null) {
+            $content = $this->containerProcessor->findAll();
+        } else {
+            $content = $this->containerProcessor->load($id);
+        }
+
+        // set the JSON encoded data in the response
+        $servletResponse->addHeader(HttpProtocol::HEADER_CONTENT_TYPE, 'application/json');
+        $servletResponse->addHeader('Access-Control-Allow-Origin', '*');
+        $servletResponse->addHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, PUT, PATCH, OPTIONS');
+        $servletResponse->addHeader('Access-Control-Allow-Headers', 'Content-Type, api_key, Authorization');
+
+        // return the JSON encoded response
+        $servletResponse->appendBodyStream(json_encode($content));
     }
 }

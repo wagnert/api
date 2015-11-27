@@ -34,22 +34,28 @@ interface PersistenceUnitProcessorInterface
 {
 
     /**
-     * Initializes the stdClass representation of the persistence unit node with
-     * the ID passed as parameter.
+     * Returns the document representation of the persistence unit with the passed ID.
      *
-     * @param string $id The ID of the requested persistence unit node
+     * @param string $id The ID of the persistence unit to be returned
      *
-     * @return \stdClass The persistence unit node as \stdClass representation
+     * @return \Tobscure\JsonApi\Document The document representation of the persistence unit
      */
     public function load($id);
 
     /**
-     * Returns all persistence units registered by the passed
-     * application instance.
+     * Returns the document representation of all persistence units.
      *
-     * @param string|null $applicationName The name of the application to return the persistence units for
-     *
-     * @return array The array with the application's persistence units
+     * @return \Tobscure\JsonApi\Document A document representation of the persistence units
      */
-    public function findAll($applicationName = null);
+    public function findAll();
+
+    /**
+     * Returns the document representation of all persistence units
+     * of the application with the passed name.
+     *
+     * @param string $applicationName The name of the application to return the persistence units for
+     *
+     * @return \Tobscure\JsonApi\Document A document representation of the persistence units
+     */
+    public function findAllByApplicationName($applicationName);
 }
