@@ -56,10 +56,32 @@ class VirtualHostServlet extends HttpServlet
      *
      * @SWG\Get(
      *   path="/virtualHosts.do",
-     *   summary="list applications",
+     *   tags={"virtualHosts"},
+     *   summary="list all virtual hosts",
      *   @SWG\Response(
      *     response=200,
-     *     description="A list with deployed apps"
+     *     description="A list with the available virtual hosts"
+     *   ),
+     *   @SWG\Response(
+     *     response="default",
+     *     description="an ""unexpected"" error"
+     *   )
+     * )
+     *
+     * @SWG\Get(
+     *   path="/virtualHosts.do/{id}",
+     *   tags={"virtualHosts"},
+     *   summary="loads the virtual host with the passed ID",
+     *   @SWG\Parameter(
+     *      name="id",
+     *      in="path",
+     *      description="The UUID of the virtual host to load",
+     *      required=false,
+     *      type="string"
+     *   ),
+     *   @SWG\Response(
+     *     response=200,
+     *     description="The requested virtual host"
      *   ),
      *   @SWG\Response(
      *     response="default",

@@ -61,19 +61,33 @@ class ApplicationServlet extends HttpServlet
      * @see \AppserverIo\Psr\Servlet\Http\HttpServlet::doGet()
      *
      * @SWG\Get(
+     *   path="/applications.do",
+     *   tags={"applications"},
+     *   summary="lists all applications",
+     *   @SWG\Response(
+     *     response=200,
+     *     description="A list with deployed apps"
+     *   ),
+     *   @SWG\Response(
+     *     response="default",
+     *     description="an ""unexpected"" error"
+     *   )
+     * )
+     *
+     * @SWG\Get(
      *   path="/applications.do/{id}",
-     *   summary="lists all applications or loads the one with the passed ID",
+     *   tags={"applications"},
+     *   summary="loads the application with the passed ID",
      *   @SWG\Parameter(
      *      name="id",
      *      in="path",
      *      description="The name of the application to load",
-     *      required=false,
-     *      type="string",
-     *      default="/"
+     *      required=true,
+     *      type="string"
      *   ),
      *   @SWG\Response(
      *     response=200,
-     *     description="A list with deployed apps"
+     *     description="The requested application"
      *   ),
      *   @SWG\Response(
      *     response="default",
@@ -112,7 +126,16 @@ class ApplicationServlet extends HttpServlet
      *
      * @SWG\Post(
      *   path="/applications.do",
+     *   tags={"applications"},
      *   summary="creates a new application",
+     *   consumes={"multipart/form-data"},
+     *   @SWG\Parameter(
+     *      name="file",
+     *      in="formData",
+     *      description="The PHAR archive containing the application",
+     *      required=true,
+     *      type="file"
+     *   ),
      *   @SWG\Response(
      *     response=200,
      *     description="a ""success"" message"
@@ -143,8 +166,16 @@ class ApplicationServlet extends HttpServlet
      * @see \AppserverIo\Psr\Servlet\Http\HttpServlet::doDelete()
      *
      * @SWG\Delete(
-     *   path="/applications.do",
+     *   path="/applications.do/{id}",
+     *   tags={"applications"},
      *   summary="deletes an existing application",
+     *   @SWG\Parameter(
+     *      name="id",
+     *      in="path",
+     *      description="The name of the application to delete",
+     *      required=true,
+     *      type="string"
+     *   ),
      *   @SWG\Response(
      *     response=200,
      *     description="a ""success"" message"

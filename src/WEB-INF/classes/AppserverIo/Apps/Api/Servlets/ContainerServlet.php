@@ -56,10 +56,32 @@ class ContainerServlet extends HttpServlet
      *
      * @SWG\Get(
      *   path="/containers.do",
-     *   summary="list containers",
+     *   tags={"containers"},
+     *   summary="lists all containers",
      *   @SWG\Response(
      *     response=200,
      *     description="A list with the available containers"
+     *   ),
+     *   @SWG\Response(
+     *     response="default",
+     *     description="an ""unexpected"" error"
+     *   )
+     * )
+     *
+     * @SWG\Get(
+     *   path="/containers.do/{id}",
+     *   tags={"containers"},
+     *   summary="loads the container with the passed ID",
+     *   @SWG\Parameter(
+     *      name="id",
+     *      in="path",
+     *      description="The name of the container to load",
+     *      required=false,
+     *      type="string"
+     *   ),
+     *   @SWG\Response(
+     *     response=200,
+     *     description="The requested container"
      *   ),
      *   @SWG\Response(
      *     response="default",

@@ -56,10 +56,32 @@ class PersistenceUnitServlet extends HttpServlet
      *
      * @SWG\Get(
      *   path="/persistenceUnits.do",
-     *   summary="list persistence units",
+     *   tags={"persistenceUnits"},
+     *   summary="lists all persistence units",
      *   @SWG\Response(
      *     response=200,
      *     description="A list with available persistence units"
+     *   ),
+     *   @SWG\Response(
+     *     response="default",
+     *     description="an ""unexpected"" error"
+     *   )
+     * )
+     *
+     * @SWG\Get(
+     *   path="/persistenceUnits.do/{id}",
+     *   tags={"persistenceUnits"},
+     *   summary="loads the persistence unit with the passed ID",
+     *   @SWG\Parameter(
+     *      name="id",
+     *      in="path",
+     *      description="The name of the persistence unit to load",
+     *      required=false,
+     *      type="string"
+     *   ),
+     *   @SWG\Response(
+     *     response=200,
+     *     description="The requested persistence unit"
      *   ),
      *   @SWG\Response(
      *     response="default",

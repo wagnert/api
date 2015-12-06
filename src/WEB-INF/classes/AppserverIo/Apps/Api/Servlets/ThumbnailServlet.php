@@ -59,8 +59,17 @@ class ThumbnailServlet extends HttpServlet
      * @see \AppserverIo\Psr\Servlet\Http\HttpServlet::doGet()
      *
      * @SWG\Get(
-     *   path="/thumbnails.do",
+     *   path="/thumbnails.do/{id}",
+     *   tags={"applications"},
      *   summary="The application's thumbnail",
+     *   produces={"image/png"},
+     *   @SWG\Parameter(
+     *      name="id",
+     *      in="path",
+     *      description="The name of the application to load the thumbnail for",
+     *      required=true,
+     *      type="string"
+     *   ),
      *   @SWG\Response(
      *     response=200,
      *     description="The application's thumbnail"

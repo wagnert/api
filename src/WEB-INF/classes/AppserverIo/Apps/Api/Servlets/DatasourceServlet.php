@@ -56,10 +56,32 @@ class DatasourceServlet extends HttpServlet
      *
      * @SWG\Get(
      *   path="/datasources.do",
-     *   summary="list datasources",
+     *   tags={"datasources"},
+     *   summary="lists all datasources",
      *   @SWG\Response(
      *     response=200,
      *     description="A list with deployed datasources"
+     *   ),
+     *   @SWG\Response(
+     *     response="default",
+     *     description="an ""unexpected"" error"
+     *   )
+     * )
+     *
+     * @SWG\Get(
+     *   path="/datasources.do/{id}",
+     *   tags={"datasources"},
+     *   summary="loads the datasource with the passed ID",
+     *   @SWG\Parameter(
+     *      name="id",
+     *      in="path",
+     *      description="The name of the datasource to load",
+     *      required=false,
+     *      type="string"
+     *   ),
+     *   @SWG\Response(
+     *     response=200,
+     *     description="The requested container"
      *   ),
      *   @SWG\Response(
      *     response="default",

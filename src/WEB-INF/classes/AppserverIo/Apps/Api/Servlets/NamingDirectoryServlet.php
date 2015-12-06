@@ -56,10 +56,32 @@ class NamingDirectoryServlet extends HttpServlet
      *
      * @SWG\Get(
      *   path="/namingDirectories.do",
-     *   summary="list the content of the naming directory",
+     *   tags={"namingDirectories"},
+     *   summary="lists the content of the naming directory",
      *   @SWG\Response(
      *     response=200,
      *     description="The naming directory content"
+     *   ),
+     *   @SWG\Response(
+     *     response="default",
+     *     description="an ""unexpected"" error"
+     *   )
+     * )
+     *
+     * @SWG\Get(
+     *   path="/namingDirectories.do/{id}",
+     *   tags={"namingDirectories"},
+     *   summary="loads the naming directory with the passed ID",
+     *   @SWG\Parameter(
+     *      name="id",
+     *      in="path",
+     *      description="The UUID of the naming directory to load",
+     *      required=false,
+     *      type="string"
+     *   ),
+     *   @SWG\Response(
+     *     response=200,
+     *     description="The requested naming directory"
      *   ),
      *   @SWG\Response(
      *     response="default",

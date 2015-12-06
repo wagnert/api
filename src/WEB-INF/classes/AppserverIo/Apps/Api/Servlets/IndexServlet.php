@@ -33,12 +33,19 @@ use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
  * @link      https://github.com/appserver-io/appserver
  * @link      http://www.appserver.io
  *
- * @SWG\Info(title="My First API", version="0.1")
+ * @SWG\Info(
+ *   title="Internal appserver.io API",
+ *   version="0.1",
+ *   contact={"name":"Tim Wagner", "url":"http://www.appserver.io", "email":"tw@appserver.io"},
+ *   license={"name":"OSL 3.0", "url"="http://opensource.org/licenses/osl-3.0.php"}
+ * )
  *
  * @SWG\Swagger(
- *   schemes={"http"},
+ *   schemes={"http", "https"},
  *   host="127.0.0.1:9024",
- *   basePath="/api"
+ *   basePath="/api",
+ *   produces={"application/json"},
+ *   swagger="2.0"
  * )
  */
 class IndexServlet extends HttpServlet
@@ -56,6 +63,7 @@ class IndexServlet extends HttpServlet
      * @SWG\Get(
      *   path="/index.do",
      *   summary="Welcome Page",
+     *   tags={"index"},
      *   @SWG\Response(
      *     response=200,
      *     description="A simple welcome page"
