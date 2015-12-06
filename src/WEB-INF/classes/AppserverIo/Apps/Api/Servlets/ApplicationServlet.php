@@ -20,7 +20,6 @@
 
 namespace AppserverIo\Apps\Api\Servlets;
 
-use AppserverIo\Http\HttpProtocol;
 use AppserverIo\Psr\Servlet\Http\HttpServlet;
 use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
@@ -62,8 +61,16 @@ class ApplicationServlet extends HttpServlet
      * @see \AppserverIo\Psr\Servlet\Http\HttpServlet::doGet()
      *
      * @SWG\Get(
-     *   path="/applications.do",
-     *   summary="list applications",
+     *   path="/applications.do/{id}",
+     *   summary="lists all applications or loads the one with the passed ID",
+     *   @SWG\Parameter(
+     *      name="id",
+     *      in="path",
+     *      description="The name of the application to load",
+     *      required=false,
+     *      type="string",
+     *      default="/"
+     *   ),
      *   @SWG\Response(
      *     response=200,
      *     description="A list with deployed apps"
@@ -89,12 +96,6 @@ class ApplicationServlet extends HttpServlet
         } else {
             $content = $this->applicationProcessor->load($id);
         }
-
-        // set the JSON encoded data in the response
-        $servletResponse->addHeader(HttpProtocol::HEADER_CONTENT_TYPE, 'application/json');
-        $servletResponse->addHeader('Access-Control-Allow-Origin', '*');
-        $servletResponse->addHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, PUT, PATCH, OPTIONS');
-        $servletResponse->addHeader('Access-Control-Allow-Headers', 'Content-Type, api_key, Authorization');
 
         // return the JSON encoded response
         $servletResponse->appendBodyStream(json_encode($content));
