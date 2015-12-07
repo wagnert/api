@@ -61,6 +61,6 @@ class ContainerSerializer extends AbstractSerializer
      */
     public function getId($model)
     {
-        return $model->getName();
+        return $model->getPrimaryKey();
     }
 }

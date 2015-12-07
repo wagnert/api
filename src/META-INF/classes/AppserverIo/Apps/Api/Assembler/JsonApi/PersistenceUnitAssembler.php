@@ -26,6 +26,7 @@ use Tobscure\JsonApi\Collection;
 use \Doctrine\ORM\EntityManagerInterface;
 use AppserverIo\Apps\Api\Serializer\PersistenceUnitSerializer;
 use AppserverIo\Apps\Api\Assembler\PersistenceUnitAssemblerInterface;
+use AppserverIo\Appserver\Core\Api\Node\PersistenceUnitNodeInterface;
 
 /**
  * A SLSB implementation providing the business logic to assemble persistence units
@@ -45,12 +46,12 @@ class PersistenceUnitAssembler implements PersistenceUnitAssemblerInterface
     /**
      * Returns the a new JSON-API document with the persistence unit data.
      *
-     * @param \Doctrine\ORM\EntityManagerInterface $persistenceUnit The persistence unit to assemble
+     * @param \AppserverIo\Appserver\Core\Api\Node\PersistenceUnitNodeInterface $persistenceUnit The persistence unit to assemble
      *
      * @return \Tobscure\JsonApi\Document The document representation of the persistence unit
      * @see \AppserverIo\Apps\Api\Assembler\PersistenceUnitAssemblerInterface::getPersistenceUnitViewData()
      */
-    public function getPersistenceUnitViewData(EntityManagerInterface $persistenceUnit)
+    public function getPersistenceUnitViewData(PersistenceUnitNodeInterface $persistenceUnit)
     {
         return new Document((new Resource($persistenceUnit, new PersistenceUnitSerializer()))->with('datasource'));
     }

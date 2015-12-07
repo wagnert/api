@@ -45,7 +45,7 @@ class ContainerRepository extends AbstractRepository implements ContainerReposit
      */
     public function load($id)
     {
-        return $this->newService(ServiceKeys::VIRTUAL_HOST)->load($id);
+        return $this->newService(ServiceKeys::CONTAINER)->load($id);
     }
 
     /**

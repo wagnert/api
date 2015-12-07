@@ -76,7 +76,7 @@ class VirtualHostServlet extends HttpServlet
      *      name="id",
      *      in="path",
      *      description="The UUID of the virtual host to load",
-     *      required=false,
+     *      required=true,
      *      type="string"
      *   ),
      *   @SWG\Response(

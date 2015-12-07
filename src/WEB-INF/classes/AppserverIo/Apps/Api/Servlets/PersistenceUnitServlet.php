@@ -76,7 +76,7 @@ class PersistenceUnitServlet extends HttpServlet
      *      name="id",
      *      in="path",
      *      description="The name of the persistence unit to load",
-     *      required=false,
+     *      required=true,
      *      type="string"
      *   ),
      *   @SWG\Response(
@@ -92,14 +92,18 @@ class PersistenceUnitServlet extends HttpServlet
     public function doGet(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
     {
 
-        // load the requested path info, e. g. /api/persistenceUnits.do/example/
+        // load the requested path info, e. g. /api/persistenceUnits.do
         $pathInfo = trim($servletRequest->getPathInfo(), '/');
 
-        // extract the application name from the path information
-        list ($applicationName, ) = explode('/', $pathInfo);
+        // extract the entity and the ID, if available
+        list ($id, ) = explode('/', $pathInfo);
 
-        // load the application's persistence units
-        $content = $this->persistenceUnitProcessor->findAllByApplicationName($applicationName);
+        // query whether we've found an ID or not
+        if ($id == null) {
+            $content = $this->persistenceUnitProcessor->findAll();
+        } else {
+            $content = $this->persistenceUnitProcessor->load($id);
+        }
 
         // return the JSON encoded response
         $servletResponse->appendBodyStream(json_encode($content));

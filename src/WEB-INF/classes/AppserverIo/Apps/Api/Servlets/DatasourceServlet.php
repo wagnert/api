@@ -76,7 +76,7 @@ class DatasourceServlet extends HttpServlet
      *      name="id",
      *      in="path",
      *      description="The name of the datasource to load",
-     *      required=false,
+     *      required=true,
      *      type="string"
      *   ),
      *   @SWG\Response(

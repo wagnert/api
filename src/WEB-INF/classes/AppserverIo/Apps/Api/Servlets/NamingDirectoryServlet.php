@@ -76,7 +76,7 @@ class NamingDirectoryServlet extends HttpServlet
      *      name="id",
      *      in="path",
      *      description="The UUID of the naming directory to load",
-     *      required=false,
+     *      required=true,
      *      type="string"
      *   ),
      *   @SWG\Response(
