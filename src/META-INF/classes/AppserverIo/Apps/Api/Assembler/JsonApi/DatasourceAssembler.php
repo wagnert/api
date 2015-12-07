@@ -23,9 +23,9 @@ namespace AppserverIo\Apps\Api\Assembler\JsonApi;
 use Tobscure\JsonApi\Resource;
 use Tobscure\JsonApi\Document;
 use Tobscure\JsonApi\Collection;
+use AppserverIo\Appserver\Core\Api\Node\DatasourceNodeInterface;
 use AppserverIo\Apps\Api\Assembler\DatasourceAssemblerInterface;
 use AppserverIo\Apps\Api\Serializer\DatasourceSerializer;
-use AppserverIo\Appserver\Core\Api\DatasourceNodeInterface;
 
 /**
  * A SLSB implementation providing the business logic to assemble datasource nodes
@@ -45,7 +45,7 @@ class DatasourceAssembler implements DatasourceAssemblerInterface
     /**
      * Returns the a new JSON-API document with the datasource node data.
      *
-     * @param \AppserverIo\Appserver\Core\Api\DatasourceNodeInterface $datasourceNode The datasource node to assemble
+     * @param \AppserverIo\Appserver\Core\Api\Node\DatasourceNodeInterface $datasourceNode The datasource node to assemble
      *
      * @return \Tobscure\JsonApi\Document The document representation of the datasource node
      * @see \AppserverIo\Apps\Api\Assembler\DatasourceAssemblerInterface::getDatasourceViewData()

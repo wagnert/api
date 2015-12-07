@@ -20,7 +20,7 @@
 
 namespace AppserverIo\Apps\Api\Assembler;
 
-use AppserverIo\Appserver\Core\Api\DatasourceNodeInterface;
+use AppserverIo\Appserver\Core\Api\Node\DatasourceNodeInterface;
 
 /**
  * Interface for datasource assemblers.

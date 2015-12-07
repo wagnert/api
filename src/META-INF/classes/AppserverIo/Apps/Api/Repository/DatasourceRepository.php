@@ -20,6 +20,9 @@
 
 namespace AppserverIo\Apps\Api\Repository;
 
+use \AppserverIo\Psr\Naming\NamingDirectoryInterface;
+use AppserverIo\Appserver\Core\Api\Node\DatasourceNode;
+
 /**
  * A SLSB implementation providing the business logic to handle datasource nodes.
  *
@@ -39,12 +42,19 @@ class DatasourceRepository extends AbstractRepository implements DatasourceRepos
      *
      * @param string $id The ID of the datasource node to be returned
      *
-     * @return \AppserverIo\Appserver\Core\Api\DatasourceNodeInterface The requested datasource node
+     * @return \AppserverIo\Appserver\Core\Api\Node\DatasourceNodeInterface The requested datasource node
      * @see \AppserverIo\Apps\Api\Service\DatasourceRepositoryInterface::load()
      */
     public function load($id)
     {
-        return $this->getNamingDirectory()->search(sprintf('php:env/%s', $id));
+
+        // load all the registered datasources
+        $datasources = $this->findAll();
+
+        // qurey whether the datasource exists or not
+        if (isset($datasources[$id])) {
+            return $datasources[$id];
+        }
     }
 
     /**
@@ -62,23 +72,22 @@ class DatasourceRepository extends AbstractRepository implements DatasourceRepos
         // initialize the array with the datasources
         $datasourceNodes = array();
 
-        // convert the application nodes into stdClass representation
+        // iterate over the containers
         foreach ($namingDirectory->search('php:env')->getAllKeys() as $key) {
             try {
-                // try to load the datasource itself
+                // try to load the container's datasources
                 $val = $namingDirectory->search(sprintf('php:env/%s/ds', $key));
 
+                // query whether we've a naming directory or not
                 if ($val instanceof NamingDirectoryInterface) {
-
                     // try to load the application
                     foreach ($val->getAllKeys() as $dsKey) {
-
                         // try to load the datasource
                         $value = $namingDirectory->search(sprintf('php:env/%s/ds/%s', $key, $dsKey));
 
                         // query whether we've found a datasource instance or not
                         if ($value instanceof DatasourceNode) {
-                            $datasourceNodes[] = $value;
+                            $datasourceNodes[$value->getPrimaryKey()] = $value;
                         }
                     }
                 }

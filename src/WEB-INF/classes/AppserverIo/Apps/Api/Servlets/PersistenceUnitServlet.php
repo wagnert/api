@@ -99,7 +99,7 @@ class PersistenceUnitServlet extends HttpServlet
         list ($applicationName, ) = explode('/', $pathInfo);
 
         // load the application's persistence units
-        $content = $this->persistenceUnitProcessor->findAll($applicationName);
+        $content = $this->persistenceUnitProcessor->findAllByApplicationName($applicationName);
 
         // return the JSON encoded response
         $servletResponse->appendBodyStream(json_encode($content));

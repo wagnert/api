@@ -77,6 +77,6 @@ class DatasourceSerializer extends AbstractSerializer
      */
     public function getId($model)
     {
-        return $model->getName();
+        return $model->getPrimaryKey();
     }
 }

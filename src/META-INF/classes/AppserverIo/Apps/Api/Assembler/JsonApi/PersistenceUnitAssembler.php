@@ -52,7 +52,7 @@ class PersistenceUnitAssembler implements PersistenceUnitAssemblerInterface
      */
     public function getPersistenceUnitViewData(EntityManagerInterface $persistenceUnit)
     {
-        return new Document(new Resource($persistenceUnit, new PersistenceUnitSerializer()));
+        return new Document((new Resource($persistenceUnit, new PersistenceUnitSerializer()))->with('datasource'));
     }
 
     /**
@@ -67,7 +67,7 @@ class PersistenceUnitAssembler implements PersistenceUnitAssemblerInterface
     {
 
         // create a new collection of naming directories
-        $collection = new Collection($entityManagers, new PersistenceUnitSerializer());
+        $collection = (new Collection($entityManagers, new PersistenceUnitSerializer()))->with(array('datasource'));
 
         // create a new JSON-API document with that collection as the data
         $document = new Document($collection);

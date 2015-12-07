@@ -20,6 +20,8 @@
 
 namespace AppserverIo\Apps\Api\Repository;
 
+use AppserverIo\Psr\Application\ApplicationInterface;
+
 /**
  * A SLSB implementation providing the business logic to handle persistence units.
  *
@@ -70,13 +72,14 @@ class PersistenceUnitRepository extends AbstractRepository implements Persistenc
 
                 // query whether we've found an application instance or not
                 if ($value instanceof ApplicationInterface) {
-
                     // load the application's persistence manager
                     /** \AppserverIo\Psr\EnterpriseBeans\PersistenceContextInterface $persistenceManager */
                     $persistenceManager = $value->search('PersistenceContextInterface');
 
-                    // load the persistence units
-                    array_merge($persistenceUnits, $persistenceManager->getEntityManagers());
+                    // load and merge the persistence units
+                    foreach ($persistenceManager->getEntityManagers() as $entityManager) {
+                        $persistenceUnits[$entityManager->getName()] = $entityManager;
+                    }
                 }
 
             } catch (\Exception $e) {
@@ -98,6 +101,9 @@ class PersistenceUnitRepository extends AbstractRepository implements Persistenc
     public function findAllByApplicationName($applicationName)
     {
 
+        // initialize the array for the persistence units
+        $persistenceUnits = array();
+
         // load the application with the passed name
         /** \AppserverIo\Psr\Application\ApplicationInterface $application */
         $application = $this->getNamingDirectory()->search(sprintf('php:global/%s', $applicationName));
@@ -106,7 +112,13 @@ class PersistenceUnitRepository extends AbstractRepository implements Persistenc
         /** \AppserverIo\Psr\EnterpriseBeans\PersistenceContextInterface $persistenceManager */
         $persistenceManager = $application->search('PersistenceContextInterface');
 
+        // prepare the array with the persistence units
+        /** \AppserverIo\Appserver\Core\Api\Node\PersistenceUnitNode $entityManager */
+        foreach ($persistenceManager->getEntityManagers() as $entityManager) {
+            $persistenceUnits[$entityManager->getName()] = $entityManager;
+        }
+
         // load the persistence units
-        return $persistenceManager->getEntityManagers();
+        return $persistenceUnits;
     }
 }

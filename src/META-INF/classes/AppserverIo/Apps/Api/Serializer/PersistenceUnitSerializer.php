@@ -20,7 +20,8 @@
 
 namespace AppserverIo\Apps\Api\Serializer;
 
-use Tobscure\JsonApi\Collection;
+use Tobscure\JsonApi\Resource;
+use Tobscure\JsonApi\Relationship;
 use Tobscure\JsonApi\AbstractSerializer;
 
 /**
@@ -54,8 +55,7 @@ class PersistenceUnitSerializer extends AbstractSerializer
     public function getAttributes($model, array $fields = null)
     {
         return [
-            'name' => $model->getName(),
-            'datasource' => $model->getDataSource()
+            'name' => $model->getName()
         ];
     }
 
@@ -66,5 +66,17 @@ class PersistenceUnitSerializer extends AbstractSerializer
     public function getId($model)
     {
         return $model->getName();
+    }
+
+    /**
+     * Returns the relationship definition for the persistence units.
+     *
+     * @param mixed $model The model to load the relationships from
+     *
+     * @param \Tobscure\JsonApi\Relationship The relationship instance
+     */
+    public function datasource($model)
+    {
+        return new Relationship(new Resource($model->getDataSource(), new DatasourceSerializer()));
     }
 }

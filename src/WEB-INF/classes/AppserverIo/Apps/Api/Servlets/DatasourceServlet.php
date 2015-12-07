@@ -96,7 +96,7 @@ class DatasourceServlet extends HttpServlet
         $pathInfo = trim($servletRequest->getPathInfo(), '/');
 
         // extract the entity and the ID, if available
-        list (, $id) = explode('/', $pathInfo);
+        list ($id, ) = explode('/', $pathInfo);
 
         // query whether we've found an ID or not
         if ($id == null) {
