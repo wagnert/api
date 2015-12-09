@@ -52,7 +52,7 @@ class VirtualHostSerializer extends AbstractSerializer
      */
     public function getAttributes($model, array $fields = null)
     {
-        return get_object_vars($model);
+        return $model->toArray();
     }
 
     /**
