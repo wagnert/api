@@ -76,7 +76,7 @@ class ContainerServlet extends HttpServlet
      *      name="id",
      *      in="path",
      *      description="The name of the container to load",
-     *      required=false,
+     *      required=true,
      *      type="string"
      *   ),
      *   @SWG\Response(

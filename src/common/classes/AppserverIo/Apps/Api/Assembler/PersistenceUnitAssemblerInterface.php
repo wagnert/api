@@ -20,7 +20,7 @@
 
 namespace AppserverIo\Apps\Api\Assembler;
 
-use Doctrine\ORM\EntityManagerInterface;
+use AppserverIo\Appserver\Core\Api\Node\PersistenceUnitNodeInterface;
 
 /**
  * Interface for persistence unit assemblers.
@@ -37,12 +37,12 @@ interface PersistenceUnitAssemblerInterface
     /**
      * Returns the a new JSON-API document with the persistence unit data.
      *
-     * @param \Doctrine\ORM\EntityManagerInterface $persistenceUnit The persistence unit to assemble
+     * @param \AppserverIo\Appserver\Core\Api\Node\PersistenceUnitNodeInterface $persistenceUnit The persistence unit to assemble
      *
      * @return \Tobscure\JsonApi\Document The document representation of the persistence unit
      * @see \AppserverIo\Apps\Api\Assembler\PersistenceUnitAssemblerInterface::getPersistenceUnitViewData()
      */
-    public function getPersistenceUnitViewData(EntityManagerInterface $persistenceUnit);
+    public function getPersistenceUnitViewData(PersistenceUnitNodeInterface $persistenceUnit);
 
     /**
      * Returns the a new JSON-API document with the persistence unit array as the data.

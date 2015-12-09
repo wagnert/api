@@ -37,11 +37,11 @@ class PersistenceUnitRepository extends AbstractRepository implements Persistenc
 {
 
     /**
-     * Returns the naming directory with the passed ID.
+     * Returns the persistence unit with the passed ID.
      *
-     * @param string $id The ID of the naming directory to be returned
+     * @param string $id The ID of the persistence unit to be returned
      *
-     * @return \stdClass The requested naming directory \stdClass representation
+     * @return \AppserverIo\Appserver\Core\Api\Node\PersistenceUnitNodeInterface The requested persistence node representation
      */
     public function load($id)
     {
