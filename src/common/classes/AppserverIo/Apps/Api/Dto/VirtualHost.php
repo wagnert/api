@@ -20,6 +20,7 @@
 
 namespace AppserverIo\Apps\Api\Dto;
 
+use Swagger\Annotations as SWG;
 use AppserverIo\Appserver\Core\Api\Node\VirtualHostNodeInterface;
 
 /**
@@ -31,16 +32,16 @@ use AppserverIo\Appserver\Core\Api\Node\VirtualHostNodeInterface;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @SWG\Model(id="VirtualHost")
+ * @SWG\Definition(type="object", required={"name"})
  */
 class VirtualHost
 {
 
     /**
-     * The virtual host name
+     * The virtual host name.
      *
      * @var string
-     * @SWG\Property(name="name", type="string")
+     * @SWG\Property(property="name", type="string")
      */
     protected $name;
 

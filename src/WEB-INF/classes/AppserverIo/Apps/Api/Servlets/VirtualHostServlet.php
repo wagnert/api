@@ -60,7 +60,11 @@ class VirtualHostServlet extends HttpServlet
      *   summary="list all virtual hosts",
      *   @SWG\Response(
      *     response=200,
-     *     description="A list with the available virtual hosts"
+     *     description="A list with the available virtual hosts",
+     *     @SWG\Schema(
+     *       type="array",
+     *       @SWG\Items(ref="#/definitions/VirtualHost")
+     *     )
      *   ),
      *   @SWG\Response(
      *     response="default",
