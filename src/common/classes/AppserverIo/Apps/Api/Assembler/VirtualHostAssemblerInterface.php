@@ -42,15 +42,13 @@ interface VirtualHostAssemblerInterface
      * @return \Tobscure\JsonApi\Document The document representation of the virtual host
      * @see \AppserverIo\Apps\Api\Assembler\VirtualHostAssemblerInterface::getVirtualHostViewData()
      */
-    public function getVirtualHostViewData(VirtualHostNodeInterface $virtualHostNode);
+    public function getVirtualHostViewData($id);
 
     /**
      * Returns the a new JSON-API document with the virtual host array as the data.
      *
-     * @param array $entityManagers The array with the virtual hosts to assemble
-     *
      * @return \Tobscure\JsonApi\Document The document representation of the virtual hosts
      * @see \AppserverIo\Apps\Api\Assembler\VirtualHostAssemblerInterface::getVirtualHostOverviewData()
      */
-    public function getVirtualHostOverviewData(array $virtualHosts);
+    public function getVirtualHostOverviewData();
 }

@@ -43,25 +43,6 @@ class VirtualHostProcessor extends AbstractProcessor implements DatasourceProces
     protected $virtualHostAssembler;
 
     /**
-     * The virtual host repository instance.
-     *
-     * @var \AppserverIo\Apps\Api\Repository\VirtualHostRepositoryInterface
-     * @EnterpriseBean
-     */
-    protected $virtualHostRepository;
-
-    /**
-     * Return's the virtual host respository instance.
-     *
-     * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The assembler instance
-     * @see \AppserverIo\Apps\Api\Repository\VirtualHostRepositoryInterface
-     */
-    protected function getVirtualHostRepository()
-    {
-        return $this->virtualHostRepository;
-    }
-
-    /**
      * Return's the virtual host assembler instance.
      *
      * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The assembler instance
@@ -82,7 +63,7 @@ class VirtualHostProcessor extends AbstractProcessor implements DatasourceProces
      */
     public function load($id)
     {
-        return $this->getVirtualHostAssembler()->getVirtualHostViewData($this->getVirtualHostRepository()->load($id));
+        return $this->getVirtualHostAssembler()->getVirtualHostViewData($id);
     }
 
     /**
@@ -93,6 +74,6 @@ class VirtualHostProcessor extends AbstractProcessor implements DatasourceProces
      */
     public function findAll()
     {
-        return $this->getVirtualHostAssembler()->getVirtualHostOverviewData($this->getVirtualHostRepository()->findAll());
+        return $this->getVirtualHostAssembler()->getVirtualHostOverviewData();
     }
 }

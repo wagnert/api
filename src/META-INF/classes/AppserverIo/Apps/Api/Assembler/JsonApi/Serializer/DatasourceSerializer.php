@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Apps\Api\Serializer\ContainerSerializer
+ * AppserverIo\Apps\Api\Assembler\JsonApi\Serializer\DatasourceSerializer
  *
  * NOTICE OF LICENSE
  *
@@ -18,12 +18,14 @@
  * @link      http://www.appserver.io
  */
 
-namespace AppserverIo\Apps\Api\Serializer;
+namespace AppserverIo\Apps\Api\Assembler\JsonApi\Serializer;
 
+use Tobscure\JsonApi\Resource;
+use Tobscure\JsonApi\Relationship;
 use Tobscure\JsonApi\AbstractSerializer;
 
 /**
- * A SLSB implementation providing the business logic to handle containers.
+ * A SLSB implementation providing the business logic to handle datasoures.
  *
  * @author    Tim Wagner <tw@appserver.io>
  * @copyright 2015 TechDivision GmbH <info@appserver.io>
@@ -31,7 +33,7 @@ use Tobscure\JsonApi\AbstractSerializer;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  */
-class ContainerSerializer extends AbstractSerializer
+class DatasourceSerializer extends AbstractSerializer
 {
 
     /**
@@ -39,7 +41,7 @@ class ContainerSerializer extends AbstractSerializer
      *
      * @var string
      */
-    protected $type = 'containers';
+    protected $type = 'datasources';
 
     /**
      * Get the attributes array.
@@ -52,7 +54,21 @@ class ContainerSerializer extends AbstractSerializer
      */
     public function getAttributes($model, array $fields = null)
     {
-        return get_object_vars($model);
+        return [
+            'name' => $model->getName()
+        ];
+    }
+
+    /**
+     * Returns the relationship definition for the persistence units.
+     *
+     * @param mixed $model The model to load the relationships from
+     *
+     * @param \Tobscure\JsonApi\Relationship The relationship instance
+     */
+    public function database($model)
+    {
+        return new Relationship(new Resource($model->getDatabase(), new DatabaseSerializer()));
     }
 
     /**

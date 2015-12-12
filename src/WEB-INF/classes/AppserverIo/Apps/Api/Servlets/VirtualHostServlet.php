@@ -57,13 +57,13 @@ class VirtualHostServlet extends HttpServlet
      * @SWG\Get(
      *   path="/virtualHosts.do",
      *   tags={"virtualHosts"},
-     *   summary="list all virtual hosts",
+     *   summary="List's all virtual hosts",
      *   @SWG\Response(
      *     response=200,
      *     description="A list with the available virtual hosts",
      *     @SWG\Schema(
      *       type="array",
-     *       @SWG\Items(ref="#/definitions/VirtualHost")
+     *       @SWG\Items(ref="#/definitions/VirtualHostOverviewData")
      *     )
      *   ),
      *   @SWG\Response(
@@ -75,7 +75,7 @@ class VirtualHostServlet extends HttpServlet
      * @SWG\Get(
      *   path="/virtualHosts.do/{id}",
      *   tags={"virtualHosts"},
-     *   summary="loads the virtual host with the passed ID",
+     *   summary="Loads the virtual host with the passed ID",
      *   @SWG\Parameter(
      *      name="id",
      *      in="path",
@@ -85,28 +85,38 @@ class VirtualHostServlet extends HttpServlet
      *   ),
      *   @SWG\Response(
      *     response=200,
-     *     description="The requested virtual host"
+     *     description="The requested virtual host",
+     *     @SWG\Schema(
+     *       ref="#/definitions/VirtualHostViewData"
+     *     )
      *   ),
      *   @SWG\Response(
-     *     response="default",
-     *     description="an ""unexpected"" error"
+     *     response="500",
+     *     description="Internal Server Error"
      *   )
      * )
      */
     public function doGet(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
     {
 
-        // load the requested path info, e. g. /api/applications.do/example/
-        $pathInfo = trim($servletRequest->getPathInfo(), '/');
+        try {
+            // load the requested path info, e. g. /api/applications.do/example/
+            $pathInfo = trim($servletRequest->getPathInfo(), '/');
 
-        // extract the entity and the ID, if available
-        list (, $id) = explode('/', $pathInfo);
+            // extract the entity and the ID, if available
+            list ($id, ) = explode('/', $pathInfo);
 
-        // query whether we've found an ID or not
-        if ($id == null) {
-            $content = $this->virtualHostProcessor->findAll();
-        } else {
-            $content = $this->virtualHostProcessor->load($id);
+            // query whether we've found an ID or not
+            if ($id == null) {
+                $content = $this->virtualHostProcessor->findAll();
+            } else {
+                $content = $this->virtualHostProcessor->load($id);
+            }
+
+        } catch (\Exception $e) {
+            // set error message and status code
+            $content = $e->getMessage();
+            $servletResponse->setStatusCode(500);
         }
 
         // return the JSON encoded response

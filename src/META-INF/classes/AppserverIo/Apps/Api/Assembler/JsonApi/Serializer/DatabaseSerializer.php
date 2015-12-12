@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Apps\Api\Serializer\VirtualHostSerializer
+ * AppserverIo\Apps\Api\Assembler\JsonApi\Serializer\DatabaseSerializer
  *
  * NOTICE OF LICENSE
  *
@@ -18,12 +18,12 @@
  * @link      http://www.appserver.io
  */
 
-namespace AppserverIo\Apps\Api\Serializer;
+namespace AppserverIo\Apps\Api\Assembler\JsonApi\Serializer;
 
 use Tobscure\JsonApi\AbstractSerializer;
 
 /**
- * A SLSB implementation providing the business logic to handle applications.
+ * A SLSB implementation providing the business logic to handle databases.
  *
  * @author    Tim Wagner <tw@appserver.io>
  * @copyright 2015 TechDivision GmbH <info@appserver.io>
@@ -31,7 +31,7 @@ use Tobscure\JsonApi\AbstractSerializer;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  */
-class VirtualHostSerializer extends AbstractSerializer
+class DatabaseSerializer extends AbstractSerializer
 {
 
     /**
@@ -39,7 +39,7 @@ class VirtualHostSerializer extends AbstractSerializer
      *
      * @var string
      */
-    protected $type = 'virtualHosts';
+    protected $type = 'databases';
 
     /**
      * Get the attributes array.
@@ -52,7 +52,19 @@ class VirtualHostSerializer extends AbstractSerializer
      */
     public function getAttributes($model, array $fields = null)
     {
-        return $model->toArray();
+        return [
+            'charset' => (string) $model->getCharset(),
+            'databaseHost' => (string) $model->getDatabaseHost(),
+            'databaseName' => (string) $model->getDatabaseName(),
+            'databasePort' => (string) $model->getDatabasePort(),
+            'driver' => (string) $model->getDriver(),
+            'driverOptions' => (string) $model->getDriverOptions(),
+            'memory' => (string) $model->getMemory(),
+            'password' => (string) $model->getPassword(),
+            'path' => (string) $model->getPath(),
+            'unixSocket' => (string) $model->getUnixSocket(),
+            'user' => (string) $model->getUser()
+        ];
     }
 
     /**

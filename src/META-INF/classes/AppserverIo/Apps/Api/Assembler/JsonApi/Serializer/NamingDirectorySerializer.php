@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Apps\Api\Serializer\DatabaseSerializer
+ * AppserverIo\Apps\Api\Assembler\JsonApi\Serializer\NamingDirectorySerializer
  *
  * NOTICE OF LICENSE
  *
@@ -18,12 +18,15 @@
  * @link      http://www.appserver.io
  */
 
-namespace AppserverIo\Apps\Api\Serializer;
+namespace AppserverIo\Apps\Api\Assembler\JsonApi\Serializer;
 
+use Tobscure\JsonApi\Collection;
+use Tobscure\JsonApi\Relationship;
 use Tobscure\JsonApi\AbstractSerializer;
+use AppserverIo\Psr\Naming\NamingDirectoryInterface;
 
 /**
- * A SLSB implementation providing the business logic to handle databases.
+ * A SLSB implementation providing the business logic to handle applications.
  *
  * @author    Tim Wagner <tw@appserver.io>
  * @copyright 2015 TechDivision GmbH <info@appserver.io>
@@ -31,7 +34,7 @@ use Tobscure\JsonApi\AbstractSerializer;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  */
-class DatabaseSerializer extends AbstractSerializer
+class NamingDirectorySerializer extends AbstractSerializer
 {
 
     /**
@@ -39,7 +42,14 @@ class DatabaseSerializer extends AbstractSerializer
      *
      * @var string
      */
-    protected $type = 'databases';
+    protected $type = 'namingDirectories';
+
+    /**
+     * Array that contains the naming directory structure as string representation.
+     *
+     * @var array
+     */
+    protected $buffer = array();
 
     /**
      * Get the attributes array.
@@ -52,19 +62,7 @@ class DatabaseSerializer extends AbstractSerializer
      */
     public function getAttributes($model, array $fields = null)
     {
-        return [
-            'charset' => (string) $model->getCharset(),
-            'databaseHost' => (string) $model->getDatabaseHost(),
-            'databaseName' => (string) $model->getDatabaseName(),
-            'databasePort' => (string) $model->getDatabasePort(),
-            'driver' => (string) $model->getDriver(),
-            'driverOptions' => (string) $model->getDriverOptions(),
-            'memory' => (string) $model->getMemory(),
-            'password' => (string) $model->getPassword(),
-            'path' => (string) $model->getPath(),
-            'unixSocket' => (string) $model->getUnixSocket(),
-            'user' => (string) $model->getUser()
-        ];
+        return $model->toArray();
     }
 
     /**
@@ -73,6 +71,6 @@ class DatabaseSerializer extends AbstractSerializer
      */
     public function getId($model)
     {
-        return $model->getPrimaryKey();
+        return $model->getSerial();
     }
 }

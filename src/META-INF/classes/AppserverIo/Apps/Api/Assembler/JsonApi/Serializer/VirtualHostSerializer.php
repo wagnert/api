@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Apps\Api\Serializer\PersistenceUnitSerializer
+ * AppserverIo\Apps\Api\Assembler\JsonApi\Serializer\VirtualHostSerializer
  *
  * NOTICE OF LICENSE
  *
@@ -18,14 +18,12 @@
  * @link      http://www.appserver.io
  */
 
-namespace AppserverIo\Apps\Api\Serializer;
+namespace AppserverIo\Apps\Api\Assembler\JsonApi\Serializer;
 
-use Tobscure\JsonApi\Resource;
-use Tobscure\JsonApi\Relationship;
 use Tobscure\JsonApi\AbstractSerializer;
 
 /**
- * A SLSB implementation providing the business logic to handle applications.
+ * A JSON-API serializer for the virtual hosts.
  *
  * @author    Tim Wagner <tw@appserver.io>
  * @copyright 2015 TechDivision GmbH <info@appserver.io>
@@ -33,7 +31,7 @@ use Tobscure\JsonApi\AbstractSerializer;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  */
-class PersistenceUnitSerializer extends AbstractSerializer
+class VirtualHostSerializer extends AbstractSerializer
 {
 
     /**
@@ -41,7 +39,7 @@ class PersistenceUnitSerializer extends AbstractSerializer
      *
      * @var string
      */
-    protected $type = 'persistenceUnits';
+    protected $type = 'virtualHosts';
 
     /**
      * Get the attributes array.
@@ -65,18 +63,6 @@ class PersistenceUnitSerializer extends AbstractSerializer
      */
     public function getId($model)
     {
-        return $model->getName();
-    }
-
-    /**
-     * Returns the relationship definition for the persistence units.
-     *
-     * @param mixed $model The model to load the relationships from
-     *
-     * @param \Tobscure\JsonApi\Relationship The relationship instance
-     */
-    public function datasource($model)
-    {
-        return new Relationship(new Resource($model->getDataSource(), new DatasourceSerializer()));
+        return $model->getId();
     }
 }
