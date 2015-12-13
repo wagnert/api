@@ -37,7 +37,9 @@ class VirtualHostProcessor extends AbstractProcessor implements DatasourceProces
     /**
      * The virtual host assembler instance.
      *
+     * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy The virtual host assembler instance
      * @var \AppserverIo\Apps\Api\Assembler\JsonApi\VirtualHostAssembler
+     *
      * @EnterpriseBean
      */
     protected $virtualHostAssembler;
