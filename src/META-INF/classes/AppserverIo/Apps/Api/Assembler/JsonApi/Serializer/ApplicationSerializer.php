@@ -55,7 +55,6 @@ class ApplicationSerializer extends AbstractSerializer
     public function getAttributes($model, array $fields = null)
     {
         return [
-            'name' => $model->getName(),
             'webappPath' => $model->getWebappPath()
         ];
     }

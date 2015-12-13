@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Apps\Api\Assembler\VirtualHostAssemblerInterface
+ * AppserverIo\Apps\Api\TransferObject\ApplicationViewData
  *
  * NOTICE OF LICENSE
  *
@@ -18,33 +18,21 @@
  * @link      http://www.appserver.io
  */
 
-namespace AppserverIo\Apps\Api\Assembler;
+namespace AppserverIo\Apps\Api\TransferObject;
+
+use Swagger\Annotations as SWG;
 
 /**
- * Interface for virtual host assemblers.
+ * DTO for the application view data implementation.
  *
  * @author    Tim Wagner <tw@appserver.io>
  * @copyright 2015 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
+ *
+ * @SWG\Definition(type="object", required={"name", "webappPath"})
  */
-interface VirtualHostAssemblerInterface
+class ApplicationViewData extends ApplicationOverviewData
 {
-
-    /**
-     * Returns the virtual host data.
-     *
-     * @param string $id The unique ID of the virtual host to load
-     *
-     * @return mixed The virtual host representation
-     */
-    public function getVirtualHostViewData($id);
-
-    /**
-     * Returns the virtual hosts.
-     *
-     * @return mixed The virtual hosts representation
-     */
-    public function getVirtualHostOverviewData();
 }

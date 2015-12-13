@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Apps\Api\TransferObject\VirtualHostOverviewData
+ * AppserverIo\Apps\Api\TransferObject\ApplicationOverviewData
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,7 @@ namespace AppserverIo\Apps\Api\TransferObject;
 use Swagger\Annotations as SWG;
 
 /**
- * DTO for the virtual host overview data implementation.
+ * DTO for the application overview data implementation.
  *
  * @author    Tim Wagner <tw@appserver.io>
  * @copyright 2015 TechDivision GmbH <info@appserver.io>
@@ -31,21 +31,13 @@ use Swagger\Annotations as SWG;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @SWG\Definition(type="object", required={"id", "name"})
+ * @SWG\Definition(type="object", required={"name", "webappPath"})
  */
-class VirtualHostOverviewData
+class ApplicationOverviewData
 {
 
     /**
-     * The virtual host UUID.
-     *
-     * @var string
-     * @SWG\Property(property="id", type="string")
-     */
-    protected $id;
-
-    /**
-     * The virtual host name.
+     * The application name.
      *
      * @var string
      * @SWG\Property(property="name", type="string")
@@ -53,31 +45,17 @@ class VirtualHostOverviewData
     protected $name;
 
     /**
-     * Set's the virtual host's UUID.
+     * The application webapp path.
      *
-     * @param string $name The virtual host's UUID
-     *
-     * @return void
+     * @var string
+     * @SWG\Property(property="webappPath", type="string")
      */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
+    protected $webappPath;
 
     /**
-     * Return's the virtual host's UUID.
+     * Set's the application's name.
      *
-     * @return string The virtual host's UUID
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set's the virtual host's name.
-     *
-     * @param string $name The virtual host's name
+     * @param string $name The application's name
      *
      * @return void
      */
@@ -87,12 +65,34 @@ class VirtualHostOverviewData
     }
 
     /**
-     * Return's the virtual host's name.
+     * Return's the application's name.
      *
-     * @return string The virtual host's name
+     * @return string The application's name
      */
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set's the application's webapp path.
+     *
+     * @param string $webappPath The applications webapp path
+     *
+     * @return void
+     */
+    public function setWebappPath($webappPath)
+    {
+        $this->webappPath = $webappPath;
+    }
+
+    /**
+     * Return's the application's webapp path.
+     *
+     * @return string The application's webapp path
+     */
+    public function getWebappPath()
+    {
+        return $this->webappPath;
     }
 }

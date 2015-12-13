@@ -105,7 +105,7 @@ class VirtualHostTransferObjectAssembler implements VirtualHostAssemblerInterfac
     /**
      * Returns an ArrayList of DTOs with the virtual host data.
      *
-     * @return \AppserverIo\Collections\ArrayList The ArrayList with the virtual hosts DTOs
+     * @return \AppserverIo\Collections\ArrayList The ArrayList with the virtual host DTOs
      * @see \AppserverIo\Apps\Api\Assembler\VirtualHostAssemblerInterface::getVirtualHostOverviewData()
      */
     public function getVirtualHostOverviewData()

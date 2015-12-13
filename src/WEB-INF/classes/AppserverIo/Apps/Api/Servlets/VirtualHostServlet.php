@@ -67,8 +67,8 @@ class VirtualHostServlet extends HttpServlet
      *     )
      *   ),
      *   @SWG\Response(
-     *     response="default",
-     *     description="an ""unexpected"" error"
+     *     response="500",
+     *     description="Internal Server Error"
      *   )
      * )
      *

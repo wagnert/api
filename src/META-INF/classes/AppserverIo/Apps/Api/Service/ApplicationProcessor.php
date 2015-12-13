@@ -43,25 +43,6 @@ class ApplicationProcessor extends AbstractProcessor implements ApplicationProce
     protected $applicationAssembler;
 
     /**
-     * The application repository instance.
-     *
-     * @var \AppserverIo\Apps\Api\Repository\ApplicationRepositoryInterface
-     * @EnterpriseBean
-     */
-    protected $applicationRepository;
-
-    /**
-     * Return's the application respository instance.
-     *
-     * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The assembler instance
-     * @see \AppserverIo\Apps\Api\Repository\ApplicationRepositoryInterface
-     */
-    protected function getApplicationRepository()
-    {
-        return $this->applicationRepository;
-    }
-
-    /**
      * Return's the application assembler instance.
      *
      * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The assembler instance
@@ -82,7 +63,7 @@ class ApplicationProcessor extends AbstractProcessor implements ApplicationProce
      */
     public function load($id)
     {
-        return $this->getApplicationAssembler()->getApplicationViewData($this->getApplicationRepository()->load($id));
+        return $this->getApplicationAssembler()->getApplicationViewData($id);
     }
 
     /**
@@ -93,7 +74,7 @@ class ApplicationProcessor extends AbstractProcessor implements ApplicationProce
      */
     public function findAll()
     {
-        return $this->getApplicationAssembler()->getApplicationOverviewData($this->getApplicationRepository()->findAll());
+        return $this->getApplicationAssembler()->getApplicationOverviewData();
     }
 
     /**

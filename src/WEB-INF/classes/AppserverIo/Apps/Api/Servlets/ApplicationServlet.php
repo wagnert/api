@@ -63,21 +63,25 @@ class ApplicationServlet extends HttpServlet
      * @SWG\Get(
      *   path="/applications.do",
      *   tags={"applications"},
-     *   summary="lists all applications",
+     *   summary="List's all applications",
      *   @SWG\Response(
      *     response=200,
-     *     description="A list with deployed apps"
+     *     description="A list with the available applications",
+     *     @SWG\Schema(
+     *       type="array",
+     *       @SWG\Items(ref="#/definitions/ApplicationOverviewData")
+     *     )
      *   ),
      *   @SWG\Response(
-     *     response="default",
-     *     description="an ""unexpected"" error"
+     *     response="500",
+     *     description="Internal Server Error"
      *   )
      * )
      *
      * @SWG\Get(
      *   path="/applications.do/{id}",
      *   tags={"applications"},
-     *   summary="loads the application with the passed ID",
+     *   summary="Load's the application with the passed ID",
      *   @SWG\Parameter(
      *      name="id",
      *      in="path",
@@ -87,11 +91,14 @@ class ApplicationServlet extends HttpServlet
      *   ),
      *   @SWG\Response(
      *     response=200,
-     *     description="The requested application"
+     *     description="The requested application",
+     *     @SWG\Schema(
+     *       ref="#/definitions/ApplicationViewData"
+     *     )
      *   ),
      *   @SWG\Response(
-     *     response="default",
-     *     description="an ""unexpected"" error"
+     *     response="500",
+     *     description="Internal Server Error"
      *   )
      * )
      */
@@ -141,8 +148,8 @@ class ApplicationServlet extends HttpServlet
      *     description="a ""success"" message"
      *   ),
      *   @SWG\Response(
-     *     response="default",
-     *     description="an ""unexpected"" error"
+     *     response="500",
+     *     description="Internal Server Error"
      *   )
      * )
      */
@@ -181,8 +188,8 @@ class ApplicationServlet extends HttpServlet
      *     description="a ""success"" message"
      *   ),
      *   @SWG\Response(
-     *     response="default",
-     *     description="an ""unexpected"" error"
+     *     response="500",
+     *     description="Internal Server Error"
      *   )
      * )
      */

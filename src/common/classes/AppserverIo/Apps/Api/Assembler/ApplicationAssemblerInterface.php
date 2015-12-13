@@ -20,8 +20,6 @@
 
 namespace AppserverIo\Apps\Api\Assembler;
 
-use AppserverIo\Psr\Application\ApplicationInterface;
-
 /**
  * Interface for application assemblers.
  *
@@ -35,20 +33,18 @@ interface ApplicationAssemblerInterface
 {
 
     /**
-     * Returns the a new JSON-API document with the application data.
+     * Returns the application data.
      *
-     * @param \AppserverIo\Psr\Application\ApplicationInterface $application The application to assemble
+     * @param string $id The unique ID of the application to load
      *
-     * @return \Tobscure\JsonApi\Document The document representation of the application
+     * @return mixed The application representation
      */
-    public function getApplicationViewData(ApplicationInterface $application);
+    public function getApplicationViewData($id);
 
     /**
-     * Returns the a new JSON-API document with the application array as the data.
+     * Returns the applications.
      *
-     * @param array $applications The array with the applications to assemble
-     *
-     * @return Tobscure\JsonApi\Document The document representation of the applications
+     * @return mixed The applications representation
      */
-    public function getApplicationOverviewData(array $applications);
+    public function getApplicationOverviewData();
 }
