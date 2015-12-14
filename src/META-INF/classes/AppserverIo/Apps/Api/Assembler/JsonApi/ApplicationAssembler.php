@@ -94,7 +94,7 @@ class ApplicationAssembler implements ApplicationAssemblerInterface
         // add metadata and links
         $document->addMeta('total', count($applications));
 
-        // return the stdClass representation of the naming directories
+        // return the JSON-API representation
         return $document;
     }
 

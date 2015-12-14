@@ -57,21 +57,25 @@ class ContainerServlet extends HttpServlet
      * @SWG\Get(
      *   path="/containers.do",
      *   tags={"containers"},
-     *   summary="lists all containers",
+     *   summary="List's all containers",
      *   @SWG\Response(
      *     response=200,
-     *     description="A list with the available containers"
+     *     description="A list with the available containers",
+     *     @SWG\Schema(
+     *       type="array",
+     *       @SWG\Items(ref="#/definitions/ContainerOverviewData")
+     *     )
      *   ),
      *   @SWG\Response(
-     *     response="default",
-     *     description="an ""unexpected"" error"
+     *     response=500,
+     *     description="Internal Server Error"
      *   )
      * )
      *
      * @SWG\Get(
      *   path="/containers.do/{id}",
      *   tags={"containers"},
-     *   summary="loads the container with the passed ID",
+     *   summary="Load's the container with the passed ID",
      *   @SWG\Parameter(
      *      name="id",
      *      in="path",
@@ -81,11 +85,14 @@ class ContainerServlet extends HttpServlet
      *   ),
      *   @SWG\Response(
      *     response=200,
-     *     description="The requested container"
+     *     description="The requested container",
+     *     @SWG\Schema(
+     *       ref="#/definitions/ContainerViewData"
+     *     )
      *   ),
      *   @SWG\Response(
-     *     response="default",
-     *     description="an ""unexpected"" error"
+     *     response=500,
+     *     description="Internal Server Error"
      *   )
      * )
      */

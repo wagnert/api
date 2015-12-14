@@ -62,7 +62,7 @@ class ContainerTransferObjectAssembler implements ContainerAssemblerInterface
     /**
      * Convert's the passed container node into a DTO.
      *
-     * @param \AppserverIo\Appserver\Core\Api\Node\ContainerNodeInterface $virtualHostNode The container node to convert
+     * @param \AppserverIo\Appserver\Core\Api\Node\ContainerNodeInterface $containerNode The container node to convert
      *
      * @return \AppserverIo\Apps\Api\TransferObject\ContainerViewData The DTO
      */

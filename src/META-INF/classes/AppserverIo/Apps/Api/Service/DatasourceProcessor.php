@@ -43,25 +43,6 @@ class DatasourceProcessor extends AbstractProcessor implements DatasourceProcess
     protected $datasourceAssembler;
 
     /**
-     * The application repository instance.
-     *
-     * @var \AppserverIo\Apps\Api\Repository\DatasourceRepositoryInterface
-     * @EnterpriseBean
-     */
-    protected $datasourceRepository;
-
-    /**
-     * Return's the application respository instance.
-     *
-     * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The assembler instance
-     * @see \AppserverIo\Apps\Api\Assembler\ApplicationRepositoryInterface
-     */
-    protected function getDatasourceRepository()
-    {
-        return $this->datasourceRepository;
-    }
-
-    /**
      * Return's the application assembler instance.
      *
      * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The assembler instance
@@ -82,7 +63,7 @@ class DatasourceProcessor extends AbstractProcessor implements DatasourceProcess
      */
     public function load($id)
     {
-        return $this->getDatasourceAssembler()->getDatasourceViewData($this->getDatasourceRepository()->load($id));
+        return $this->getDatasourceAssembler()->getDatasourceViewData($id);
     }
 
     /**
@@ -93,6 +74,6 @@ class DatasourceProcessor extends AbstractProcessor implements DatasourceProcess
      */
     public function findAll()
     {
-        return $this->getDatasourceAssembler()->getDatasourceOverviewData($this->getDatasourceRepository()->findAll());
+        return $this->getDatasourceAssembler()->getDatasourceOverviewData();
     }
 }

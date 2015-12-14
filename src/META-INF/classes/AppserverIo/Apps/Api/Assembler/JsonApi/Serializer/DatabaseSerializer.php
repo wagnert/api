@@ -53,17 +53,17 @@ class DatabaseSerializer extends AbstractSerializer
     public function getAttributes($model, array $fields = null)
     {
         return [
-            'charset' => (string) $model->getCharset(),
-            'databaseHost' => (string) $model->getDatabaseHost(),
-            'databaseName' => (string) $model->getDatabaseName(),
-            'databasePort' => (string) $model->getDatabasePort(),
-            'driver' => (string) $model->getDriver(),
-            'driverOptions' => (string) $model->getDriverOptions(),
-            'memory' => (string) $model->getMemory(),
-            'password' => (string) $model->getPassword(),
-            'path' => (string) $model->getPath(),
-            'unixSocket' => (string) $model->getUnixSocket(),
-            'user' => (string) $model->getUser()
+            'charset' => $model->getCharset(),
+            'databaseHost' => $model->getDatabaseHost(),
+            'databaseName' => $model->getDatabaseName(),
+            'databasePort' => $model->getDatabasePort(),
+            'driver' => $model->getDriver(),
+            'driverOptions' => $model->getDriverOptions(),
+            'memory' => $model->getMemory(),
+            'password' => $model->getPassword(),
+            'path' => $model->getPath(),
+            'unixSocket' => $model->getUnixSocket(),
+            'user' => $model->getUser()
         ];
     }
 
@@ -73,6 +73,6 @@ class DatabaseSerializer extends AbstractSerializer
      */
     public function getId($model)
     {
-        return $model->getPrimaryKey();
+        return $model->getId();
     }
 }

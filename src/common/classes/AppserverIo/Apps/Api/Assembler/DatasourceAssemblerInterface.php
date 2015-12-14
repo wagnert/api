@@ -20,8 +20,6 @@
 
 namespace AppserverIo\Apps\Api\Assembler;
 
-use AppserverIo\Appserver\Core\Api\Node\DatasourceNodeInterface;
-
 /**
  * Interface for datasource assemblers.
  *
@@ -35,20 +33,18 @@ interface DatasourceAssemblerInterface
 {
 
     /**
-     * Returns the a new JSON-API document with the datasource node data.
+     * Returns the datasource data.
      *
-     * @param \AppserverIo\Appserver\Core\Api\DatasourceNodeInterface $datasourceNode The datasource node to assemble
+     * @param string $id The unique ID of the datasource to load
      *
-     * @return \Tobscure\JsonApi\Document The document representation of the datasource node
+     * @return mixed The datasource representation
      */
-    public function getDatasourceViewData(DatasourceNodeInterface $datasourceNode);
+    public function getDatasourceViewData($id);
 
     /**
-     * Returns the a new JSON-API document with the datasource node array as the data.
+     * Returns the datasources.
      *
-     * @param array $datasourceNodes The array with the datasource nodes to assemble
-     *
-     * @return Tobscure\JsonApi\Document The document representation of the datasource nodes
+     * @return mixed The datasources representation
      */
-    public function getDatasourceOverviewData(array $datasourceNodes);
+    public function getDatasourceOverviewData();
 }

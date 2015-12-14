@@ -75,8 +75,8 @@ class ThumbnailServlet extends HttpServlet
      *     description="The application's thumbnail"
      *   ),
      *   @SWG\Response(
-     *     response="default",
-     *     description="an ""unexpected"" error"
+     *     response=500,
+     *     description="Internal Server Error"
      *   )
      * )
      */

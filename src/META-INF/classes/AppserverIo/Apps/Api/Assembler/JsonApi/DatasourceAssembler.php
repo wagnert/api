@@ -23,9 +23,10 @@ namespace AppserverIo\Apps\Api\Assembler\JsonApi;
 use Tobscure\JsonApi\Resource;
 use Tobscure\JsonApi\Document;
 use Tobscure\JsonApi\Collection;
+use AppserverIo\Collections\CollectionInterface;
 use AppserverIo\Appserver\Core\Api\Node\DatasourceNodeInterface;
 use AppserverIo\Apps\Api\Assembler\DatasourceAssemblerInterface;
-use AppserverIo\Apps\Api\Serializer\DatasourceSerializer;
+use AppserverIo\Apps\Api\Assembler\JsonApi\Serializer\DatasourceSerializer;
 
 /**
  * A SLSB implementation providing the business logic to assemble datasource nodes
@@ -43,39 +44,81 @@ class DatasourceAssembler implements DatasourceAssemblerInterface
 {
 
     /**
+     * The datasource repository instance.
+     *
+     * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
+     * @see \AppserverIo\Apps\Api\Assembler\DatasourceAssemblerInterface
+     * @EnterpriseBean
+     */
+    protected $datasourceTransferObjectAssembler;
+
+    /**
+     * Return's the assembler instance.
+     *
+     * @return AppserverIo\RemoteMethodInvocation\RemoteProxy The assembler instance
+     * @see \AppserverIo\Apps\Api\Assembler\DatasourceAssemblerInterface
+     */
+    protected function getDatasourceTransferObjectAssembler()
+    {
+        return $this->datasourceTransferObjectAssembler;
+    }
+
+    /**
+     * Convert's the passed DTO into a JSON-API document representation.
+     *
+     * @param \AppserverIo\Apps\Api\TransferObject\DatasourceViewData $datasourceViewData The datasource DTO to convert
+     *
+     * @return Tobscure\JsonApi\Document The JSON-API document representation
+     */
+    protected function toDatasourceViewData($datasourceViewData)
+    {
+        return new Document((new Resource($datasourceViewData, new DatasourceSerializer()))->with('database'));
+    }
+
+    /**
+     * Convert's the passed datasource DTO into a JSON-API document representation.
+     *
+     * @param \AppserverIo\Collections\CollectionInterface $datasources The datasource DTOs to convert
+     *
+     * @return Tobscure\JsonApi\Document The JSON-API document representation
+     */
+    protected function toDatasourceOverviewData(CollectionInterface $datasources)
+    {
+
+        // create a new collection of naming directories
+        $collection = new Collection($datasources->toArray(), new DatasourceSerializer());
+
+        // create a new JSON-API document with that collection as the data
+        $document = new Document($collection);
+
+        // add metadata and links
+        $document->addMeta('total', count($datasources));
+
+        // return the JSON-API representation
+        return $document;
+    }
+
+    /**
      * Returns the a new JSON-API document with the datasource node data.
      *
-     * @param \AppserverIo\Appserver\Core\Api\Node\DatasourceNodeInterface $datasourceNode The datasource node to assemble
+     * @param string $id The unique ID of the datasource to load
      *
      * @return \Tobscure\JsonApi\Document The document representation of the datasource node
      * @see \AppserverIo\Apps\Api\Assembler\DatasourceAssemblerInterface::getDatasourceViewData()
      */
-    public function getDatasourceViewData(DatasourceNodeInterface $datasourceNode)
+    public function getDatasourceViewData($id)
     {
-        return new Document((new Resource($datasourceNode, new DatasourceSerializer()))->with(['database']));
+        return $this->toDatasourceViewData($this->getDatasourceTransferObjectAssembler()->getDatasourceViewData($id));
     }
 
     /**
      * Returns the a new JSON-API document with the datasource node array as the data.
      *
-     * @param array $datasourceNodes The array with the datasource nodes to assemble
-     *
      * @return Tobscure\JsonApi\Document The document representation of the datasource nodes
      * @see \AppserverIo\Apps\Api\Assembler\DatasourceAssemblerInterface::getDatasourceOverviewData()
      */
-    public function getDatasourceOverviewData(array $datasourceNodes)
+    public function getDatasourceOverviewData()
     {
-
-        // create a new collection of datasources
-        $collection = (new Collection($datasourceNodes, new DatasourceSerializer()))->with(['database']);
-
-        // create a new JSON-API document with that collection as the data
-        $document = new Document($collection);
-
-        // add metadata and links.
-        $document->addMeta('total', count($datasourceNodes));
-
-        // return the stdClass representation of the datasources
-        return $document;
+        return $this->toDatasourceOverviewData($this->getDatasourceTransferObjectAssembler()->getDatasourceOverviewData());
     }
 }

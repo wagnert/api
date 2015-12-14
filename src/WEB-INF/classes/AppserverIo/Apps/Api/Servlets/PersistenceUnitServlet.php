@@ -57,21 +57,25 @@ class PersistenceUnitServlet extends HttpServlet
      * @SWG\Get(
      *   path="/persistenceUnits.do",
      *   tags={"persistenceUnits"},
-     *   summary="lists all persistence units",
+     *   summary="List's all persistence units",
      *   @SWG\Response(
      *     response=200,
-     *     description="A list with available persistence units"
+     *     description="A list with the available persistence units",
+     *     @SWG\Schema(
+     *       type="array",
+     *       @SWG\Items(ref="#/definitions/PersistenceUnitOverviewData")
+     *     )
      *   ),
      *   @SWG\Response(
-     *     response="default",
-     *     description="an ""unexpected"" error"
+     *     response=500,
+     *     description="Internal Server Error"
      *   )
      * )
      *
      * @SWG\Get(
      *   path="/persistenceUnits.do/{id}",
      *   tags={"persistenceUnits"},
-     *   summary="loads the persistence unit with the passed ID",
+     *   summary="Load's the persistence unit with the passed ID",
      *   @SWG\Parameter(
      *      name="id",
      *      in="path",
@@ -81,11 +85,14 @@ class PersistenceUnitServlet extends HttpServlet
      *   ),
      *   @SWG\Response(
      *     response=200,
-     *     description="The requested persistence unit"
+     *     description="The requested persistence unit",
+     *     @SWG\Schema(
+     *       ref="#/definitions/PersistenceUnitViewData"
+     *     )
      *   ),
      *   @SWG\Response(
-     *     response="default",
-     *     description="an ""unexpected"" error"
+     *     response=500,
+     *     description="Internal Server Error"
      *   )
      * )
      */

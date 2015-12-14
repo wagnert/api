@@ -57,21 +57,25 @@ class DatasourceServlet extends HttpServlet
      * @SWG\Get(
      *   path="/datasources.do",
      *   tags={"datasources"},
-     *   summary="lists all datasources",
+     *   summary="List's all datasources",
      *   @SWG\Response(
      *     response=200,
-     *     description="A list with deployed datasources"
+     *     description="A list with the available datasources",
+     *     @SWG\Schema(
+     *       type="array",
+     *       @SWG\Items(ref="#/definitions/DatasourceOverviewData")
+     *     )
      *   ),
      *   @SWG\Response(
-     *     response="default",
-     *     description="an ""unexpected"" error"
+     *     response=500,
+     *     description="Internal Server Error"
      *   )
      * )
      *
      * @SWG\Get(
      *   path="/datasources.do/{id}",
      *   tags={"datasources"},
-     *   summary="loads the datasource with the passed ID",
+     *   summary="Load's the datasource with the passed ID",
      *   @SWG\Parameter(
      *      name="id",
      *      in="path",
@@ -81,11 +85,14 @@ class DatasourceServlet extends HttpServlet
      *   ),
      *   @SWG\Response(
      *     response=200,
-     *     description="The requested container"
+     *     description="The requested datasource",
+     *     @SWG\Schema(
+     *       ref="#/definitions/DatasourceViewData"
+     *     )
      *   ),
      *   @SWG\Response(
-     *     response="default",
-     *     description="an ""unexpected"" error"
+     *     response=500,
+     *     description="Internal Server Error"
      *   )
      * )
      */

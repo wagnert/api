@@ -57,21 +57,25 @@ class NamingDirectoryServlet extends HttpServlet
      * @SWG\Get(
      *   path="/namingDirectories.do",
      *   tags={"namingDirectories"},
-     *   summary="lists the content of the naming directory",
+     *   summary="List's the available naming directories",
      *   @SWG\Response(
      *     response=200,
-     *     description="The naming directory content"
+     *     description="A list with the available naming directories",
+     *     @SWG\Schema(
+     *       type="array",
+     *       @SWG\Items(ref="#/definitions/NamingDirectoryOverviewData")
+     *     )
      *   ),
      *   @SWG\Response(
-     *     response="default",
-     *     description="an ""unexpected"" error"
+     *     response=500,
+     *     description="Internal Server Error"
      *   )
      * )
      *
      * @SWG\Get(
      *   path="/namingDirectories.do/{id}",
      *   tags={"namingDirectories"},
-     *   summary="loads the naming directory with the passed ID",
+     *   summary="Load's the naming directory with the passed ID",
      *   @SWG\Parameter(
      *      name="id",
      *      in="path",
@@ -81,11 +85,14 @@ class NamingDirectoryServlet extends HttpServlet
      *   ),
      *   @SWG\Response(
      *     response=200,
-     *     description="The requested naming directory"
+     *     description="The requested naming directory",
+     *     @SWG\Schema(
+     *       ref="#/definitions/NamingDirectoryViewData"
+     *     )
      *   ),
      *   @SWG\Response(
-     *     response="default",
-     *     description="an ""unexpected"" error"
+     *     response=500,
+     *     description="Internal Server Error"
      *   )
      * )
      */

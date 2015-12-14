@@ -73,7 +73,7 @@ class ApplicationServlet extends HttpServlet
      *     )
      *   ),
      *   @SWG\Response(
-     *     response="500",
+     *     response=500,
      *     description="Internal Server Error"
      *   )
      * )
@@ -97,7 +97,7 @@ class ApplicationServlet extends HttpServlet
      *     )
      *   ),
      *   @SWG\Response(
-     *     response="500",
+     *     response=500,
      *     description="Internal Server Error"
      *   )
      * )
@@ -134,7 +134,7 @@ class ApplicationServlet extends HttpServlet
      * @SWG\Post(
      *   path="/applications.do",
      *   tags={"applications"},
-     *   summary="creates a new application",
+     *   summary="Create's a new application",
      *   consumes={"multipart/form-data"},
      *   @SWG\Parameter(
      *      name="file",
@@ -148,7 +148,7 @@ class ApplicationServlet extends HttpServlet
      *     description="a ""success"" message"
      *   ),
      *   @SWG\Response(
-     *     response="500",
+     *     response=500,
      *     description="Internal Server Error"
      *   )
      * )
@@ -175,7 +175,7 @@ class ApplicationServlet extends HttpServlet
      * @SWG\Delete(
      *   path="/applications.do/{id}",
      *   tags={"applications"},
-     *   summary="deletes an existing application",
+     *   summary="Delete's an existing application",
      *   @SWG\Parameter(
      *      name="id",
      *      in="path",
@@ -188,7 +188,7 @@ class ApplicationServlet extends HttpServlet
      *     description="a ""success"" message"
      *   ),
      *   @SWG\Response(
-     *     response="500",
+     *     response=500,
      *     description="Internal Server Error"
      *   )
      * )
