@@ -23,9 +23,9 @@ namespace AppserverIo\Apps\Api\Assembler\JsonApi;
 use Tobscure\JsonApi\Resource;
 use Tobscure\JsonApi\Document;
 use Tobscure\JsonApi\Collection;
-use AppserverIo\Apps\Api\Serializer\ContainerSerializer;
+use AppserverIo\Collections\CollectionInterface;
 use AppserverIo\Apps\Api\Assembler\ContainerAssemblerInterface;
-use AppserverIo\Appserver\Core\Api\Node\ContainerNodeInterface;
+use AppserverIo\Apps\Api\Assembler\JsonApi\Serializer\ContainerSerializer;
 
 /**
  * A SLSB implementation providing the business logic to assemble virtual hosts
@@ -43,31 +43,49 @@ class ContainerAssembler implements ContainerAssemblerInterface
 {
 
     /**
-     * Returns the a new JSON-API document with the container node data.
+     * The container repository instance.
      *
-     * @param \AppserverIo\Appserver\Core\Api\Node\ContainerNodeInterface $containerNode The container node to assemble
-     *
-     * @return \Tobscure\JsonApi\Document The document representation of the container node
-     * @see \AppserverIo\Apps\Api\Assembler\ContainerAssemblerInterface::getContainerViewData()
+     * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
+     * @see \AppserverIo\Apps\Api\Assembler\ContainerAssemblerInterface
+     * @EnterpriseBean
      */
-    public function getContainerViewData(ContainerNodeInterface $containerNode)
+    protected $containerTransferObjectAssembler;
+
+    /**
+     * Return's the assembler instance.
+     *
+     * @return AppserverIo\RemoteMethodInvocation\RemoteProxy The assembler instance
+     * @see \AppserverIo\Apps\Api\Assembler\ContainerAssemblerInterface
+     */
+    protected function getContainerTransferObjectAssembler()
     {
-        return new Document(new Resource($containerNode, new ContainerSerializer()));
+        return $this->containerTransferObjectAssembler;
     }
 
     /**
-     * Returns the a new JSON-API document with the container node array as the data.
+     * Convert's the passed DTO into a JSON-API document representation.
      *
-     * @param array $containers The array with the container nodes to assemble
+     * @param \AppserverIo\Apps\Api\TransferObject\ContainerViewData $containerViewData The virtual host DTO to convert
      *
-     * @return \Tobscure\JsonApi\Document The document representation of the container nodes
-     * @see \AppserverIo\Apps\Api\Assembler\ContainerAssemblerInterface::getContainerOverviewData()
+     * @return Tobscure\JsonApi\Document The JSON-API document representation
      */
-    public function getContainerOverviewData(array $containers)
+    protected function toContainerViewData($containerViewData)
+    {
+        return new Document(new Resource($containerViewData, new ContainerSerializer()));
+    }
+
+    /**
+     * Convert's the passed virtual host DTO into a JSON-API document representation.
+     *
+     * @param \AppserverIo\Collections\CollectionInterface $containers The container DTOs to convert
+     *
+     * @return Tobscure\JsonApi\Document The JSON-API document representation
+     */
+    protected function toContainerOverviewData(CollectionInterface $containers)
     {
 
         // create a new collection of naming directories
-        $collection = new Collection($containers, new ContainerSerializer());
+        $collection = new Collection($containers->toArray(), new ContainerSerializer());
 
         // create a new JSON-API document with that collection as the data
         $document = new Document($collection);
@@ -77,5 +95,29 @@ class ContainerAssembler implements ContainerAssemblerInterface
 
         // return the stdClass representation of the naming directories
         return $document;
+    }
+
+    /**
+     * Returns the a new JSON-API document with the container data.
+     *
+     * @param string $id The unique ID of the container to load
+     *
+     * @return \Tobscure\JsonApi\Document The document representation of the container
+     * @see \AppserverIo\Apps\Api\Assembler\ContainerAssemblerInterface::getContainerViewData()
+     */
+    public function getContainerViewData($id)
+    {
+        return $this->toContainerViewData($this->getContainerTransferObjectAssembler()->getContainerViewData($id));
+    }
+
+    /**
+     * Returns the a new JSON-API document with the container array as the data.
+     *
+     * @return \Tobscure\JsonApi\Document The document representation of the containers
+     * @see \AppserverIo\Apps\Api\Assembler\ContainerAssemblerInterface::getContainerOverviewData()
+     */
+    public function getContainerOverviewData()
+    {
+        return $this->toContainerOverviewData($this->getContainerTransferObjectAssembler()->getContainerOverviewData());
     }
 }

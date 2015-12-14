@@ -43,25 +43,6 @@ class ContainerProcessor extends AbstractProcessor implements ContainerProcessor
     protected $containerAssembler;
 
     /**
-     * The container repository instance.
-     *
-     * @var \AppserverIo\Apps\Api\Repository\ContainerRepositoryInterface
-     * @EnterpriseBean
-     */
-    protected $containerRepository;
-
-    /**
-     * Return's the container respository instance.
-     *
-     * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The assembler instance
-     * @see \AppserverIo\Apps\Api\Repository\ContainerRepositoryInterface
-     */
-    protected function getContainerRepository()
-    {
-        return $this->containerRepository;
-    }
-
-    /**
      * Return's the container assembler instance.
      *
      * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The assembler instance
@@ -82,7 +63,7 @@ class ContainerProcessor extends AbstractProcessor implements ContainerProcessor
      */
     public function load($id)
     {
-        return $this->getContainerAssembler()->getContainerViewData($this->getContainerRepository()->load($id));
+        return $this->getContainerAssembler()->getContainerViewData($id);
     }
 
     /**
@@ -93,6 +74,6 @@ class ContainerProcessor extends AbstractProcessor implements ContainerProcessor
      */
     public function findAll()
     {
-        return $this->getContainerAssembler()->getContainerOverviewData($this->getContainerRepository()->findAll());
+        return $this->getContainerAssembler()->getContainerOverviewData();
     }
 }

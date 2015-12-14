@@ -52,7 +52,9 @@ class ContainerSerializer extends AbstractSerializer
      */
     public function getAttributes($model, array $fields = null)
     {
-        return get_object_vars($model);
+        return [
+            'name' => $model->getName()
+        ];
     }
 
     /**
@@ -61,6 +63,6 @@ class ContainerSerializer extends AbstractSerializer
      */
     public function getId($model)
     {
-        return $model->getPrimaryKey();
+        return $model->getId();
     }
 }

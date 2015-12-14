@@ -64,7 +64,7 @@ class VirtualHostAssembler implements VirtualHostAssemblerInterface
     }
 
     /**
-     * Convert's the passed virtual host node into a JSON-API document representation.
+     * Convert's the passed DTO into a JSON-API document representation.
      *
      * @param \AppserverIo\Appserver\Core\Api\Node\VirtualHostNodeInterface $virtualHostNode The virtual host node to convert
      *
@@ -76,9 +76,9 @@ class VirtualHostAssembler implements VirtualHostAssemblerInterface
     }
 
     /**
-     * Convert's the passed virtual host node into a JSON-API document representation.
+     * Convert's the passed virtual host DTOs into a JSON-API document representation.
      *
-     * @param \AppserverIo\Appserver\Core\Api\Node\VirtualHostNodeInterface $virtualHostNode The virtual host node to convert
+     * @param \AppserverIo\Collections\CollectionInterfae $virtualHosts The virtual host DTOs to convert
      *
      * @return Tobscure\JsonApi\Document The JSON-API document representation
      */

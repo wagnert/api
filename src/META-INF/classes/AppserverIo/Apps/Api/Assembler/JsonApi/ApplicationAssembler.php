@@ -25,8 +25,8 @@ use Tobscure\JsonApi\Document;
 use Tobscure\JsonApi\Collection;
 use AppserverIo\Collections\CollectionInterface;
 use AppserverIo\Psr\Application\ApplicationInterface;
-use AppserverIo\Apps\Api\Serializer\ApplicationSerializer;
 use AppserverIo\Apps\Api\Assembler\ApplicationAssemblerInterface;
+use AppserverIo\Apps\Api\Assembler\JsonApi\Serializer\ApplicationSerializer;
 
 /**
  * A SLSB implementation providing the business logic to assemble applications
@@ -78,7 +78,7 @@ class ApplicationAssembler implements ApplicationAssemblerInterface
     /**
      * Convert's the passed DTO into a JSON-API document representation.
      *
-     * @param \AppserverIo\Collections\CollectionInterface $applications The applications to convert
+     * @param \AppserverIo\Collections\CollectionInterface $applications The application DTOs to convert
      *
      * @return Tobscure\JsonApi\Document The JSON-API document representation
      */

@@ -20,6 +20,9 @@
 
 namespace AppserverIo\Apps\Api\Assembler\TransferObject;
 
+use AppserverIo\Collections\ArrayList;
+use AppserverIo\Apps\Api\TransferObject\ContainerViewData;
+use AppserverIo\Apps\Api\TransferObject\ContainerOverviewData;
 use AppserverIo\Apps\Api\Assembler\ContainerAssemblerInterface;
 use AppserverIo\Appserver\Core\Api\Node\ContainerNodeInterface;
 
@@ -38,26 +41,85 @@ class ContainerTransferObjectAssembler implements ContainerAssemblerInterface
 {
 
     /**
-     * Returns the a new JSON-API document with the container node data.
+     * The container repository instance.
      *
-     * @param \AppserverIo\Appserver\Core\Api\Node\ContainerNodeInterface $containerNode The container node to assemble
-     *
-     * @return \Tobscure\JsonApi\Document The document representation of the container node
-     * @see \AppserverIo\Apps\Api\Assembler\ContainerAssemblerInterface::getContainerViewData()
+     * @var \AppserverIo\Apps\Api\Repository\ContainerRepositoryInterface
+     * @EnterpriseBean
      */
-    public function getContainerViewData(ContainerNodeInterface $containerNode)
+    protected $containerRepository;
+
+    /**
+     * Return's the container respository instance.
+     *
+     * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The assembler instance
+     * @see \AppserverIo\Apps\Api\Repository\ContainerRepositoryInterface
+     */
+    protected function getContainerRepository()
     {
+        return $this->containerRepository;
     }
 
     /**
-     * Returns the a new JSON-API document with the container node array as the data.
+     * Convert's the passed container node into a DTO.
      *
-     * @param array $containers The array with the container nodes to assemble
+     * @param \AppserverIo\Appserver\Core\Api\Node\ContainerNodeInterface $virtualHostNode The container node to convert
      *
-     * @return \Tobscure\JsonApi\Document The document representation of the container nodes
+     * @return \AppserverIo\Apps\Api\TransferObject\ContainerViewData The DTO
+     */
+    protected function toContainerViewData(ContainerNodeInterface $containerNode)
+    {
+        $viewData = new ContainerViewData();
+        $viewData->setId($containerNode->getPrimaryKey());
+        $viewData->setName($containerNode->getName());
+        return $viewData;
+    }
+
+    /**
+     * Convert's the passed container node into a DTO.
+     *
+     * @param \AppserverIo\Appserver\Core\Api\Node\ContainerNodeInterface $containerNode The container node to convert
+     *
+     * @return \AppserverIo\Apps\Api\TransferObject\ContainerOverviewData The DTO
+     */
+    protected function toContainerOverviewData(ContainerNodeInterface $containerNode)
+    {
+        $overviewData = new ContainerOverviewData();
+        $overviewData->setId($containerNode->getPrimaryKey());
+        $overviewData->setName($containerNode->getName());
+        return $overviewData;
+    }
+
+    /**
+     * Returns the a DTO with the container data.
+     *
+     * @param string $id The unique ID of the container to load
+     *
+     * @return \AppserverIo\Apps\Api\TransferObject\ContainerViewData The DTO representation of the container
+     * @see \AppserverIo\Apps\Api\Assembler\ContainerAssemblerInterface::getContainerViewData()
+     */
+    public function getContainerViewData($id)
+    {
+        return $this->toContainerViewData($this->getContainerRepository()->load($id));
+    }
+
+    /**
+     * Returns an ArrayList of DTOs with the container data.
+     *
+     * @return \AppserverIo\Collections\ArrayList The ArrayList with the container DTOs
      * @see \AppserverIo\Apps\Api\Assembler\ContainerAssemblerInterface::getContainerOverviewData()
      */
-    public function getContainerOverviewData(array $containers)
+    public function getContainerOverviewData()
     {
+
+        // create the ArrayList instance
+        $containers = new ArrayList();
+
+        // load all virtual host nodes
+        foreach ($this->getContainerRepository()->findAll() as $containerNode) {
+            $containers->add($this->toContainerOverviewData($containerNode));
+        }
+
+        // return the ArrayList instance
+        return $containers;
     }
 }
