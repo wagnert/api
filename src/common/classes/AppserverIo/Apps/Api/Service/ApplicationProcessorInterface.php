@@ -63,11 +63,10 @@ interface ApplicationProcessorInterface
      * Uploads the passed file to the application servers deploy directory.
      *
      * @param string $filename The filename
-     * @param string $data     The file data
      *
      * @return void
      */
-    public function upload($filename, $data);
+    public function upload($filename);
 
     /**
      * Deletes the app node with the passed ID from the system configuration.

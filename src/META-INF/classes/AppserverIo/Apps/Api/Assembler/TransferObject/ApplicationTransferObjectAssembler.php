@@ -21,7 +21,7 @@
 namespace AppserverIo\Apps\Api\Assembler\TransferObject;
 
 use AppserverIo\Collections\ArrayList;
-use AppserverIo\Psr\Application\ApplicationInterface;
+use AppserverIo\Appserver\Core\Api\Node\AppNodeInterface;
 use AppserverIo\Apps\Api\TransferObject\ApplicationViewData;
 use AppserverIo\Apps\Api\TransferObject\ApplicationOverviewData;
 use AppserverIo\Apps\Api\Assembler\ApplicationAssemblerInterface;
@@ -63,30 +63,32 @@ class ApplicationTransferObjectAssembler implements ApplicationAssemblerInterfac
     /**
      * Convert's the passed application into a DTO.
      *
-     * @param \AppserverIo\Psr\Application\ApplicationInterface $application The application to convert
+     * @param \AppserverIo\Appserver\Core\Api\Node\AppNodeInterface $appNode The application node to convert
      *
      * @return \AppserverIo\Apps\Api\TransferObject\ApplicationViewData The DTO
      */
-    public function toApplicationViewData(ApplicationInterface $application)
+    public function toApplicationViewData(AppNodeInterface $appNode)
     {
         $viewData = new ApplicationViewData();
-        $viewData->setName($application->getName());
-        $viewData->setWebappPath($application->getWebappPath());
+        $viewData->setId($appNode->getPrimaryKey());
+        $viewData->setName($appNode->getName());
+        $viewData->setWebappPath($appNode->getWebappPath());
         return $viewData;
     }
 
     /**
      * Convert's the passed application into a DTO.
      *
-     * @param \AppserverIo\Psr\Application\ApplicationInterface $application The application to convert
+     * @param \AppserverIo\Appserver\Core\Api\Node\AppNodeInterface $appNode The application node to convert
      *
      * @return \AppserverIo\Apps\Api\TransferObject\ApplicationOverviewData The DTO
      */
-    public function toApplicationOverviewData(ApplicationInterface $application)
+    public function toApplicationOverviewData(AppNodeInterface $appNode)
     {
         $overviewData = new ApplicationOverviewData();
-        $overviewData->setName($application->getName());
-        $overviewData->setWebappPath($application->getWebappPath());
+        $overviewData->setId($appNode->getPrimaryKey());
+        $overviewData->setName($appNode->getName());
+        $overviewData->setWebappPath($appNode->getWebappPath());
         return $overviewData;
     }
 

@@ -31,10 +31,19 @@ use Swagger\Annotations as SWG;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @SWG\Definition(type="object", required={"name", "webappPath"})
+ * @SWG\Definition(type="object", required={"id", "name", "webappPath"})
  */
 class ApplicationOverviewData
 {
+
+    /**
+     * The virtual host UUID.
+     *
+     * @var string
+     * @SWG\Property(property="id", type="string")
+     */
+    protected $id;
+
 
     /**
      * The application name.
@@ -51,6 +60,28 @@ class ApplicationOverviewData
      * @SWG\Property(property="webappPath", type="string")
      */
     protected $webappPath;
+
+    /**
+     * Set's the application's UUID.
+     *
+     * @param string $name The application's UUID
+     *
+     * @return void
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * Return's the application's UUID.
+     *
+     * @return string The application's UUID
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * Set's the application's name.

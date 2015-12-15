@@ -61,7 +61,7 @@ class ApplicationRepository extends AbstractRepository implements ApplicationRep
      */
     public function load($id)
     {
-        return $this->getNamingDirectory()->search(sprintf('php:global/%s/env/ApplicationInterface', $id));
+        return $this->newService(ServiceKeys::APPLICATION)->load($id);
     }
 
     /**
@@ -72,56 +72,20 @@ class ApplicationRepository extends AbstractRepository implements ApplicationRep
      */
     public function findAll()
     {
-
-        // create a local naming directory instance
-        $namingDirectory = $this->getNamingDirectory();
-
-        // initialize the array for the applications
-        $applications = array();
-
-        // convert the application nodes into stdClass representation
-        foreach ($namingDirectory->search('php:global')->getAllKeys() as $key) {
-            try {
-                // try to load the application
-                $value = $namingDirectory->search(sprintf('php:global/%s/env/ApplicationInterface', $key));
-
-                // query whether we've found an application instance or not
-                if ($value instanceof ApplicationInterface) {
-                    $applications[] = $value;
-                }
-
-            } catch (\Exception $e) {
-                // do nothing here, because
-            }
-        }
-
-        // return the applications
-        return $applications;
+        return $this->newService(ServiceKeys::APPLICATION)->findAll();
     }
 
     /**
      * Uploads the passed file to the application servers deploy directory.
      *
      * @param string $filename The filename
-     * @param string $data     The file data
      *
      * @return void
      * @see \AppserverIo\Apps\Api\Service\ApplicationRepositoryInterface::upload()
      */
-    public function upload($filename, $data)
+    public function upload($filename)
     {
-
-        // prepare service instance
-        $service = $this->newService(ServiceKeys::APPLICATION);
-
-        // prepare the upload target in the deploy directory
-        $target = $service->getTmpDir() . DIRECTORY_SEPARATOR . $filename;
-
-        // save the uploaded file in the tmp directory
-        file_put_contents($target, $data);
-
-        // let the service soak the application archive
-        $service->soak(new \SplFileInfo($target));
+        $this->newService(ServiceKeys::APPLICATION)->soak(new \SplFileInfo($filename));
     }
 
     /**

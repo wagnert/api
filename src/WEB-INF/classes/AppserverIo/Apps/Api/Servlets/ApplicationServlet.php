@@ -157,10 +157,14 @@ class ApplicationServlet extends HttpServlet
     {
 
         // load the HTTP part
-        $part = $servletRequest->getPart(ApplicationServlet::UPLOADED_PHAR_FILE);
+        $pharArchive = $servletRequest->getPart(ApplicationServlet::UPLOADED_PHAR_FILE);
+
+        // save file to appserver's upload tmp folder with a temporary name
+        $pharArchive->init();
+        $pharArchive->write($pharArchive->getFilename());
 
         // upload the file
-        $this->applicationProcessor->upload($part->getFilename(), $part->getInputStream());
+        $this->applicationProcessor->upload($pharArchive->getFilename());
     }
 
     /**
