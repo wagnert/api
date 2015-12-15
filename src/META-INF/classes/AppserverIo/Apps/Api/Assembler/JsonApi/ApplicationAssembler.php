@@ -76,7 +76,7 @@ class ApplicationAssembler implements ApplicationAssemblerInterface
     }
 
     /**
-     * Convert's the passed DTO into a JSON-API document representation.
+     * Convert's the passed DTOs into a JSON-API document representation.
      *
      * @param \AppserverIo\Collections\CollectionInterface $applications The application DTOs to convert
      *

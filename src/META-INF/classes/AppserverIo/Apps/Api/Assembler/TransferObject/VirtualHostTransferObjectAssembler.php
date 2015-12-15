@@ -54,7 +54,7 @@ class VirtualHostTransferObjectAssembler implements VirtualHostAssemblerInterfac
      * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The assembler instance
      * @see \AppserverIo\Apps\Api\Repository\VirtualHostRepositoryInterface
      */
-    protected function getVirtualHostRepository()
+    public function getVirtualHostRepository()
     {
         return $this->virtualHostRepository;
     }
@@ -66,7 +66,7 @@ class VirtualHostTransferObjectAssembler implements VirtualHostAssemblerInterfac
      *
      * @return \AppserverIo\Apps\Api\TransferObject\VirtualHostViewData The DTO
      */
-    protected function toVirtualHostViewData(VirtualHostNodeInterface $virtualHostNode)
+    public function toVirtualHostViewData(VirtualHostNodeInterface $virtualHostNode)
     {
         $viewData = new VirtualHostViewData();
         $viewData->setId($virtualHostNode->getPrimaryKey());
@@ -81,7 +81,7 @@ class VirtualHostTransferObjectAssembler implements VirtualHostAssemblerInterfac
      *
      * @return \AppserverIo\Apps\Api\TransferObject\VirtualHostOverviewData The DTO
      */
-    protected function toVirtualHostOverviewData(VirtualHostNodeInterface $virtualHostNode)
+    public function toVirtualHostOverviewData(VirtualHostNodeInterface $virtualHostNode)
     {
         $overviewData = new VirtualHostOverviewData();
         $overviewData->setId($virtualHostNode->getPrimaryKey());

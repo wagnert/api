@@ -54,7 +54,7 @@ class ContainerTransferObjectAssembler implements ContainerAssemblerInterface
      * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The assembler instance
      * @see \AppserverIo\Apps\Api\Repository\ContainerRepositoryInterface
      */
-    protected function getContainerRepository()
+    public function getContainerRepository()
     {
         return $this->containerRepository;
     }
@@ -66,7 +66,7 @@ class ContainerTransferObjectAssembler implements ContainerAssemblerInterface
      *
      * @return \AppserverIo\Apps\Api\TransferObject\ContainerViewData The DTO
      */
-    protected function toContainerViewData(ContainerNodeInterface $containerNode)
+    public function toContainerViewData(ContainerNodeInterface $containerNode)
     {
         $viewData = new ContainerViewData();
         $viewData->setId($containerNode->getPrimaryKey());
@@ -81,7 +81,7 @@ class ContainerTransferObjectAssembler implements ContainerAssemblerInterface
      *
      * @return \AppserverIo\Apps\Api\TransferObject\ContainerOverviewData The DTO
      */
-    protected function toContainerOverviewData(ContainerNodeInterface $containerNode)
+    public function toContainerOverviewData(ContainerNodeInterface $containerNode)
     {
         $overviewData = new ContainerOverviewData();
         $overviewData->setId($containerNode->getPrimaryKey());

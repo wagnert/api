@@ -20,7 +20,10 @@
 
 namespace AppserverIo\Apps\Api\Assembler\TransferObject;
 
-use AppserverIo\Psr\NamingDirectory\NamingDirectoryInterface;
+use AppserverIo\Collections\ArrayList;
+use AppserverIo\Psr\Naming\NamingDirectoryInterface;
+use AppserverIo\Apps\Api\TransferObject\NamingDirectoryViewData;
+use AppserverIo\Apps\Api\TransferObject\NamingDirectoryOverviewData;
 use AppserverIo\Apps\Api\Assembler\NamingDirectoryAssemblerInterface;
 
 /**
@@ -38,26 +41,88 @@ class NamingDirectoryTransferObjectAssembler implements NamingDirectoryAssembler
 {
 
     /**
-     * Returns the a new JSON-API document with the naming directory data.
+     * The datasource repository instance.
      *
-     * @param AppserverIo\Psr\NamingDirectory\NamingDirectoryInterface $namingDirectory The naming directory to assemble
-     *
-     * @return \Tobscure\JsonApi\Document The document representation of the naming directory
-     * @see \AppserverIo\Apps\Api\Assembler\NamingDirectoryAssemblerInterface::getNamingDirectoryViewData()
+     * @var \AppserverIo\Apps\Api\Repository\NamingDirectoryRepositoryInterface
+     * @EnterpriseBean
      */
-    public function getNamingDirectoryViewData(NamingDirectoryInterface $namingDirectory)
+    protected $namingDirectoryRepository;
+
+    /**
+     * Return's the naming directory respository instance.
+     *
+     * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The assembler instance
+     * @see \AppserverIo\Apps\Api\Repository\NamingDirectoryRepositoryInterface
+     */
+    public function getNamingDirectoryRepository()
     {
+        return $this->namingDirectoryRepository;
     }
 
     /**
-     * Returns the a new JSON-API document with the naming directory array as the data.
+     * Convert's the passed naming directory into a DTO.
      *
-     * @param array $namingDirectories The array with the naming directories to assemble
+     * @param \AppserverIo\Psr\Naming\NamingDirectoryInterface $namingDirectory The naming directory to convert
      *
-     * @return Tobscure\JsonApi\Document The document representation of the naming directories
+     * @return \AppserverIo\Apps\Api\TransferObject\NamingDirectoryViewData The DTO
+     */
+    public function toNamingDirectoryViewData(NamingDirectoryInterface $namingDirectory)
+    {
+        $viewData = new NamingDirectoryViewData();
+        $viewData->setId($namingDirectory->getSerial());
+        $viewData->setName($namingDirectory->getName());
+        $viewData->setScheme($namingDirectory->getScheme());
+        $viewData->setValues($namingDirectory->toArray());
+        return $viewData;
+    }
+
+    /**
+     * Convert's the passed naming directory into a DTO.
+     *
+     * @param \AppserverIo\Psr\Naming\NamingDirectoryInterface $namingDirectory The naming directory to convert
+     *
+     * @return \AppserverIo\Apps\Api\TransferObject\NamingDirectoryOverviewData The DTO
+     */
+    public function toNamingDirectoryOverviewData(NamingDirectoryInterface $namingDirectory)
+    {
+        $overviewData = new NamingDirectoryOverviewData();
+        $overviewData->setId($namingDirectory->getSerial());
+        $overviewData->setName($namingDirectory->getName());
+        $overviewData->setScheme($namingDirectory->getScheme());
+        return $overviewData;
+    }
+
+    /**
+     * Returns the a DTO with the naming directory data.
+     *
+     * @param string $id The unique ID of the naming directory to load
+     *
+     * @return \AppserverIo\Apps\Api\TransferObject\NamingDirectoryViewData The DTO representation of the naming directory
+     * @see \AppserverIo\Apps\Api\Assembler\NamingDirectoryAssemblerInterface::getNamingDirectoryViewData()
+     */
+    public function getNamingDirectoryViewData($id)
+    {
+        return $this->toNamingDirectoryViewData($this->getNamingDirectoryRepository()->load($id));
+    }
+
+    /**
+     * Returns an ArrayList of DTOs with the naming directory data.
+     *
+     * @return \AppserverIo\Collections\ArrayList The ArrayList with the naming directory DTOs
      * @see \AppserverIo\Apps\Api\Assembler\NamingDirectoryAssemblerInterface::getNamingDirectoryOverviewData()
      */
-    public function getNamingDirectoryOverviewData(array $namingDirectories)
+    public function getNamingDirectoryOverviewData()
     {
+
+        // create the ArrayList instance
+        $namingDirectories = new ArrayList();
+
+        // load all virtual host nodes
+        foreach ($this->getNamingDirectoryRepository()->findAll() as $namingDirectory) {
+            $namingDirectories->add($this->toNamingDirectoryOverviewData($namingDirectory));
+        }
+
+        // return the ArrayList instance
+        return $namingDirectories;
     }
 }

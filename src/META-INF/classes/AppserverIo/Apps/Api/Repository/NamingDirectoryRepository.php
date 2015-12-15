@@ -39,7 +39,7 @@ class NamingDirectoryRepository extends AbstractRepository implements NamingDire
      *
      * @param string $id The ID of the naming directory to be returned
      *
-     * @return \stdClass The requested naming directory \stdClass representation
+     * @return \AppserverIo\Psr\Naming\NamingDirectoryInterface The requested naming directory
      */
     public function load($id)
     {

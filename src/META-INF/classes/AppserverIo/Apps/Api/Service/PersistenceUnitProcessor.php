@@ -83,7 +83,7 @@ class PersistenceUnitProcessor extends AbstractProcessor implements PersistenceU
      */
     public function load($id)
     {
-        return $this->getPersistenceUnitAssembler()->getPersistenceUnitViewData($this->getPersistenceUnitRepository()->load($id));
+        return $this->getPersistenceUnitAssembler()->getPersistenceUnitViewData($id);
     }
 
     /**
@@ -94,7 +94,7 @@ class PersistenceUnitProcessor extends AbstractProcessor implements PersistenceU
      */
     public function findAll()
     {
-        return $this->getPersistenceUnitAssembler()->getPersistenceUnitOverviewData($this->getPersistenceUnitRepository()->findAll());
+        return $this->getPersistenceUnitAssembler()->getPersistenceUnitOverviewData();
     }
 
     /**
@@ -108,6 +108,6 @@ class PersistenceUnitProcessor extends AbstractProcessor implements PersistenceU
      */
     public function findAllByApplicationName($applicationName)
     {
-        return $this->getPersistenceUnitAssembler()->getPersistenceUnitOverviewData($this->getPersistenceUnitRepository()->findAllByApplicationName($applicationName));
+        return $this->getPersistenceUnitAssembler()->getPersistenceUnitOverviewDataByApplicationName($applicationName);
     }
 }

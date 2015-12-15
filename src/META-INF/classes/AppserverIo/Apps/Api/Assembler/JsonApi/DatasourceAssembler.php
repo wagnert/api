@@ -76,7 +76,7 @@ class DatasourceAssembler implements DatasourceAssemblerInterface
     }
 
     /**
-     * Convert's the passed datasource DTO into a JSON-API document representation.
+     * Convert's the passed datasource DTOs into a JSON-API document representation.
      *
      * @param \AppserverIo\Collections\CollectionInterface $datasources The datasource DTOs to convert
      *

@@ -20,8 +20,6 @@
 
 namespace AppserverIo\Apps\Api\Assembler;
 
-use AppserverIo\Psr\NamingDirectory\NamingDirectoryInterface;
-
 /**
  * Interface for naming directory assemblers.
  *
@@ -35,20 +33,18 @@ interface NamingDirectoryAssemblerInterface
 {
 
     /**
-     * Returns the a new JSON-API document with the naming directory data.
+     * Returns the naming directory data.
      *
-     * @param AppserverIo\Psr\NamingDirectory\NamingDirectoryInterface $namingDirectory The naming directory to assemble
+     * @param string $id The unique ID of the naming directory to load
      *
-     * @return \Tobscure\JsonApi\Document The document representation of the naming directory
+     * @return mixed The naming directory representation
      */
-    public function getNamingDirectoryViewData(NamingDirectoryInterface $namingDirectory);
+    public function getNamingDirectoryViewData($id);
 
     /**
-     * Returns the a new JSON-API document with the naming directory array as the data.
+     * Returns the naming directories.
      *
-     * @param array $namingDirectories The array with the naming directories to assemble
-     *
-     * @return Tobscure\JsonApi\Document The document representation of the naming directories
+     * @return mixed The naming directories representation
      */
-    public function getNamingDirectoryOverviewData(array $namingDirectories);
+    public function getNamingDirectoryOverviewData();
 }

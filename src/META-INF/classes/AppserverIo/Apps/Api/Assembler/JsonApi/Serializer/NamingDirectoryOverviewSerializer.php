@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Apps\Api\Assembler\JsonApi\Serializer\NamingDirectorySerializer
+ * AppserverIo\Apps\Api\Assembler\JsonApi\Serializer\NamingDirectoryOverviewSerializer
  *
  * NOTICE OF LICENSE
  *
@@ -34,7 +34,7 @@ use AppserverIo\Psr\Naming\NamingDirectoryInterface;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  */
-class NamingDirectorySerializer extends AbstractSerializer
+class NamingDirectoryOverviewSerializer extends AbstractSerializer
 {
 
     /**
@@ -62,7 +62,10 @@ class NamingDirectorySerializer extends AbstractSerializer
      */
     public function getAttributes($model, array $fields = null)
     {
-        return $model->toArray();
+        return [
+            'name' => $model->getName(),
+            'scheme' => $model->getScheme()
+        ];
     }
 
     /**
@@ -71,6 +74,6 @@ class NamingDirectorySerializer extends AbstractSerializer
      */
     public function getId($model)
     {
-        return $model->getSerial();
+        return $model->getId();
     }
 }

@@ -20,6 +20,9 @@
 
 namespace AppserverIo\Apps\Api\Assembler\TransferObject;
 
+use AppserverIo\Collections\ArrayList;
+use AppserverIo\Apps\Api\TransferObject\PersistenceUnitViewData;
+use AppserverIo\Apps\Api\TransferObject\PersistenceUnitOverviewData;
 use AppserverIo\Apps\Api\Assembler\PersistenceUnitAssemblerInterface;
 use AppserverIo\Appserver\Core\Api\Node\PersistenceUnitNodeInterface;
 
@@ -38,26 +41,106 @@ class PersistenceUnitTransferObjectAssembler implements PersistenceUnitAssembler
 {
 
     /**
-     * Returns the a new JSON-API document with the persistence unit data.
+     * The persistence unit repository instance.
      *
-     * @param \AppserverIo\Appserver\Core\Api\Node\PersistenceUnitNodeInterface $persistenceUnit The persistence unit to assemble
-     *
-     * @return \Tobscure\JsonApi\Document The document representation of the persistence unit
-     * @see \AppserverIo\Apps\Api\Assembler\PersistenceUnitAssemblerInterface::getPersistenceUnitViewData()
+     * @var \AppserverIo\Apps\Api\Repository\PersistenceRepositoryInterface
+     * @EnterpriseBean
      */
-    public function getPersistenceUnitViewData(PersistenceUnitNodeInterface $persistenceUnit)
+    protected $persistenceUnitRepository;
+
+    /**
+     * The datasource repository instance.
+     *
+     * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
+     * @see \AppserverIo\Apps\Api\Assembler\DatasourceAssemblerInterface
+     * @EnterpriseBean
+     */
+    protected $datasourceTransferObjectAssembler;
+
+    /**
+     * Return's the persistence unit respository instance.
+     *
+     * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The assembler instance
+     * @see \AppserverIo\Apps\Api\Repository\PersistenceUnitRepositoryInterface
+     */
+    public function getPersistenceUnitRepository()
     {
+        return $this->persistenceUnitRepository;
     }
 
     /**
-     * Returns the a new JSON-API document with the persistence unit array as the data.
+     * Return's the assembler instance.
      *
-     * @param array $entityManagers The array with the persistence units to assemble
+     * @return AppserverIo\RemoteMethodInvocation\RemoteProxy The assembler instance
+     * @see \AppserverIo\Apps\Api\Assembler\DatasourceAssemblerInterface
+     */
+    public function getDatasourceTransferObjectAssembler()
+    {
+        return $this->datasourceTransferObjectAssembler;
+    }
+
+    /**
+     * Convert's the passed persistence unit node into a DTO.
      *
-     * @return \Tobscure\JsonApi\Document The document representation of the persistence units
+     * @param \AppserverIo\Appserver\Core\Api\Node\PersistenceUnitNodeInterface $persistenceUnitNode The persistence unit node to convert
+     *
+     * @return \AppserverIo\Apps\Api\TransferObject\PersistenceUnitViewData The DTO
+     */
+    public function toPersistenceUnitViewData(PersistenceUnitNodeInterface $persistenceUnitNode)
+    {
+        $viewData = new PersistenceUnitViewData();
+        $viewData->setId($persistenceUnitNode->getPrimaryKey());
+        $viewData->setName($persistenceUnitNode->getName());
+        $viewData->setDatasource($this->getDatasourceTransferObjectAssembler()->toDatasourceOverviewData($persistenceUnitNode->getDatasource()));
+        return $viewData;
+    }
+
+    /**
+     * Convert's the passed persistence unit node into a DTO.
+     *
+     * @param \AppserverIo\Appserver\Core\Api\Node\PersistenceUnitNodeInterface $persistenceUnitNode The persistence unit node to convert
+     *
+     * @return \AppserverIo\Apps\Api\TransferObject\PersistenceUnitOverviewData The DTO
+     */
+    public function toPersistenceUnitOverviewData(PersistenceUnitNodeInterface $persistenceUnitNode)
+    {
+        $overviewData = new PersistenceUnitOverviewData();
+        $overviewData->setId($persistenceUnitNode->getPrimaryKey());
+        $overviewData->setName($persistenceUnitNode->getName());
+        return $overviewData;
+    }
+
+    /**
+     * Returns the a DTO with the persistence unit data.
+     *
+     * @param string $id The unique ID of the persistence unit to load
+     *
+     * @return \AppserverIo\Apps\Api\TransferObject\PersistenceUnitViewData The DTO representation of the persistence unit
+     * @see \AppserverIo\Apps\Api\Assembler\PersistenceUnitAssemblerInterface::getPersistenceUnitViewData()
+     */
+    public function getPersistenceUnitViewData($id)
+    {
+        return $this->toPersistenceUnitViewData($this->getPersistenceUnitRepository()->load($id));
+    }
+
+    /**
+     * Returns an ArrayList of DTOs with the persistence unit data.
+     *
+     * @return \AppserverIo\Collections\ArrayList The ArrayList with the persistence unit DTOs
      * @see \AppserverIo\Apps\Api\Assembler\PersistenceUnitAssemblerInterface::getPersistenceUnitOverviewData()
      */
-    public function getPersistenceUnitOverviewData(array $entityManagers)
+    public function getPersistenceUnitOverviewData()
     {
+
+        // create the ArrayList instance
+        $persistenceUnitNodes = new ArrayList();
+
+        // load all persistence unit nodes
+        foreach ($this->getPersistenceUnitRepository()->findAll() as $persistenceUnitNode) {
+            $persistenceUnitNodes->add($this->toPersistenceUnitOverviewData($persistenceUnitNode));
+        }
+
+        // return the ArrayList instance
+        return $persistenceUnitNodes;
     }
 }

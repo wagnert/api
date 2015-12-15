@@ -78,7 +78,7 @@ class PersistenceUnitRepository extends AbstractRepository implements Persistenc
 
                     // load and merge the persistence units
                     foreach ($persistenceManager->getEntityManagers() as $entityManager) {
-                        $persistenceUnits[$entityManager->getName()] = $entityManager;
+                        $persistenceUnits[$entityManager->getPrimaryKey()] = $entityManager;
                     }
                 }
 
@@ -115,7 +115,7 @@ class PersistenceUnitRepository extends AbstractRepository implements Persistenc
         // prepare the array with the persistence units
         /** \AppserverIo\Appserver\Core\Api\Node\PersistenceUnitNode $entityManager */
         foreach ($persistenceManager->getEntityManagers() as $entityManager) {
-            $persistenceUnits[$entityManager->getName()] = $entityManager;
+            $persistenceUnits[$entityManager->getPrimaryKey()] = $entityManager;
         }
 
         // load the persistence units

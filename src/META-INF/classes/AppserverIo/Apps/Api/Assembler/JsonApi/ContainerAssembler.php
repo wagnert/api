@@ -75,7 +75,7 @@ class ContainerAssembler implements ContainerAssemblerInterface
     }
 
     /**
-     * Convert's the passed virtual host DTO into a JSON-API document representation.
+     * Convert's the passed virtual host DTOs into a JSON-API document representation.
      *
      * @param \AppserverIo\Collections\CollectionInterface $containers The container DTOs to convert
      *

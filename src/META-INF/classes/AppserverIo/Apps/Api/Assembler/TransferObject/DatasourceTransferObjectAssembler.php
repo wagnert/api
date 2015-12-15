@@ -56,7 +56,7 @@ class DatasourceTransferObjectAssembler implements DatasourceAssemblerInterface
      * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The assembler instance
      * @see \AppserverIo\Apps\Api\Repository\DatasourceRepositoryInterface
      */
-    protected function getDatasourceRepository()
+    public function getDatasourceRepository()
     {
         return $this->datasourceRepository;
     }
@@ -68,7 +68,7 @@ class DatasourceTransferObjectAssembler implements DatasourceAssemblerInterface
      *
      * @return \AppserverIo\Apps\Api\TransferObject\DatasourceViewData The DTO
      */
-    protected function toDatasourceViewData(DatasourceNodeInterface $datasourceNode)
+    public function toDatasourceViewData(DatasourceNodeInterface $datasourceNode)
     {
         $viewData = new DatasourceViewData();
         $viewData->setId($datasourceNode->getPrimaryKey());
@@ -84,7 +84,7 @@ class DatasourceTransferObjectAssembler implements DatasourceAssemblerInterface
      *
      * @return \AppserverIo\Apps\Api\TransferObject\DatasourceOverviewData The DTO
      */
-    protected function toDatasourceOverviewData(DatasourceNodeInterface $datasourceNode)
+    public function toDatasourceOverviewData(DatasourceNodeInterface $datasourceNode)
     {
         $overviewData = new DatasourceOverviewData();
         $overviewData->setId($datasourceNode->getPrimaryKey());
@@ -99,7 +99,7 @@ class DatasourceTransferObjectAssembler implements DatasourceAssemblerInterface
      *
      * @return \AppserverIo\Apps\Api\TransferObject\DatabaseOverviewData The DTO
      */
-    protected function toDatabaseOverviewData(DatabaseNodeInterface $databaseNode)
+    public function toDatabaseOverviewData(DatabaseNodeInterface $databaseNode)
     {
         $overviewData = new DatabaseOverviewData();
         $overviewData->setId($databaseNode->getPrimaryKey());

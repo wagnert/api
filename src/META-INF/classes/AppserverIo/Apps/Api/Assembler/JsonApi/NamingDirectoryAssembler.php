@@ -23,9 +23,11 @@ namespace AppserverIo\Apps\Api\Assembler\JsonApi;
 use Tobscure\JsonApi\Resource;
 use Tobscure\JsonApi\Document;
 use Tobscure\JsonApi\Collection;
-use AppserverIo\Apps\Api\Serializer\NamingDirectorySerializer;
-use AppserverIo\Apps\Api\Assembler\NamingDirectoryAssemblerInterface;
+use AppserverIo\Collections\CollectionInterface;
 use AppserverIo\Psr\NamingDirectory\NamingDirectoryInterface;
+use AppserverIo\Apps\Api\Assembler\NamingDirectoryAssemblerInterface;
+use AppserverIo\Apps\Api\Assembler\JsonApi\Serializer\NamingDirectoryViewSerializer;
+use AppserverIo\Apps\Api\Assembler\JsonApi\Serializer\NamingDirectoryOverviewSerializer;
 
 /**
  * A SLSB implementation providing the business logic to assemble naming directories
@@ -43,31 +45,49 @@ class NamingDirectoryAssembler implements NamingDirectoryAssemblerInterface
 {
 
     /**
-     * Returns the a new JSON-API document with the naming directory data.
+     * The naming directory DTO assembler instance.
      *
-     * @param AppserverIo\Psr\NamingDirectory\NamingDirectoryInterface $namingDirectory The naming directory to assemble
-     *
-     * @return \Tobscure\JsonApi\Document The document representation of the naming directory
-     * @see \AppserverIo\Apps\Api\Assembler\NamingDirectoryAssemblerInterface::getNamingDirectoryViewData()
+     * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
+     * @see \AppserverIo\Apps\Api\Assembler\NamingDirectoryAssemblerInterface
+     * @EnterpriseBean
      */
-    public function getNamingDirectoryViewData(NamingDirectoryInterface $namingDirectory)
+    protected $namingDirectoryTransferObjectAssembler;
+
+    /**
+     * Return's the assembler instance.
+     *
+     * @return AppserverIo\RemoteMethodInvocation\RemoteProxy The assembler instance
+     * @see \AppserverIo\Apps\Api\Assembler\NamingDirectoryAssemblerInterface
+     */
+    protected function getNamingDirectoryTransferObjectAssembler()
     {
-        return new Document(new Resource($namingDirectory, new NamingDirectorySerializer()));
+        return $this->namingDirectoryTransferObjectAssembler;
     }
 
     /**
-     * Returns the a new JSON-API document with the naming directory array as the data.
+     * Convert's the passed DTO into a JSON-API document representation.
      *
-     * @param array $namingDirectories The array with the naming directories to assemble
+     * @param \AppserverIo\Apps\Api\TransferObject\NamingDirectoryViewData $namingDirectoryViewData The datasource DTO to convert
      *
-     * @return Tobscure\JsonApi\Document The document representation of the naming directories
-     * @see \AppserverIo\Apps\Api\Assembler\NamingDirectoryAssemblerInterface::getNamingDirectoryOverviewData()
+     * @return Tobscure\JsonApi\Document The JSON-API document representation
      */
-    public function getNamingDirectoryOverviewData(array $namingDirectories)
+    protected function toNamingDirectoryViewData($namingDirectoryViewData)
+    {
+        return new Document(new Resource($namingDirectoryViewData, new NamingDirectoryViewSerializer()));
+    }
+
+    /**
+     * Convert's the passed naming directory DTOs into a JSON-API document representation.
+     *
+     * @param \AppserverIo\Collections\CollectionInterface $namingDirectories The naming directory DTOs to convert
+     *
+     * @return Tobscure\JsonApi\Document The JSON-API document representation
+     */
+    protected function toNamingDirectoryOverviewData(CollectionInterface $namingDirectories)
     {
 
         // create a new collection of naming directories
-        $collection = new Collection($namingDirectories, new NamingDirectorySerializer());
+        $collection = new Collection($namingDirectories->toArray(), new NamingDirectoryOverviewSerializer());
 
         // create a new JSON-API document with that collection as the data
         $document = new Document($collection);
@@ -75,7 +95,31 @@ class NamingDirectoryAssembler implements NamingDirectoryAssemblerInterface
         // add metadata and links
         $document->addMeta('total', count($namingDirectories));
 
-        // return the stdClass representation of the naming directories
+        // return the JSON-API representation
         return $document;
+    }
+
+    /**
+     * Returns the a new JSON-API document with the naming directory data.
+     *
+     * @param string $id The unique ID of the naming directory to load
+     *
+     * @return \Tobscure\JsonApi\Document The document representation of the naming directory
+     * @see \AppserverIo\Apps\Api\Assembler\NamingDirectoryAssemblerInterface::getNamingDirectoryViewData()
+     */
+    public function getNamingDirectoryViewData($id)
+    {
+        return $this->toNamingDirectoryViewData($this->getNamingDirectoryTransferObjectAssembler()->getNamingDirectoryViewData($id));
+    }
+
+    /**
+     * Returns the a new JSON-API document with the naming directory array as the data.
+     *
+     * @return Tobscure\JsonApi\Document The document representation of the naming directories
+     * @see \AppserverIo\Apps\Api\Assembler\NamingDirectoryAssemblerInterface::getNamingDirectoryOverviewData()
+     */
+    public function getNamingDirectoryOverviewData()
+    {
+        return $this->toNamingDirectoryOverviewData($this->getNamingDirectoryTransferObjectAssembler()->getNamingDirectoryOverviewData());
     }
 }

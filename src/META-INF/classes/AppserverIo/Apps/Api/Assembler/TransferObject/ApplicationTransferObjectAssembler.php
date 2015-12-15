@@ -55,7 +55,7 @@ class ApplicationTransferObjectAssembler implements ApplicationAssemblerInterfac
      * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The assembler instance
      * @see \AppserverIo\Apps\Api\Repository\ApplicationRepositoryInterface
      */
-    protected function getApplicationRepository()
+    public function getApplicationRepository()
     {
         return $this->applicationRepository;
     }
@@ -67,7 +67,7 @@ class ApplicationTransferObjectAssembler implements ApplicationAssemblerInterfac
      *
      * @return \AppserverIo\Apps\Api\TransferObject\ApplicationViewData The DTO
      */
-    protected function toApplicationViewData(ApplicationInterface $application)
+    public function toApplicationViewData(ApplicationInterface $application)
     {
         $viewData = new ApplicationViewData();
         $viewData->setName($application->getName());
@@ -82,7 +82,7 @@ class ApplicationTransferObjectAssembler implements ApplicationAssemblerInterfac
      *
      * @return \AppserverIo\Apps\Api\TransferObject\ApplicationOverviewData The DTO
      */
-    protected function toApplicationOverviewData(ApplicationInterface $application)
+    public function toApplicationOverviewData(ApplicationInterface $application)
     {
         $overviewData = new ApplicationOverviewData();
         $overviewData->setName($application->getName());

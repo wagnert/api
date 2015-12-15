@@ -23,10 +23,10 @@ namespace AppserverIo\Apps\Api\Assembler\JsonApi;
 use Tobscure\JsonApi\Resource;
 use Tobscure\JsonApi\Document;
 use Tobscure\JsonApi\Collection;
-use \Doctrine\ORM\EntityManagerInterface;
-use AppserverIo\Apps\Api\Serializer\PersistenceUnitSerializer;
-use AppserverIo\Apps\Api\Assembler\PersistenceUnitAssemblerInterface;
+use AppserverIo\Collections\CollectionInterface;
 use AppserverIo\Appserver\Core\Api\Node\PersistenceUnitNodeInterface;
+use AppserverIo\Apps\Api\Assembler\PersistenceUnitAssemblerInterface;
+use AppserverIo\Apps\Api\Assembler\JsonApi\Serializer\PersistenceUnitSerializer;
 
 /**
  * A SLSB implementation providing the business logic to assemble persistence units
@@ -44,39 +44,81 @@ class PersistenceUnitAssembler implements PersistenceUnitAssemblerInterface
 {
 
     /**
-     * Returns the a new JSON-API document with the persistence unit data.
+     * The datasource repository instance.
      *
-     * @param \AppserverIo\Appserver\Core\Api\Node\PersistenceUnitNodeInterface $persistenceUnit The persistence unit to assemble
-     *
-     * @return \Tobscure\JsonApi\Document The document representation of the persistence unit
-     * @see \AppserverIo\Apps\Api\Assembler\PersistenceUnitAssemblerInterface::getPersistenceUnitViewData()
+     * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
+     * @see \AppserverIo\Apps\Api\Assembler\DatasourceAssemblerInterface
+     * @EnterpriseBean
      */
-    public function getPersistenceUnitViewData(PersistenceUnitNodeInterface $persistenceUnit)
+    protected $persistenceUnitTransferObjectAssembler;
+
+    /**
+     * Return's the assembler instance.
+     *
+     * @return AppserverIo\RemoteMethodInvocation\RemoteProxy The assembler instance
+     * @see \AppserverIo\Apps\Api\Assembler\PersistenceUnitAssemblerInterface
+     */
+    public function getPersistenceUnitTransferObjectAssembler()
     {
-        return new Document((new Resource($persistenceUnit, new PersistenceUnitSerializer()))->with('datasource'));
+        return $this->persistenceUnitTransferObjectAssembler;
     }
 
     /**
-     * Returns the a new JSON-API document with the persistence unit array as the data.
+     * Convert's the passed DTO into a JSON-API document representation.
      *
-     * @param array $entityManagers The array with the persistence units to assemble
+     * @param \AppserverIo\Apps\Api\TransferObject\PersistenceUnitViewData $persistenceUnitViewData The persistence unit DTO to convert
      *
-     * @return \Tobscure\JsonApi\Document The document representation of the persistence units
-     * @see \AppserverIo\Apps\Api\Assembler\PersistenceUnitAssemblerInterface::getPersistenceUnitOverviewData()
+     * @return Tobscure\JsonApi\Document The JSON-API document representation
      */
-    public function getPersistenceUnitOverviewData(array $entityManagers)
+    public function toPersistenceUnitViewData($persistenceUnitViewData)
+    {
+        return new Document((new Resource($persistenceUnitViewData, new PersistenceUnitSerializer()))->with('datasource'));
+    }
+
+    /**
+     * Convert's the passed persistence unit DTOs into a JSON-API document representation.
+     *
+     * @param \AppserverIo\Collections\CollectionInterface $persistenceUnits The persistence unit DTOs to convert
+     *
+     * @return Tobscure\JsonApi\Document The JSON-API document representation
+     */
+    public function toPersistenceUnitOverviewData(CollectionInterface $persistenceUnits)
     {
 
         // create a new collection of naming directories
-        $collection = (new Collection($entityManagers, new PersistenceUnitSerializer()))->with(array('datasource'));
+        $collection = new Collection($persistenceUnits, new PersistenceUnitSerializer());
 
         // create a new JSON-API document with that collection as the data
         $document = new Document($collection);
 
         // add metadata and links
-        $document->addMeta('total', count($entityManagers));
+        $document->addMeta('total', count($persistenceUnits));
 
         // return the stdClass representation of the naming directories
         return $document;
+    }
+
+    /**
+     * Returns the a new JSON-API document with the persistence unit node data.
+     *
+     * @param string $id The unique ID of the persistence unit node to load
+     *
+     * @return \Tobscure\JsonApi\Document The document representation of the persistence unit node
+     * @see \AppserverIo\Apps\Api\Assembler\PersistenceUnitAssemblerInterface::getPersistenceUnitViewData()
+     */
+    public function getPersistenceUnitViewData($id)
+    {
+        return $this->toPersistenceUnitViewData($this->getPersistenceUnitTransferObjectAssembler()->getPersistenceUnitViewData($id));
+    }
+
+    /**
+     * Returns the a new JSON-API document with the persistence unit node array as the data.
+     *
+     * @return Tobscure\JsonApi\Document The document representation of the persistence unit nodes
+     * @see \AppserverIo\Apps\Api\Assembler\PersistenceUnitAssemblerInterface::getPersistenceUnitOverviewData()
+     */
+    public function getPersistenceUnitOverviewData()
+    {
+        return $this->toPersistenceUnitOverviewData($this->getPersistenceUnitTransferObjectAssembler()->getPersistenceUnitOverviewData());
     }
 }

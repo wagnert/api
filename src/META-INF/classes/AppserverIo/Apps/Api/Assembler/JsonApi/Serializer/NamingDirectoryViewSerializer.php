@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Apps\Api\Assembler\JsonApi\Serializer\PersistenceUnitSerializer
+ * AppserverIo\Apps\Api\Assembler\JsonApi\Serializer\NamingDirectoryViewSerializer
  *
  * NOTICE OF LICENSE
  *
@@ -20,9 +20,10 @@
 
 namespace AppserverIo\Apps\Api\Assembler\JsonApi\Serializer;
 
-use Tobscure\JsonApi\Resource;
+use Tobscure\JsonApi\Collection;
 use Tobscure\JsonApi\Relationship;
 use Tobscure\JsonApi\AbstractSerializer;
+use AppserverIo\Psr\Naming\NamingDirectoryInterface;
 
 /**
  * A SLSB implementation providing the business logic to handle applications.
@@ -33,15 +34,8 @@ use Tobscure\JsonApi\AbstractSerializer;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  */
-class PersistenceUnitSerializer extends AbstractSerializer
+class NamingDirectoryViewSerializer extends NamingDirectoryOverviewSerializer
 {
-
-    /**
-     * The serializer type.
-     *
-     * @var string
-     */
-    protected $type = 'persistenceUnits';
 
     /**
      * Get the attributes array.
@@ -54,29 +48,6 @@ class PersistenceUnitSerializer extends AbstractSerializer
      */
     public function getAttributes($model, array $fields = null)
     {
-        return [
-            'name' => $model->getName()
-        ];
-    }
-
-    /**
-     * {@inheritDoc}
-     * @see \Tobscure\JsonApi\AbstractSerializer::getId()
-     */
-    public function getId($model)
-    {
-        return $model->getId();
-    }
-
-    /**
-     * Returns the relationship definition for the persistence units.
-     *
-     * @param mixed $model The model to load the relationships from
-     *
-     * @param \Tobscure\JsonApi\Relationship The relationship instance
-     */
-    public function datasource($model)
-    {
-        return new Relationship(new Resource($model->getDatasource(), new DatasourceSerializer()));
+        return array_merge(parent::getAttributes($model, $fields), ['values' => $model->getValues()]);
     }
 }

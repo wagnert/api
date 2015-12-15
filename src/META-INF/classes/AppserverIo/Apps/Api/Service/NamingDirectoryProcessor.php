@@ -43,25 +43,6 @@ class NamingDirectoryProcessor extends AbstractProcessor implements NamingDirect
     protected $namingDirectoryAssembler;
 
     /**
-     * The naming directory repository instance.
-     *
-     * @var \AppserverIo\Apps\Api\Repository\NamingDirectoryRepositoryInterface
-     * @EnterpriseBean
-     */
-    protected $namingDirectoryRepository;
-
-    /**
-     * Return's the naming directory respository instance.
-     *
-     * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The assembler instance
-     * @see \AppserverIo\Apps\Api\Repository\NamingDirectoryRepositoryInterface
-     */
-    protected function getNamingDirectoryRepository()
-    {
-        return $this->namingDirectoryRepository;
-    }
-
-    /**
      * Return's the naming directory assembler instance.
      *
      * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The assembler instance
@@ -82,7 +63,7 @@ class NamingDirectoryProcessor extends AbstractProcessor implements NamingDirect
      */
     public function load($id)
     {
-        return $this->getNamingDirectoryAssembler()->getNamingDirectoryViewData($this->getNamingDirectoryRepository()->load($id));
+        return $this->getNamingDirectoryAssembler()->getNamingDirectoryViewData($id);
     }
 
     /**
@@ -93,6 +74,6 @@ class NamingDirectoryProcessor extends AbstractProcessor implements NamingDirect
      */
     public function findAll()
     {
-        return $this->getNamingDirectoryAssembler()->getNamingDirectoryOverviewData($this->getNamingDirectoryRepository()->findAll());
+        return $this->getNamingDirectoryAssembler()->getNamingDirectoryOverviewData();
     }
 }

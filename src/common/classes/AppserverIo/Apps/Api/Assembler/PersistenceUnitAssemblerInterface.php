@@ -35,22 +35,18 @@ interface PersistenceUnitAssemblerInterface
 {
 
     /**
-     * Returns the a new JSON-API document with the persistence unit data.
+     * Returns the persistence unit data.
      *
-     * @param \AppserverIo\Appserver\Core\Api\Node\PersistenceUnitNodeInterface $persistenceUnit The persistence unit to assemble
+     * @param string $id The unique ID of the persistence unit to load
      *
-     * @return \Tobscure\JsonApi\Document The document representation of the persistence unit
-     * @see \AppserverIo\Apps\Api\Assembler\PersistenceUnitAssemblerInterface::getPersistenceUnitViewData()
+     * @return mixed The persistence unit representation
      */
-    public function getPersistenceUnitViewData(PersistenceUnitNodeInterface $persistenceUnit);
+    public function getPersistenceUnitViewData($id);
 
     /**
-     * Returns the a new JSON-API document with the persistence unit array as the data.
+     * Returns the persistence units.
      *
-     * @param array $persistenceUnits The array with the persistence units to assemble
-     *
-     * @return \Tobscure\JsonApi\Document The document representation of the persistence units
-     * @see \AppserverIo\Apps\Api\Assembler\PersistenceUnitAssemblerInterface::getPersistenceUnitOverviewData()
+     * @return mixed The persistence units representation
      */
-    public function getPersistenceUnitOverviewData(array $persistenceUnits);
+    public function getPersistenceUnitOverviewData();
 }
