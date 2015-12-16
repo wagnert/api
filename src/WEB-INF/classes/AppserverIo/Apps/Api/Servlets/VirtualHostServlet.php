@@ -38,12 +38,24 @@ class VirtualHostServlet extends HttpServlet
 {
 
     /**
-     * The VirtualHostProcessor instance.
+     * The virtual host processor instance.
      *
-     * @var \AppserverIo\Apps\Api\Services\VirtualHostProcessor
+     * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
+     * @see \AppserverIo\Apps\Api\Services\VirtualHostProcessorInterface
      * @EnterpriseBean
      */
     protected $virtualHostProcessor;
+
+    /**
+     * Return's the virtual host processor instance.
+     *
+     * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The processor proxy
+     * @see \AppserverIo\Apps\Api\Services\VirtualHostProcessorInterface
+     */
+    public function getVirtualHostProcessor()
+    {
+        return $this->virtualHostProcessor;
+    }
 
     /**
      * Tries to load the requested vhosts and adds them to the response.
@@ -108,9 +120,9 @@ class VirtualHostServlet extends HttpServlet
 
             // query whether we've found an ID or not
             if ($id == null) {
-                $content = $this->virtualHostProcessor->findAll();
+                $content = $this->getVirtualHostProcessor()->findAll();
             } else {
-                $content = $this->virtualHostProcessor->load($id);
+                $content = $this->getVirtualHostProcessor()->load($id);
             }
 
         } catch (\Exception $e) {

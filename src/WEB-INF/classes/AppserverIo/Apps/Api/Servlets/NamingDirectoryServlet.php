@@ -38,12 +38,24 @@ class NamingDirectoryServlet extends HttpServlet
 {
 
     /**
-     * The NamingDirectoryProcessor instance.
+     * The naming directory processor instance.
      *
-     * @var \AppserverIo\Apps\Api\Services\NamingDirectoryProcessor
+     * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
+     * @see \AppserverIo\Apps\Api\Services\NamingDirectoryProcessorInterface
      * @EnterpriseBean
      */
     protected $namingDirectoryProcessor;
+
+    /**
+     * Return's the naming directory processor instance.
+     *
+     * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The processor proxy
+     * @see \AppserverIo\Apps\Api\Services\NamingDirectoryProcessorInterface
+     */
+    public function getNamingDirectoryProcessor()
+    {
+        return $this->namingDirectoryProcessor;
+    }
 
     /**
      * Tries to load the content of the naming directory and adds it to the response.
@@ -107,9 +119,9 @@ class NamingDirectoryServlet extends HttpServlet
 
         // query whether we've found an ID or not
         if ($id == null) {
-            $content = $this->namingDirectoryProcessor->findAll();
+            $content = $this->getNamingDirectoryProcessor()->findAll();
         } else {
-            $content = $this->namingDirectoryProcessor->load($id);
+            $content = $this->getNamingDirectoryProcessor()->load($id);
         }
 
         // return the JSON encoded response

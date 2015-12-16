@@ -38,12 +38,24 @@ class DatasourceServlet extends HttpServlet
 {
 
     /**
-     * The DatasourceProcessor instance.
+     * The datasource processor instance.
      *
-     * @var \AppserverIo\Apps\Api\Services\DatasourceProcessor
+     * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
+     * @var \AppserverIo\Apps\Api\Services\DatasourceProcessorInterface
      * @EnterpriseBean
      */
     protected $datasourceProcessor;
+
+    /**
+     * Return's the datasource processor instance.
+     *
+     * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The processor proxy
+     * @see \AppserverIo\Apps\Api\Services\DatasourceProcessorInterface
+     */
+    public function getDatasourceProcessor()
+    {
+        return $this->datasourceProcessor;
+    }
 
     /**
      * Tries to load the requested datasources and adds them to the response.
@@ -107,9 +119,9 @@ class DatasourceServlet extends HttpServlet
 
         // query whether we've found an ID or not
         if ($id == null) {
-            $content = $this->datasourceProcessor->findAll();
+            $content = $this->getDatasourceProcessor()->findAll();
         } else {
-            $content = $this->datasourceProcessor->load($id);
+            $content = $this->getDatasourceProcessor()->load($id);
         }
 
         // return the JSON encoded response

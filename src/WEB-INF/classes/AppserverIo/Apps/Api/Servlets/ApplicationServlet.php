@@ -44,12 +44,24 @@ class ApplicationServlet extends HttpServlet
     const UPLOADED_PHAR_FILE = 'file';
 
     /**
-     * The ApplicationProcessor instance.
+     * The application processor instance.
      *
-     * @var \AppserverIo\Apps\Api\Services\ApplicationProcessor
+     * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
+     * @see \AppserverIo\Apps\Api\Services\ApplicationProcessorInterface
      * @EnterpriseBean
      */
     protected $applicationProcessor;
+
+    /**
+     * Return's the application processor instance.
+     *
+     * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The processor proxy
+     * @see \AppserverIo\Apps\Api\Services\ApplicationProcessorInterface
+     */
+    public function getApplicationProcessor()
+    {
+        return $this->applicationProcessor;
+    }
 
     /**
      * Tries to load the requested applications and adds them to the response.
@@ -113,9 +125,9 @@ class ApplicationServlet extends HttpServlet
 
         // query whether we've found an ID or not
         if ($id == null) {
-            $content = $this->applicationProcessor->findAll();
+            $content = $this->getApplicationProcessor()->findAll();
         } else {
-            $content = $this->applicationProcessor->load($id);
+            $content = $this->getApplicationProcessor()->load($id);
         }
 
         // return the JSON encoded response
@@ -164,7 +176,7 @@ class ApplicationServlet extends HttpServlet
         $pharArchive->write($pharArchive->getFilename());
 
         // upload the file
-        $this->applicationProcessor->upload($pharArchive->getFilename());
+        $this->getApplicationProcessor()->upload($pharArchive->getFilename());
     }
 
     /**
@@ -207,6 +219,6 @@ class ApplicationServlet extends HttpServlet
         list ($id, ) = explode('/', $pathInfo);
 
         // undeploy the application
-        $this->applicationProcessor->delete($id);
+        $this->getApplicationProcessor()->delete($id);
     }
 }

@@ -20,10 +20,11 @@
 
 namespace AppserverIo\Apps\Api\Servlets;
 
+use AppserverIo\Http\HttpProtocol;
+use AppserverIo\Server\Dictionaries\MimeTypes;
 use AppserverIo\Psr\Servlet\Http\HttpServlet;
 use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
-use AppserverIo\Server\Dictionaries\MimeTypes;
 use AppserverIo\Apps\Api\Exceptions\FileNotFoundException;
 use AppserverIo\Apps\Api\Exceptions\FileNotReadableException;
 use AppserverIo\Apps\Api\Exceptions\FoundDirInsteadOfFileException;
@@ -41,12 +42,24 @@ class ThumbnailServlet extends HttpServlet
 {
 
     /**
-     * The ApplicationProcessor instance.
+     * The application processor instance.
      *
-     * @var \AppserverIo\Apps\Api\Services\ApplicationProcessor
+     * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
+     * @see \AppserverIo\Apps\Api\Services\ApplicationProcessorInterface
      * @EnterpriseBean
      */
     protected $applicationProcessor;
+
+    /**
+     * Return's the application processor instance.
+     *
+     * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The processor proxy
+     * @see \AppserverIo\Apps\Api\Services\ApplicationProcessorInterface
+     */
+    public function getApplicationProcessor()
+    {
+        return $this->applicationProcessor;
+    }
 
     /**
      * Tries to load the requested thumbnail from the applications WEB-INF directory
@@ -90,7 +103,7 @@ class ThumbnailServlet extends HttpServlet
         list ($id, ) = explode('/', $pathInfo);
 
         // load file information and return the file object if possible
-        $fileInfo = new \SplFileInfo($path = $this->applicationProcessor->thumbnail($id));
+        $fileInfo = new \SplFileInfo($path = $this->getApplicationProcessor()->thumbnail($id));
         if ($fileInfo->isDir()) {
             throw new FoundDirInsteadOfFileException(sprintf("Requested file %s is a directory", $path));
         }
@@ -106,7 +119,7 @@ class ThumbnailServlet extends HttpServlet
 
         // set mimetypes to header
         $servletResponse->addHeader(
-            'Content-Type',
+            HttpProtocol::HEADER_CONTENT_TYPE,
             MimeTypes::getMimeTypeByExtension(
                 pathinfo(
                     $file->getFilename(),
@@ -116,17 +129,17 @@ class ThumbnailServlet extends HttpServlet
         );
 
         // set last modified date from file
-        $servletResponse->addHeader('Last-Modified', gmdate('D, d M Y H:i:s \G\M\T', $file->getMTime()));
+        $servletResponse->addHeader(HttpProtocol::HEADER_LAST_MODIFIED, gmdate('D, d M Y H:i:s \G\M\T', $file->getMTime()));
 
         // set expires date
-        $servletResponse->addHeader('Expires', gmdate('D, d M Y H:i:s \G\M\T', time() + 3600));
+        $servletResponse->addHeader(HttpProtocol::HEADER_EXPIRES, gmdate('D, d M Y H:i:s \G\M\T', time() + 3600));
 
         // check if If-Modified-Since header info is set
-        if ($servletRequest->getHeader('If-Modified-Since')) {
+        if ($servletRequest->getHeader(HttpProtocol::HEADER_IF_MODIFIED_SINCE)) {
             // check if file is modified since header given header date
-            if (strtotime($servletRequest->getHeader('If-Modified-Since')) >= $file->getMTime()) {
+            if (strtotime($servletRequest->getHeader(HttpProtocol::HEADER_IF_MODIFIED_SINCE)) >= $file->getMTime()) {
                 // send 304 Not Modified Header information without content
-                $servletResponse->addHeader('status', 'HTTP/1.1 304 Not Modified');
+                $servletResponse->addHeader(HttpProtocol::HEADER_STATUS, 'HTTP/1.1 304 Not Modified');
                 $servletResponse->appendBodyStream(PHP_EOL);
                 return;
             }

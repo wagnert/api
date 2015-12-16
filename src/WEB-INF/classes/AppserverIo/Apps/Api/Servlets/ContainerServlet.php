@@ -38,12 +38,24 @@ class ContainerServlet extends HttpServlet
 {
 
     /**
-     * The ContainerProcessor instance.
+     * The container processor instance.
      *
-     * @var \AppserverIo\Apps\Api\Services\ContainerProcessor
+     * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
+     * @see \AppserverIo\Apps\Api\Services\ContainerProcessorInterface
      * @EnterpriseBean
      */
     protected $containerProcessor;
+
+    /**
+     * Return's the container processor instance.
+     *
+     * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The processor proxy
+     * @see \AppserverIo\Apps\Api\Services\ContainerProcessorInterface
+     */
+    public function getContainerProcessor()
+    {
+        return $this->containerProcessor;
+    }
 
     /**
      * Tries to load the requested containers and adds them to the response.
@@ -107,9 +119,9 @@ class ContainerServlet extends HttpServlet
 
         // query whether we've found an ID or not
         if ($id == null) {
-            $content = $this->containerProcessor->findAll();
+            $content = $this->getContainerProcessor()->findAll();
         } else {
-            $content = $this->containerProcessor->load($id);
+            $content = $this->getContainerProcessor()->load($id);
         }
 
         // return the JSON encoded response

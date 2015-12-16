@@ -38,12 +38,24 @@ class PersistenceUnitServlet extends HttpServlet
 {
 
     /**
-     * The PersistenceUnitProcessor instance.
+     * The persistence unit processor instance.
      *
-     * @var \AppserverIo\Apps\Api\Services\PersistenceUnitProcessor
+     * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
+     * @see \AppserverIo\Apps\Api\Services\PersistenceUnitProcessorInterface
      * @EnterpriseBean
      */
     protected $persistenceUnitProcessor;
+
+    /**
+     * Return's the persistence unit processor instance.
+     *
+     * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The processor proxy
+     * @see \AppserverIo\Apps\Api\Services\PersistenceUnitProcessorInterface
+     */
+    public function getPersistenceUnitProcessor()
+    {
+        return $this->persistenceUnitProcessor;
+    }
 
     /**
      * Tries to load the available persistence units and adds them to the response.
@@ -107,9 +119,9 @@ class PersistenceUnitServlet extends HttpServlet
 
         // query whether we've found an ID or not
         if ($id == null) {
-            $content = $this->persistenceUnitProcessor->findAll();
+            $content = $this->getPersistenceUnitProcessor()->findAll();
         } else {
-            $content = $this->persistenceUnitProcessor->load($id);
+            $content = $this->getPersistenceUnitProcessor()->load($id);
         }
 
         // return the JSON encoded response
