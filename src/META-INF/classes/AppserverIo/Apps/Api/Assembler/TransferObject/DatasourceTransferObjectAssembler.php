@@ -51,6 +51,15 @@ class DatasourceTransferObjectAssembler implements DatasourceAssemblerInterface
     protected $datasourceRepository;
 
     /**
+     * The database assembler instance.
+     *
+     * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
+     * @see \AppserverIo\Apps\Api\Assembler\DatabaseAssemblerInterface
+     * @EnterpriseBean
+     */
+    protected $databaseTransferObjectAssembler;
+
+    /**
      * Return's the datasource respository instance.
      *
      * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The assembler instance
@@ -59,6 +68,17 @@ class DatasourceTransferObjectAssembler implements DatasourceAssemblerInterface
     public function getDatasourceRepository()
     {
         return $this->datasourceRepository;
+    }
+
+    /**
+     * Return's the assembler instance.
+     *
+     * @return AppserverIo\RemoteMethodInvocation\RemoteProxy The assembler instance
+     * @see \AppserverIo\Apps\Api\Assembler\DatabaseAssemblerInterface
+     */
+    protected function getDatabaseTransferObjectAssembler()
+    {
+        return $this->databaseTransferObjectAssembler;
     }
 
     /**
@@ -73,7 +93,7 @@ class DatasourceTransferObjectAssembler implements DatasourceAssemblerInterface
         $viewData = new DatasourceViewData();
         $viewData->setId($datasourceNode->getPrimaryKey());
         $viewData->setName($datasourceNode->getName());
-        $viewData->setDatabase($this->toDatabaseOverviewData($datasourceNode->getDatabase()));
+        $viewData->setDatabase($this->getDatabaseTransferObjectAssembler()->toDatabaseOverviewData($datasourceNode->getDatabase()));
         return $viewData;
     }
 
@@ -89,31 +109,6 @@ class DatasourceTransferObjectAssembler implements DatasourceAssemblerInterface
         $overviewData = new DatasourceOverviewData();
         $overviewData->setId($datasourceNode->getPrimaryKey());
         $overviewData->setName($datasourceNode->getName());
-        return $overviewData;
-    }
-
-    /**
-     * Convert's the passed database node into a DTO.
-     *
-     * @param \AppserverIo\Appserver\Core\Api\Node\DatabaseNodeInterface $databaseNode The datgabase node to convert
-     *
-     * @return \AppserverIo\Apps\Api\TransferObject\DatabaseOverviewData The DTO
-     */
-    public function toDatabaseOverviewData(DatabaseNodeInterface $databaseNode)
-    {
-        $overviewData = new DatabaseOverviewData();
-        $overviewData->setId($databaseNode->getPrimaryKey());
-        $overviewData->setCharset((string) $databaseNode->getCharset());
-        $overviewData->setDatabaseHost((string) $databaseNode->getDatabaseHost());
-        $overviewData->setDatabaseName((string) $databaseNode->getDatabaseName());
-        $overviewData->setDatabasePort((integer) $databaseNode->getDatabasePort());
-        $overviewData->setDriver((string) $databaseNode->getDriver());
-        $overviewData->setDriverOptions((string) $databaseNode->getDriverOptions());
-        $overviewData->setMemory((boolean) $databaseNode->getMemory());
-        $overviewData->setPassword((string) $databaseNode->getPassword());
-        $overviewData->setPath((string) $databaseNode->getPath());
-        $overviewData->setUnixSocket((string) $databaseNode->getUnixSocket());
-        $overviewData->setUser((string) $databaseNode->getUser());
         return $overviewData;
     }
 
