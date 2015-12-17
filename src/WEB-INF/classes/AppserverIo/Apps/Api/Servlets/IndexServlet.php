@@ -20,6 +20,7 @@
 
 namespace AppserverIo\Apps\Api\Servlets;
 
+use AppserverIo\Apps\Api\Utils\RequestKeys;
 use AppserverIo\Psr\Servlet\Http\HttpServlet;
 use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
@@ -52,6 +53,44 @@ class IndexServlet extends HttpServlet
 {
 
     /**
+     * The user processor instance.
+     *
+     * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
+     * @var \AppserverIo\Apps\Api\Services\UserProcessorInterface
+     * @EnterpriseBean
+     */
+    protected $userProcessor;
+
+    /**
+     * The system logger implementation.
+     *
+     * @var \AppserverIo\Logger\Logger
+     * @Resource(lookup="php:global/log/System")
+     */
+    protected $systemLogger;
+
+    /**
+     * Return's the user processor instance.
+     *
+     * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The processor proxy
+     * @see \AppserverIo\Apps\Api\Services\UserProcessorInterface
+     */
+    public function getUserProcessor()
+    {
+        return $this->userProcessor;
+    }
+
+    /**
+     * Return's the system logger instance.
+     *
+     * @return \AppserverIo\Logger\Logger The logger instance
+     */
+    protected function getSystemLogger()
+    {
+        return $this->systemLogger;
+    }
+
+    /**
      * Tries to load the requested applications and adds them to the response.
      *
      * @param \AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface  $servletRequest  The request instance
@@ -77,5 +116,57 @@ class IndexServlet extends HttpServlet
     public function doGet(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
     {
         $servletResponse->appendBodyStream(json_encode(array('Welcome to appserver.io API')));
+    }
+
+    /**
+     * Log the user into the API.
+     *
+     * @param \AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface  $servletRequest  The request instance
+     * @param \AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface $servletResponse The response instance
+     *
+     * @return void
+     * @see \AppserverIo\Psr\Servlet\Http\HttpServlet::doPost()
+     *
+     * @SWG\Post(
+     *   path="/index.do",
+     *   summary="Login",
+     *   tags={"index"},
+     *   @SWG\Response(
+     *     response=200,
+     *     description="A simple welcome page"
+     *   ),
+     *   @SWG\Response(
+     *     response="default",
+     *     description="an ""unexpected"" error"
+     *   )
+     * )
+     */
+    public function doPost(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
+    {
+
+        try {
+            // start the session, if not already done
+            /** @var \AppserverIo\Psr\Servlet\Http\HttpSessionInterface $session */
+            $session = $servletRequest->getSession(true);
+            $session->start();
+
+            // load username + password from the request
+            $username = $servletRequest->getParameter(RequestKeys::USERNAME);
+            $password = $servletRequest->getParameter(RequestKeys::PASSWORD);
+
+            // try to login the user into the system
+            if ($username && $password) {
+                $content = $this->getUserProcessor()->login($username, $password);
+            }
+
+        } catch (\Exception $e) {
+            // log the exception
+            $this->getSystemLogger()->error($e->__toString());
+            // set the exception message as response body
+            $content = $e->getMessage();
+        }
+
+        // add a success message to the response
+        $servletResponse->appendBodyStream(json_encode($content));
     }
 }
