@@ -21,7 +21,7 @@
 namespace AppserverIo\Apps\Api\Repository;
 
 use AppserverIo\Apps\Api\Utils\ServiceKeys;
-use AppserverIo\Psr\Application\ApplicationInterface;
+use AppserverIo\Appserver\Core\Api\Node\AppNodeInterface;
 
 /**
  * A SLSB implementation providing the business logic to handle applications.
@@ -52,11 +52,11 @@ class ApplicationRepository extends AbstractRepository implements ApplicationRep
     const THUMBNAIL_PLACEHOLDER = 'app-placeholder-300x200.png';
 
     /**
-     * Returns the application with the passed ID.
+     * Returns the application node with the passed ID.
      *
-     * @param string $id The ID of the application to be returned
+     * @param string $id The ID of the application node to be returned
      *
-     * @return \AppserverIo\Psr\Application\ApplicationInterface The requested application
+     * @return \AppserverIo\Appserver\Core\Api\Node\AppNodeInterface The requested application node
      * @see \AppserverIo\Apps\Api\Service\ApplicationRepositoryInterface::load()
      */
     public function load($id)
@@ -65,9 +65,9 @@ class ApplicationRepository extends AbstractRepository implements ApplicationRep
     }
 
     /**
-     * Returns an array with the available applications.
+     * Returns an array with the available application nodes.
      *
-     * @return array The array with the available applications
+     * @return array The array with the available application nodes
      * @see \AppserverIo\Apps\Api\Service\ApplicationRepositoryInterface::findAll()
      */
     public function findAll()
@@ -118,15 +118,15 @@ class ApplicationRepository extends AbstractRepository implements ApplicationRep
     /**
      * Returns the full path to the application's thumbnail.
      *
-     * @param \AppserverIo\Psr\Application\ApplicationInterface $application The application to return the thumbnail path for
+     * @param \AppserverIo\Appserver\Core\Api\Node\AppNodeInterface $appNode The application node to return the thumbnail path for
      *
      * @return string The absolute path to the app's thumbnail
      */
-    protected function getThumbnailPath(ApplicationInterface $application)
+    protected function getThumbnailPath(AppNodeInterface $appNode)
     {
 
         // prepare the thumbnail path of the passed app node
-        $thumbnailPath = $application->getWebappPath() . DIRECTORY_SEPARATOR . 'WEB-INF' . DIRECTORY_SEPARATOR . ApplicationRepository::THUMBNAIL;
+        $thumbnailPath = $appNode->getWebappPath() . DIRECTORY_SEPARATOR . 'WEB-INF' . DIRECTORY_SEPARATOR . ApplicationRepository::THUMBNAIL;
 
         // check if the app contains a thumbnail in it's WEB-INF folder
         if (file_exists($thumbnailPath)) {
@@ -134,6 +134,6 @@ class ApplicationRepository extends AbstractRepository implements ApplicationRep
         }
 
         // if not, return the placeholder thumbnail
-        return $application->getWebappPath() . DIRECTORY_SEPARATOR . 'WEB-INF'  . DIRECTORY_SEPARATOR . ApplicationRepository::THUMBNAIL_PLACEHOLDER;
+        return $appNode->getWebappPath() . DIRECTORY_SEPARATOR . 'WEB-INF'  . DIRECTORY_SEPARATOR . ApplicationRepository::THUMBNAIL_PLACEHOLDER;
     }
 }

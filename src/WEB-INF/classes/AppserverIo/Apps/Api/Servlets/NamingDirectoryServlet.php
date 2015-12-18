@@ -20,8 +20,7 @@
 
 namespace AppserverIo\Apps\Api\Servlets;
 
-use AppserverIo\Http\HttpProtocol;
-use AppserverIo\Psr\Servlet\Http\HttpServlet;
+use AppserverIo\Apps\Api\Utils\RequestKeys;
 use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
 
@@ -34,7 +33,7 @@ use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
  * @link      https://github.com/appserver-io/appserver
  * @link      http://www.appserver.io
  */
-class NamingDirectoryServlet extends HttpServlet
+class NamingDirectoryServlet extends EncodingAwareServlet
 {
 
     /**
@@ -124,7 +123,7 @@ class NamingDirectoryServlet extends HttpServlet
             $content = $this->getNamingDirectoryProcessor()->load($id);
         }
 
-        // return the JSON encoded response
-        $servletResponse->appendBodyStream(json_encode($content));
+        // add the result to the request
+        $servletRequest->setAttribute(RequestKeys::RESULT, $content);
     }
 }

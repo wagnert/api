@@ -20,7 +20,7 @@
 
 namespace AppserverIo\Apps\Api\Servlets;
 
-use AppserverIo\Psr\Servlet\Http\HttpServlet;
+use AppserverIo\Apps\Api\Utils\RequestKeys;
 use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
 
@@ -33,7 +33,7 @@ use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
  * @link      https://github.com/appserver-io/appserver
  * @link      http://www.appserver.io
  */
-class ApplicationServlet extends HttpServlet
+class ApplicationServlet extends EncodingAwareServlet
 {
 
     /**
@@ -130,8 +130,8 @@ class ApplicationServlet extends HttpServlet
             $content = $this->getApplicationProcessor()->load($id);
         }
 
-        // return the JSON encoded response
-        $servletResponse->appendBodyStream(json_encode($content));
+        // add the result to the request
+        $servletRequest->setAttribute(RequestKeys::RESULT, $content);
     }
 
     /**

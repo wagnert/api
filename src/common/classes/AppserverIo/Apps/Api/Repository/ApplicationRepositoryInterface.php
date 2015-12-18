@@ -34,18 +34,18 @@ interface ApplicationRepositoryInterface
 {
 
     /**
-     * Returns the application with the passed ID.
+     * Returns the application node with the passed ID.
      *
-     * @param string $id The ID of the application to be returned
+     * @param string $id The ID of the application node to be returned
      *
-     * @return \AppserverIo\Psr\Application\ApplicationInterface The requested application
+     * @return \AppserverIo\Appserver\Core\Api\Node\AppNodeInterface The requested application node
      */
     public function load($id);
 
     /**
-     * Returns an array with the available applications.
+     * Returns an array with the available application nodes.
      *
-     * @return array The array with the available applications
+     * @return array The array with the available application nodes
      */
     public function findAll();
 

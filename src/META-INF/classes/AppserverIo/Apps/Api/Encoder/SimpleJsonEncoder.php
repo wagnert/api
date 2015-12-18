@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Apps\Api\Utils\RequestKeys
+ * AppserverIo\Apps\Api\Encoder\SimpleJsonEncoder
  *
  * NOTICE OF LICENSE
  *
@@ -18,45 +18,50 @@
  * @link      http://www.appserver.io
  */
 
-namespace AppserverIo\Apps\Api\Utils;
+namespace AppserverIo\Apps\Api\Encoder;
+
+use AppserverIo\Http\HttpProtocol;
 
 /**
- * Request keys that are used to store data in a request context.
+ * A simple JSON encoder implemenetation.
  *
  * @author    Tim Wagner <tw@appserver.io>
  * @copyright 2015 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
+ *
+ * @Stateless
  */
-class RequestKeys
+class SimpleJsonEncoder implements EncoderInterface
 {
 
     /**
-     * Private to constructor to avoid instancing this class.
-     */
-    private function __construct()
-    {
-    }
-
-    /**
-     * The key for the request attribute that has to be encoded.
+     * The content type of the encoded content.
      *
      * @var string
      */
-    const RESULT = 'result';
+    const CONTENT_TYPE = 'application/json';
 
     /**
-     * The key for a 'username'.
+     * JSON encodes the passed content and returns it.
      *
-     * @return string
+     * @param mixed $content The content to be JSON encoded
+     *
+     * @return string The encoded content
      */
-    const USERNAME = 'username';
+    public function encode($content)
+    {
+        return json_encode($content);
+    }
 
     /**
-     * The key for a 'password'.
+     * Returns the content type of the encoded content.
      *
-     * @return string
+     * @return string The content type
      */
-    const PASSWORD = 'password';
+    public function getContentType()
+    {
+        return SimpleJsonEncoder::CONTENT_TYPE;
+    }
 }

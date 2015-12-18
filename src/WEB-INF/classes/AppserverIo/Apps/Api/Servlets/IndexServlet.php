@@ -21,7 +21,6 @@
 namespace AppserverIo\Apps\Api\Servlets;
 
 use AppserverIo\Apps\Api\Utils\RequestKeys;
-use AppserverIo\Psr\Servlet\Http\HttpServlet;
 use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
 
@@ -49,7 +48,7 @@ use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
  *   swagger="2.0"
  * )
  */
-class IndexServlet extends HttpServlet
+class IndexServlet extends EncodingAwareServlet
 {
 
     /**
@@ -115,7 +114,7 @@ class IndexServlet extends HttpServlet
      */
     public function doGet(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
     {
-        $servletResponse->appendBodyStream(json_encode(array('Welcome to appserver.io API')));
+        $servletRequest->setAttribute(RequestKeys::RESULT, array('Welcome to appserver.io API'));
     }
 
     /**
@@ -166,7 +165,7 @@ class IndexServlet extends HttpServlet
             $content = $e->getMessage();
         }
 
-        // add a success message to the response
-        $servletResponse->appendBodyStream(json_encode($content));
+        // add the result to the request
+        $servletRequest->setAttribute(RequestKeys::RESULT, $content);
     }
 }

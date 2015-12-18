@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Apps\Api\Utils\RequestKeys
+ * AppserverIo\Apps\Api\Encoder\EncoderInterface
  *
  * NOTICE OF LICENSE
  *
@@ -18,10 +18,10 @@
  * @link      http://www.appserver.io
  */
 
-namespace AppserverIo\Apps\Api\Utils;
+namespace AppserverIo\Apps\Api\Encoder;
 
 /**
- * Request keys that are used to store data in a request context.
+ * Interface for all encoders.
  *
  * @author    Tim Wagner <tw@appserver.io>
  * @copyright 2015 TechDivision GmbH <info@appserver.io>
@@ -29,34 +29,22 @@ namespace AppserverIo\Apps\Api\Utils;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  */
-class RequestKeys
+interface EncoderInterface
 {
 
     /**
-     * Private to constructor to avoid instancing this class.
+     * Encodes the passed content and returns it.
+     *
+     * @param mixed $content The content to be encoded
+     *
+     * @return string The encoded content
      */
-    private function __construct()
-    {
-    }
+    public function encode($content);
 
     /**
-     * The key for the request attribute that has to be encoded.
+     * Returns the content type of the encoded content.
      *
-     * @var string
+     * @return string The content type
      */
-    const RESULT = 'result';
-
-    /**
-     * The key for a 'username'.
-     *
-     * @return string
-     */
-    const USERNAME = 'username';
-
-    /**
-     * The key for a 'password'.
-     *
-     * @return string
-     */
-    const PASSWORD = 'password';
+    public function getContentType();
 }
