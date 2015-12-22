@@ -20,6 +20,8 @@
 
 namespace AppserverIo\Apps\Api\Service;
 
+use AppserverIo\Apps\Api\TransferObject\UserOverviewData;
+
 /**
  * A SLSB implementation providing the business logic to handle users.
  *
@@ -60,6 +62,17 @@ class UserProcessor implements UserProcessorInterface
     protected function getUserRepository()
     {
         return $this->userRepository;
+    }
+
+    /**
+     * Queries whether a user has been logged into the system or not.
+     *
+     * @return boolean TRUE if a valid user is available, else FALSE
+     * @see \AppserverIo\Apps\Example\Service\UserProcessorInterface::isAuthenticated()
+     */
+    public function isAuthenticated()
+    {
+        return $this->user instanceof UserOverviewData;
     }
 
     /**

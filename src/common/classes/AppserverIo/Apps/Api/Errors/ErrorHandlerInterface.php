@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Apps\Example\Service\UserProcessorInterface
+ * AppserverIo\Apps\Api\Errors\ErrorHandlerInterface
  *
  * NOTICE OF LICENSE
  *
@@ -18,11 +18,10 @@
  * @link      http://www.appserver.io
  */
 
-namespace AppserverIo\Apps\Api\Service;
+namespace AppserverIo\Apps\Api\Errors;
 
 /**
- * An interface for SLSB implementations providing the business logic
- * to handle users.
+ * Interface for all error handlers.
  *
  * @author    Tim Wagner <tw@appserver.io>
  * @copyright 2015 TechDivision GmbH <info@appserver.io>
@@ -30,23 +29,15 @@ namespace AppserverIo\Apps\Api\Service;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  */
-interface UserProcessorInterface
+interface ErrorHandlerInterface
 {
 
     /**
-     * Queries whether a user has been logged into the system or not.
+     * Transforms the passed errors into a compatible structure.
      *
-     * @return boolean TRUE if a valid user is available, else FALSE
+     * @param array $errors The array containing the errors
+     *
+     * @return mixed The transformed errors
      */
-    public function isAuthenticated();
-
-    /**
-     * Tries to login the user with the passed name and password.
-     *
-     * @param string $username The username used to login
-     * @param string $password The password used to login
-     *
-     * @return \AppserverIo\Apps\Api\TransferObject\UserOverviewData The user logged into the system
-     */
-    public function login($username, $password);
+    public function processErrors(array $errors);
 }

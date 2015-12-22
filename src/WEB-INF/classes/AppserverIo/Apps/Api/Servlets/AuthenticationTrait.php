@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Apps\Api\Servlets\AbstractServlet
+ * AppserverIo\Apps\Api\Servlets\AuthenticationAwareServlet
  *
  * NOTICE OF LICENSE
  *
@@ -20,15 +20,11 @@
 
 namespace AppserverIo\Apps\Api\Servlets;
 
-use AppserverIo\Http\HttpProtocol;
-use AppserverIo\Apps\Api\Utils\RequestKeys;
-use AppserverIo\Psr\Servlet\Http\HttpServlet;
 use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
-use AppserverIo\Apps\Api\Encoding\EncodingAwareInterface;
 
 /**
- * The abstract servlet implementation that provides basic encoding functionality.
+ * Trait that provides authentication functionality.
  *
  * @author    Tim Wagner <tw@appserver.io>
  * @copyright 2015 TechDivision GmbH <info@appserver.io>
@@ -36,17 +32,17 @@ use AppserverIo\Apps\Api\Encoding\EncodingAwareInterface;
  * @link      https://github.com/appserver-io/appserver
  * @link      http://www.appserver.io
  */
-abstract class EncodingAwareServlet extends HttpServlet implements EncodingAwareInterface
+trait AuthenticationTrait
 {
 
     /**
-     * The encoder used to encode the result data.
+     * The service providing the authentication functionality.
      *
      * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
      * @see \AppserverIo\Apps\Api\Encoder\EncoderInterface
-     * @EnterpriseBean(beanName="SimpleJsonEncoder")
+     * @EnterpriseBean(beanName="UserProcessor")
      */
-    protected $simpleJsonEncoder;
+    protected $authenticationProvider;
 
     /**
      * Returns the encoder instance.
@@ -54,26 +50,28 @@ abstract class EncodingAwareServlet extends HttpServlet implements EncodingAware
      * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
      * @see \AppserverIo\Apps\Api\Encoder\EncoderInterface
      */
-    public function getEncoder()
+    public function getAuthenticationProvider()
     {
-        return $this->simpleJsonEncoder;
+        return $this->authenticationProvider;
     }
 
     /**
-     * Encodes the request using the configured encoding method, e. g. JSON.
+     * Queries whether or not a valid user has been logged into the system.
      *
      * @param \AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface  $servletRequest  The request instance
      * @param \AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface $servletResponse The response instance
      *
-     * @return void
+     * @return boolean TRUE if a user has been logged into the system, else FALSE
      */
-    public function encode(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
+    public function isAuthenticated(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
     {
 
-        // add the header for the content type
-        $servletResponse->addHeader(HttpProtocol::HEADER_CONTENT_TYPE, $this->getEncoder()->getContentType());
+        // try to start the session
+        /** @var \AppserverIo\Psr\Servlet\Http\HttpSessionInterface $session */
+        $session = $servletRequest->getSession();
+        $session->start();
 
-        // append the encoded content to the servlet response
-        $servletResponse->appendBodyStream($this->getEncoder()->encode($servletRequest->getAttribute(RequestKeys::RESULT)));
+        // query whether or no an user has already been authenticated
+        return $this->getAuthenticationProvider()->isAuthenticated();
     }
 }

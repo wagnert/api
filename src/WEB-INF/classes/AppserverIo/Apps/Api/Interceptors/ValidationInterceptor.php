@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Apps\Api\Interceptors\EncodeResultInterceptor
+ * AppserverIo\Apps\Api\Interceptors\ValidationInterceptor
  *
  * NOTICE OF LICENSE
  *
@@ -20,11 +20,12 @@
 
 namespace AppserverIo\Apps\Api\Interceptors;
 
-use AppserverIo\Apps\Api\Encoding\EncodingAwareInterface;
+use AppserverIo\Lang\Reflection\ReflectionObject;
+use AppserverIo\Apps\Api\Validation\ValidationAwareInterface;
 use AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface;
 
 /**
- * Interceptor to encode the response data.
+ * Interceptor to invoke validation functionality.
  *
  * @author    Bernhard Wick <bw@appserver.io>
  * @copyright 2015 TechDivision GmbH <info@appserver.io>
@@ -34,7 +35,7 @@ use AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface;
  *
  * @Aspect
  */
-class EncodeResultInterceptor
+class ValidationInterceptor
 {
 
     /**
@@ -91,7 +92,7 @@ class EncodeResultInterceptor
      */
     public function getServletRequest()
     {
-        return $this->getParameter(EncodeResultInterceptor::SERVLET_REQUEST);
+        return $this->getParameter(JsonResultInterceptor::SERVLET_REQUEST);
     }
 
     /**
@@ -101,7 +102,7 @@ class EncodeResultInterceptor
      */
     public function getServletResponse()
     {
-        return $this->getParameter(EncodeResultInterceptor::SERVLET_RESPONSE);
+        return $this->getParameter(JsonResultInterceptor::SERVLET_RESPONSE);
     }
 
     /**
@@ -120,9 +121,31 @@ class EncodeResultInterceptor
         // load the servlet instance
         $servlet = $methodInvocation->getContext();
 
-        // query whether or not we've to encode the request
-        if ($servlet instanceof EncodingAwareInterface) {
-            $servlet->encode($this->getServletRequest(), $this->getServletResponse());
+        // query whether we've to validate the servlet or not
+        if ($servlet instanceof ValidationAwareInterface) {
+            // create a reflection object instance
+            $reflectionObject = new ReflectionObject($servlet);
+
+            // iterate over all methods to one with the apropriate validation annotations
+            foreach ($reflectionObject->getMethods() as $reflectionMethod) {
+                // prepare the request method name
+                $requestMethod = ucfirst(strtolower($this->getServletRequest()->getMethod()));
+
+                // invoke the valiation method only on the Doppelgaenger methods
+                if ($reflectionMethod->hasAnnotation(sprintf('ValidateOn%s', $requestMethod)) &&
+                    stripos($reflectionMethod->getMethodName(), 'OPPELGAENGEROriginal') === false) {
+                    $reflectionMethod->invoke($servlet);
+                }
+            }
+
+            // query whether or not we've to process errors or not
+            if ($servlet->hasErrors()) {
+                return $servlet->processErrors($this->getServletRequest(), $this->getServletResponse());
+            }
+
         }
+
+        // proceed method invocation
+        return $methodInvocation->proceed();
     }
 }

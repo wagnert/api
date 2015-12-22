@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Apps\Api\Interceptors\EncodeResultInterceptor
+ * AppserverIo\Apps\Api\Interceptors\AuthenticationInterceptor
  *
  * NOTICE OF LICENSE
  *
@@ -20,11 +20,11 @@
 
 namespace AppserverIo\Apps\Api\Interceptors;
 
-use AppserverIo\Apps\Api\Encoding\EncodingAwareInterface;
+use AppserverIo\Apps\Api\Authentication\AuthenticationAwareInterface;
 use AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface;
 
 /**
- * Interceptor to encode the response data.
+ * Interceptor to check that a user has been authenticated.
  *
  * @author    Bernhard Wick <bw@appserver.io>
  * @copyright 2015 TechDivision GmbH <info@appserver.io>
@@ -34,7 +34,7 @@ use AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface;
  *
  * @Aspect
  */
-class EncodeResultInterceptor
+class AuthenticationInterceptor
 {
 
     /**
@@ -91,7 +91,7 @@ class EncodeResultInterceptor
      */
     public function getServletRequest()
     {
-        return $this->getParameter(EncodeResultInterceptor::SERVLET_REQUEST);
+        return $this->getParameter(JsonResultInterceptor::SERVLET_REQUEST);
     }
 
     /**
@@ -101,7 +101,7 @@ class EncodeResultInterceptor
      */
     public function getServletResponse()
     {
-        return $this->getParameter(EncodeResultInterceptor::SERVLET_RESPONSE);
+        return $this->getParameter(JsonResultInterceptor::SERVLET_RESPONSE);
     }
 
     /**
@@ -120,9 +120,9 @@ class EncodeResultInterceptor
         // load the servlet instance
         $servlet = $methodInvocation->getContext();
 
-        // query whether or not we've to encode the request
-        if ($servlet instanceof EncodingAwareInterface) {
-            $servlet->encode($this->getServletRequest(), $this->getServletResponse());
+        // query whether or not a user has been logged into the system
+        if ($servlet instanceof AuthenticationAwareInterface && !$servlet->isAuthenticated($this->getServletRequest(), $this->getServletResponse())) {
+            throw new \Exception('Authentication Exception!!!!!');
         }
     }
 }

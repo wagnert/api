@@ -28,6 +28,7 @@ use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
 use AppserverIo\Apps\Api\Exceptions\FileNotFoundException;
 use AppserverIo\Apps\Api\Exceptions\FileNotReadableException;
 use AppserverIo\Apps\Api\Exceptions\FoundDirInsteadOfFileException;
+use AppserverIo\Apps\Api\Authentication\AuthenticationAwareInterface;
 
 /**
  * Servlet that handles all thumbnail related requests.
@@ -38,7 +39,7 @@ use AppserverIo\Apps\Api\Exceptions\FoundDirInsteadOfFileException;
  * @link      https://github.com/appserver-io/appserver
  * @link      http://www.appserver.io
  */
-class ThumbnailServlet extends HttpServlet
+class ThumbnailServlet extends AbstractServlet implements AuthenticationAwareInterface
 {
 
     /**

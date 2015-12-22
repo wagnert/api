@@ -23,6 +23,8 @@ namespace AppserverIo\Apps\Api\Servlets;
 use AppserverIo\Apps\Api\Utils\RequestKeys;
 use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
+use AppserverIo\Apps\Api\Encoding\EncodingAwareInterface;
+use AppserverIo\Apps\Api\Authentication\AuthenticationAwareInterface;
 
 /**
  * Servlet that handles all vhost related requests.
@@ -33,7 +35,7 @@ use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
  * @link      https://github.com/appserver-io/appserver
  * @link      http://www.appserver.io
  */
-class VirtualHostServlet extends EncodingAwareServlet
+class VirtualHostServlet extends AbstractServlet implements EncodingAwareInterface, AuthenticationAwareInterface
 {
 
     /**

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Apps\Example\Service\UserProcessorInterface
+ * AppserverIo\Apps\Api\TransferObject\JsonapiOverviewData
  *
  * NOTICE OF LICENSE
  *
@@ -18,35 +18,52 @@
  * @link      http://www.appserver.io
  */
 
-namespace AppserverIo\Apps\Api\Service;
+namespace AppserverIo\Apps\Api\TransferObject;
+
+use Swagger\Annotations as SWG;
+use Rhumsaa\Uuid\Uuid;
 
 /**
- * An interface for SLSB implementations providing the business logic
- * to handle users.
+ * DTO for the JSON-API version.
  *
  * @author    Tim Wagner <tw@appserver.io>
  * @copyright 2015 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
+ *
+ * @SWG\Definition(type="object", required={"version"})
  */
-interface UserProcessorInterface
+class JsonapiViewData
 {
 
     /**
-     * Queries whether a user has been logged into the system or not.
+     * The JSON-API version number.
      *
-     * @return boolean TRUE if a valid user is available, else FALSE
+     * @var string
+     * @SWG\Property(property="version", type="string")
      */
-    public function isAuthenticated();
+    protected $version = '1.0';
 
     /**
-     * Tries to login the user with the passed name and password.
+     * Set's the JSON-API version number.
      *
-     * @param string $username The username used to login
-     * @param string $password The password used to login
+     * @param string $version The version number
      *
-     * @return \AppserverIo\Apps\Api\TransferObject\UserOverviewData The user logged into the system
+     * @return void
      */
-    public function login($username, $password);
+    public function setVersion($version)
+    {
+        $this->version = $version;
+    }
+
+    /**
+     * Return's the JSON-API version number
+     *
+     * @return string The version number
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
 }

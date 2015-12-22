@@ -20,7 +20,11 @@
 
 namespace AppserverIo\Apps\Api\Servlets;
 
+use Respect\Validation\Validator as v;
 use AppserverIo\Apps\Api\Utils\RequestKeys;
+use AppserverIo\Apps\Api\Encoding\EncodingAwareInterface;
+use AppserverIo\Apps\Api\Validation\ValidationAwareInterface;
+use AppserverIo\Apps\Api\TransferObject\ErrorOverviewData;
 use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
 
@@ -48,45 +52,133 @@ use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
  *   swagger="2.0"
  * )
  */
-class IndexServlet extends EncodingAwareServlet
+class IndexServlet extends AbstractServlet implements EncodingAwareInterface, ValidationAwareInterface
 {
 
     /**
-     * The user processor instance.
+     * The username for login purposes.
+     *
+     * @var string
+     */
+    protected $username;
+
+    /**
+     * The password for login purposes.
+     *
+     * @var string
+     */
+    protected $password;
+
+    /**
+     * The service providing the authentication functionality.
      *
      * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
-     * @var \AppserverIo\Apps\Api\Services\UserProcessorInterface
-     * @EnterpriseBean
+     * @see \AppserverIo\Apps\Api\Encoder\EncoderInterface
+     * @EnterpriseBean(beanName="UserProcessor")
      */
-    protected $userProcessor;
+    protected $authenticationProvider;
 
     /**
-     * The system logger implementation.
+     * Set's the username found as request parameter.
      *
-     * @var \AppserverIo\Logger\Logger
-     * @Resource(lookup="php:global/log/System")
-     */
-    protected $systemLogger;
-
-    /**
-     * Return's the user processor instance.
+     * @param string|null $username The username
      *
-     * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The processor proxy
-     * @see \AppserverIo\Apps\Api\Services\UserProcessorInterface
+     * @return void
      */
-    public function getUserProcessor()
+    public function setUsername($username)
     {
-        return $this->userProcessor;
+        $this->username = $username;
     }
 
     /**
-     * Return's the system logger instance.
+     * Return's the password found as request parameter.
      *
-     * @return \AppserverIo\Logger\Logger The logger instance
+     * @return string|null The username
      */
-    protected function getSystemLogger()
+    public function getUsername()
     {
-        return $this->systemLogger;
+        return $this->username;
+    }
+
+    /**
+     * Set's the password found as request parameter.
+     *
+     * @param string|null $password The password
+     *
+     * @return void
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+    }
+
+    /**
+     * Return's the password found as request paramater.
+     *
+     * @return string|null The password
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * Returns the encoder instance.
+     *
+     * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
+     * @see \AppserverIo\Apps\Api\Encoder\EncoderInterface
+     */
+    public function getAuthenticationProvider()
+    {
+        return $this->authenticationProvider;
+    }
+
+    /**
+     * Validates the user credentials on a Post request.
+     *
+     * @return void
+     * @ValidateOnPost
+     */
+    public function validateOnPost()
+    {
+
+        // validate the username
+        if (v::stringType()->length(8, 16)->validate($this->getUsername()) === false) {
+            $this->addError(ErrorOverviewData::factoryForParameter(500, 'Username must have between 8 and 16 chars', 'username', 'A really long error description'));
+        }
+
+        // validate the password
+        if (v::stringType()->length(8, 16)->validate($this->getPassword()) === false) {
+            $this->addError(ErrorOverviewData::factoryForParameter(500, 'Password must have between 8 and 16 chars', 'password', 'A really long error description'));
+        }
+    }
+
+    /**
+     * Logs the user with the data found in the request into the system.
+     *
+     * @param \AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface  $servletRequest  The request instance
+     * @param \AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface $servletResponse The response instance
+     *
+     * @return void
+     */
+    public function authenticate(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
+    {
+
+        try {
+            // start the session, if not already done
+            /** @var \AppserverIo\Psr\Servlet\Http\HttpSessionInterface $session */
+            $session = $servletRequest->getSession(true);
+            $session->start();
+
+            // try to login the user into the system add the result to the request
+            $servletRequest->setAttribute(RequestKeys::RESULT, $this->getAuthenticationProvider()->login($this->getUsername(), $this->getPassword()));
+
+        } catch (\Exception $e) {
+            // log the exception
+            $this->getSystemLogger()->error($e->__toString());
+            // set the exception message as response body
+            $this->addError(array('error' => $e->getMessage()));
+        }
     }
 
     /**
@@ -107,8 +199,8 @@ class IndexServlet extends EncodingAwareServlet
      *     description="A simple welcome page"
      *   ),
      *   @SWG\Response(
-     *     response="default",
-     *     description="an ""unexpected"" error"
+     *     response=500,
+     *     description="Internal Server Error"
      *   )
      * )
      */
@@ -135,37 +227,13 @@ class IndexServlet extends EncodingAwareServlet
      *     description="A simple welcome page"
      *   ),
      *   @SWG\Response(
-     *     response="default",
-     *     description="an ""unexpected"" error"
+     *     response=500,
+     *     description="Internal Server Error"
      *   )
      * )
      */
     public function doPost(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
     {
-
-        try {
-            // start the session, if not already done
-            /** @var \AppserverIo\Psr\Servlet\Http\HttpSessionInterface $session */
-            $session = $servletRequest->getSession(true);
-            $session->start();
-
-            // load username + password from the request
-            $username = $servletRequest->getParameter(RequestKeys::USERNAME);
-            $password = $servletRequest->getParameter(RequestKeys::PASSWORD);
-
-            // try to login the user into the system
-            if ($username && $password) {
-                $content = $this->getUserProcessor()->login($username, $password);
-            }
-
-        } catch (\Exception $e) {
-            // log the exception
-            $this->getSystemLogger()->error($e->__toString());
-            // set the exception message as response body
-            $content = $e->getMessage();
-        }
-
-        // add the result to the request
-        $servletRequest->setAttribute(RequestKeys::RESULT, $content);
+        $this->authenticate($servletRequest, $servletResponse);
     }
 }

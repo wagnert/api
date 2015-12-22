@@ -20,21 +20,19 @@
 
 namespace AppserverIo\Apps\Api\Interceptors;
 
-use AppserverIo\Apps\Api\Encoding\EncodingAwareInterface;
+use AppserverIo\Psr\Servlet\ServletInterface;
 use AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface;
 
 /**
- * Interceptor to encode the response data.
+ * Interceptor that set's all request parameters to the action by using setter methods.
  *
- * @author    Bernhard Wick <bw@appserver.io>
- * @copyright 2015 TechDivision GmbH <info@appserver.io>
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      https://github.com/appserver-io-apps/api
- * @link      http://www.appserver.io
- *
- * @Aspect
+ * @author     Tim Wagner <tw@techdivision.com>
+ * @copyright  2015 TechDivision GmbH <info@techdivision.com>
+ * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link       http://github.com/appserver-io/routlt
+ * @link       http://www.appserver.io
  */
-class EncodeResultInterceptor
+class ParamsInterceptor
 {
 
     /**
@@ -91,7 +89,7 @@ class EncodeResultInterceptor
      */
     public function getServletRequest()
     {
-        return $this->getParameter(EncodeResultInterceptor::SERVLET_REQUEST);
+        return $this->getParameter(ParamsInterceptor::SERVLET_REQUEST);
     }
 
     /**
@@ -101,15 +99,16 @@ class EncodeResultInterceptor
      */
     public function getServletResponse()
     {
-        return $this->getParameter(EncodeResultInterceptor::SERVLET_RESPONSE);
+        return $this->getParameter(ParamsInterceptor::SERVLET_RESPONSE);
     }
 
     /**
-     * Advice used to encode the response data.
+     * Iterates over all servlet request parameters and tries to find and
+     * invoke a setter with the param that matches the setters name.
      *
-     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
+     * @param AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
      *
-     * @return void
+     * @return string|null The action result
      */
     public function intercept(MethodInvocationInterface $methodInvocation)
     {
@@ -120,9 +119,26 @@ class EncodeResultInterceptor
         // load the servlet instance
         $servlet = $methodInvocation->getContext();
 
-        // query whether or not we've to encode the request
-        if ($servlet instanceof EncodingAwareInterface) {
-            $servlet->encode($this->getServletRequest(), $this->getServletResponse());
+        // get the servlet's methods
+        $methods = get_class_methods($servlet);
+
+        // try to inject the request parameters by using the class setters
+        foreach ($this->getServletRequest()->getParameterMap() as $key => $value) {
+            // prepare the setter method name
+            $methodName = sprintf('set%s', ucfirst($key));
+
+            // query whether the class has the setter implemented
+            if (in_array($methodName, $methods) === false) {
+                continue;
+            }
+
+            try {
+                // set the value by using the setter
+                $servlet->$methodName($value);
+
+            } catch (\Exception $e) {
+                $servlet->addError(array($key => $e->getMessage()));
+            }
         }
     }
 }
