@@ -23,7 +23,6 @@ namespace AppserverIo\Apps\Api\Encoder;
 use AppserverIo\Http\HttpProtocol;
 use JMS\Serializer\SerializerBuilder;
 use AppserverIo\Appserver\ServletEngine\RequestHandler;
-use Tobscure\JsonApi\Document;
 
 /**
  * A simple JSON encoder implemenetation.
@@ -60,7 +59,7 @@ class JmsSerializerEncoder implements EncoderInterface
         $application = RequestHandler::getApplicationContext();
 
         // this is necessary to load the PSR-4 compatible Swagger library
-        \Doctrine\Common\Annotations\AnnotationRegistry::registerLoader(function ($className) use ($application) {
+        \Doctrine\Common\Annotations\AnnotationRegistry::registerLoader(function($className) use ($application) {
 
             // load the application directory
             $webappPath = $application->getWebappPath();
@@ -79,8 +78,20 @@ class JmsSerializerEncoder implements EncoderInterface
             return false;
         });
 
+        // create the builder instance
+        $builder = SerializerBuilder::create();
+
+        // configure/register the handler for the JSON-API documents
+        $builder->configureHandlers(function(JMS\Serializer\Handler\HandlerRegistry $registry) {
+            $registry->registerHandler('serialization', 'Tobscure\JsonApi\Document', 'json',
+                function($visitor, Tobscure\JsonApi\Document $obj, array $type) {
+                    return $obj->__toString();
+                }
+            );
+        });
+
         // serialize the content
-        return SerializerBuilder::create()->build()->serialize($content, 'json');
+        return $builder->build()->serialize($content, 'json');
     }
 
     /**

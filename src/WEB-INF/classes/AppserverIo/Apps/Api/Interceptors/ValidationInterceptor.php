@@ -92,7 +92,7 @@ class ValidationInterceptor
      */
     public function getServletRequest()
     {
-        return $this->getParameter(JsonResultInterceptor::SERVLET_REQUEST);
+        return $this->getParameter(ValidationInterceptor::SERVLET_REQUEST);
     }
 
     /**
@@ -102,7 +102,7 @@ class ValidationInterceptor
      */
     public function getServletResponse()
     {
-        return $this->getParameter(JsonResultInterceptor::SERVLET_RESPONSE);
+        return $this->getParameter(ValidationInterceptor::SERVLET_RESPONSE);
     }
 
     /**
