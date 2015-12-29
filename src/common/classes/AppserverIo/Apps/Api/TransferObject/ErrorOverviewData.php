@@ -75,7 +75,7 @@ class ErrorOverviewData
      * @param \AppserverIo\Apps\Api\TransferObject\SourceViewData $source The error source
      * @param integer                                             $code   The error code
      * @param string                                              $title  The error title
-     * @param string                                              $detail The error detail
+     * @param string|null                                         $detail The error detail
      */
     protected function __construct(SourceViewData $source, $code, $title, $detail)
     {
@@ -88,14 +88,14 @@ class ErrorOverviewData
     /**
      * Factory method to create a new DTO for the passed error details.
      *
-     * @param integer $code   The error code
-     * @param string  $title  The error title
-     * @param string  $source The error source
-     * @param string  $detail The error detail
+     * @param integer     $code   The error code
+     * @param string      $title  The error title
+     * @param string|null $source The error source
+     * @param string|null $detail The error detail
      *
      * @return \AppserverIo\Apps\Api\TransferObject\ErrorOverviewData The initialized DTO
      */
-    public static function factoryForPointer($code, $title, $source, $detail)
+    public static function factoryForPointer($code, $title, $source = null, $detail = null)
     {
         return new ErrorOverviewData(new SourceViewData($source), $code, $title, $detail);
     }
@@ -103,14 +103,14 @@ class ErrorOverviewData
     /**
      * Factory method to create a new DTO for the passed error details.
      *
-     * @param integer $code   The error code
-     * @param string  $title  The error title
-     * @param string  $source The error source
-     * @param string  $detail The error detail
+     * @param integer     $code   The error code
+     * @param string      $title  The error title
+     * @param string|null $source The error source
+     * @param string|null $detail The error detail
      *
      * @return \AppserverIo\Apps\Api\TransferObject\ErrorOverviewData The initialized DTO
      */
-    public static function factoryForParameter($code, $title, $source, $detail)
+    public static function factoryForParameter($code, $title, $source = null, $detail = null)
     {
         return new ErrorOverviewData(new SourceViewData(null, $source), $code, $title, $detail);
     }
@@ -184,7 +184,7 @@ class ErrorOverviewData
     /**
      * Set's the error's detail.
      *
-     * @param string $detail The error's detail
+     * @param string|null $detail The error's detail
      *
      * @return void
      */

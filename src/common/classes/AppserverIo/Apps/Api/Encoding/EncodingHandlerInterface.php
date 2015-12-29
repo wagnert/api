@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Apps\Api\Encoder\EncoderInterface
+ * AppserverIo\Apps\Api\Encoding\EncodingHandlerInterface
  *
  * NOTICE OF LICENSE
  *
@@ -18,10 +18,10 @@
  * @link      http://www.appserver.io
  */
 
-namespace AppserverIo\Apps\Api\Encoder;
+namespace AppserverIo\Apps\Api\Encoding;
 
 /**
- * Interface for all encoders.
+ * Interface for all encoding handlers.
  *
  * @author    Tim Wagner <tw@appserver.io>
  * @copyright 2015 TechDivision GmbH <info@appserver.io>
@@ -29,7 +29,7 @@ namespace AppserverIo\Apps\Api\Encoder;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  */
-interface EncoderInterface
+interface EncodingHandlerInterface
 {
 
     /**
@@ -37,14 +37,7 @@ interface EncoderInterface
      *
      * @param mixed $content The content to be encoded
      *
-     * @return string The encoded content
+     * @return \AppserverIo\Apps\Api\TransferObject\EncodedViewData The DTO with the encoded content
      */
     public function encode($content);
-
-    /**
-     * Returns the content type of the encoded content.
-     *
-     * @return string The content type
-     */
-    public function getContentType();
 }

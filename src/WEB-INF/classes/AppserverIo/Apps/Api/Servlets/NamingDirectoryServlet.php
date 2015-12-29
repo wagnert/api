@@ -14,7 +14,7 @@
  * @author    Tim Wagner <tw@appserver.io>
  * @copyright 2015 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      https://github.com/appserver-io/appserver
+ * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  */
 
@@ -32,8 +32,13 @@ use AppserverIo\Apps\Api\Authentication\AuthenticationAwareInterface;
  * @author    Tim Wagner <tw@appserver.io>
  * @copyright 2015 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      https://github.com/appserver-io/appserver
+ * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
+ *
+ * @Route(name="namingDirectories",
+ *        displayName="Handles naming directory related requests",
+ *        description="A servlet implementation that handles all naming directory related requests.",
+ *        urlPattern={"/namingDirectories.do", "/namingDirectories.do*"})
  */
 class NamingDirectoryServlet extends AbstractServlet implements EncodingAwareInterface, AuthenticationAwareInterface
 {

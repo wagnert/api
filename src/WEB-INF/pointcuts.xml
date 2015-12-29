@@ -9,7 +9,7 @@
     <advice>
         <advice-aspect>\AppserverIo\Apps\Api\Interceptors\AuthenticationInterceptor</advice-aspect>
         <advice-name>intercept</advice-name>
-        <advice-type>Before</advice-type>
+        <advice-type>Around</advice-type>
         <advice-pointcuts>
             <pointcut-name>allDoMethods</pointcut-name>
         </advice-pointcuts>
@@ -18,7 +18,7 @@
     <advice>
         <advice-aspect>\AppserverIo\Apps\Api\Interceptors\ParamsInterceptor</advice-aspect>
         <advice-name>intercept</advice-name>
-        <advice-type>Before</advice-type>
+        <advice-type>Around</advice-type>
         <advice-pointcuts>
             <pointcut-name>allDoMethods</pointcut-name>
         </advice-pointcuts>

@@ -68,7 +68,7 @@ trait AuthenticationTrait
 
         // try to start the session
         /** @var \AppserverIo\Psr\Servlet\Http\HttpSessionInterface $session */
-        $session = $servletRequest->getSession();
+        $session = $servletRequest->getSession(true);
         $session->start();
 
         // query whether or no an user has already been authenticated

@@ -133,7 +133,7 @@ class ValidationInterceptor
 
                 // invoke the valiation method only on the Doppelgaenger methods
                 if ($reflectionMethod->hasAnnotation(sprintf('ValidateOn%s', $requestMethod)) &&
-                    stripos($reflectionMethod->getMethodName(), 'OPPELGAENGEROriginal') === false) {
+                    stripos($reflectionMethod->getMethodName(), 'DOPPELGAENGEROriginal') === false) {
                     $reflectionMethod->invoke($servlet);
                 }
             }
@@ -142,7 +142,6 @@ class ValidationInterceptor
             if ($servlet->hasErrors()) {
                 return $servlet->processErrors($this->getServletRequest(), $this->getServletResponse());
             }
-
         }
 
         // proceed method invocation

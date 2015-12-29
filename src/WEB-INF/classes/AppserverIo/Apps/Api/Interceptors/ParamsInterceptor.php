@@ -140,5 +140,8 @@ class ParamsInterceptor
                 $servlet->addError(array($key => $e->getMessage()));
             }
         }
+
+        // proceed method invocation
+        return $methodInvocation->proceed();
     }
 }

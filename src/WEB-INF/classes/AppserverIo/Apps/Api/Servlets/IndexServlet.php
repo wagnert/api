@@ -14,7 +14,7 @@
  * @author    Tim Wagner <tw@appserver.io>
  * @copyright 2015 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      https://github.com/appserver-io/appserver
+ * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  */
 
@@ -34,8 +34,13 @@ use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
  * @author    Tim Wagner <tw@appserver.io>
  * @copyright 2015 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      https://github.com/appserver-io/appserver
+ * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
+ *
+ * @Route(name="index",
+ *        displayName="Handles login/logout requests",
+ *        description="A servlet implementation that handles login/logout related requests.",
+ *        urlPattern={"/index.do", "/index.do*"})
  *
  * @SWG\Info(
  *   title="Internal appserver.io API",
@@ -143,13 +148,13 @@ class IndexServlet extends AbstractServlet implements EncodingAwareInterface, Va
     {
 
         // validate the username
-        if (v::stringType()->length(8, 16)->validate($this->getUsername()) === false) {
-            $this->addError(ErrorOverviewData::factoryForParameter(500, 'Username must have between 8 and 16 chars', 'username', 'A really long error description'));
+        if (v::stringType()->length(4, 16)->validate($this->getUsername()) === false) {
+            $this->addError(ErrorOverviewData::factoryForParameter(500, 'Username must have between 4 and 16 chars', 'username'));
         }
 
         // validate the password
         if (v::stringType()->length(8, 16)->validate($this->getPassword()) === false) {
-            $this->addError(ErrorOverviewData::factoryForParameter(500, 'Password must have between 8 and 16 chars', 'password', 'A really long error description'));
+            $this->addError(ErrorOverviewData::factoryForParameter(500, 'Password must have between 8 and 16 chars', 'password'));
         }
     }
 
@@ -177,7 +182,7 @@ class IndexServlet extends AbstractServlet implements EncodingAwareInterface, Va
             // log the exception
             $this->getSystemLogger()->error($e->__toString());
             // set the exception message as response body
-            $this->addError(array('error' => $e->getMessage()));
+            $this->addError(ErrorOverviewData::factoryForParameter(500, $e->getMessage()));
         }
     }
 

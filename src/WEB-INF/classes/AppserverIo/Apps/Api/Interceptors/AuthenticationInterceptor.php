@@ -20,6 +20,7 @@
 
 namespace AppserverIo\Apps\Api\Interceptors;
 
+use AppserverIo\Apps\Api\TransferObject\ErrorOverviewData;
 use AppserverIo\Apps\Api\Authentication\AuthenticationAwareInterface;
 use AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface;
 
@@ -122,7 +123,12 @@ class AuthenticationInterceptor
 
         // query whether or not a user has been logged into the system
         if ($servlet instanceof AuthenticationAwareInterface && !$servlet->isAuthenticated($this->getServletRequest(), $this->getServletResponse())) {
-            throw new \Exception('Authentication Exception!!!!!');
+            // add an error to the servlet
+            $servlet->addError(ErrorOverviewData::factoryForParameter(500, 'Authentication Exception'));
+            // stop the workflow and process the errors immediately
+            return $servlet->processErrors($this->getServletRequest(), $this->getServletResponse());
+        } else {
+            return $methodInvocation->proceed();
         }
     }
 }

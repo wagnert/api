@@ -26,7 +26,7 @@ use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
 
 /**
- * The abstract servlet implementation that provides basic encoding functionality.
+ * The trait that provides basic encoding functionality.
  *
  * @author    Tim Wagner <tw@appserver.io>
  * @copyright 2015 TechDivision GmbH <info@appserver.io>
@@ -38,23 +38,23 @@ trait EncodingTrait
 {
 
     /**
-     * The encoder used to encode the result data.
+     * The encoding handler used to encode the result data.
      *
      * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
-     * @see \AppserverIo\Apps\Api\Encoder\EncoderInterface
-     * @EnterpriseBean(beanName="JmsSerializerEncoder")
+     * @see \AppserverIo\Apps\Api\Encoding\EncodingHandlerInterface
+     * @EnterpriseBean
      */
-    protected $encoder;
+    protected $encodingHandler;
 
     /**
-     * Returns the encoder instance.
+     * Returns the encoding handler instance.
      *
      * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
-     * @see \AppserverIo\Apps\Api\Encoder\EncoderInterface
+     * @see \AppserverIo\Apps\Api\Encoding\EncodingHandlerInterface
      */
-    public function getEncoder()
+    public function getEncodingHandler()
     {
-        return $this->encoder;
+        return $this->encodingHandler;
     }
 
     /**
@@ -68,10 +68,14 @@ trait EncodingTrait
     public function encode(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
     {
 
-        // add the header for the content type
-        $servletResponse->addHeader(HttpProtocol::HEADER_CONTENT_TYPE, $this->getEncoder()->getContentType());
+        // load the result to be encoded
+        $result = $servletRequest->getAttribute(RequestKeys::RESULT);
 
-        // append the encoded content to the servlet response
-        $servletResponse->appendBodyStream($this->getEncoder()->encode($servletRequest->getAttribute(RequestKeys::RESULT)));
+        // encode the result with the configured encoder
+        $viewData = $this->getEncodingHandler()->encode($result);
+
+        // add the header for the content type and append the encoded content
+        $servletResponse->addHeader(HttpProtocol::HEADER_CONTENT_TYPE, $viewData->getContentType());
+        $servletResponse->appendBodyStream($viewData->getData());
     }
 }

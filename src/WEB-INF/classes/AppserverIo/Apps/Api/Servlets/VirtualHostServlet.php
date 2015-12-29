@@ -14,7 +14,7 @@
  * @author    Tim Wagner <tw@appserver.io>
  * @copyright 2015 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      https://github.com/appserver-io/appserver
+ * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  */
 
@@ -27,13 +27,18 @@ use AppserverIo\Apps\Api\Encoding\EncodingAwareInterface;
 use AppserverIo\Apps\Api\Authentication\AuthenticationAwareInterface;
 
 /**
- * Servlet that handles all vhost related requests.
+ * Servlet that handles all virtual host related requests.
  *
  * @author    Tim Wagner <tw@appserver.io>
  * @copyright 2015 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      https://github.com/appserver-io/appserver
+ * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
+ *
+ * @Route(name="virtualHosts",
+ *        displayName="Handles virtual host related requests",
+ *        description="A servlet implementation that handles all virtual host related requests.",
+ *        urlPattern={"/virtualHosts.do", "/virtualHosts.do*"})
  */
 class VirtualHostServlet extends AbstractServlet implements EncodingAwareInterface, AuthenticationAwareInterface
 {
