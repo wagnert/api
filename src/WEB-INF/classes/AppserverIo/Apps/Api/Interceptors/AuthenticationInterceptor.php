@@ -92,7 +92,7 @@ class AuthenticationInterceptor
      */
     public function getServletRequest()
     {
-        return $this->getParameter(JsonResultInterceptor::SERVLET_REQUEST);
+        return $this->getParameter(AuthenticationInterceptor::SERVLET_REQUEST);
     }
 
     /**
@@ -102,7 +102,7 @@ class AuthenticationInterceptor
      */
     public function getServletResponse()
     {
-        return $this->getParameter(JsonResultInterceptor::SERVLET_RESPONSE);
+        return $this->getParameter(AuthenticationInterceptor::SERVLET_RESPONSE);
     }
 
     /**
