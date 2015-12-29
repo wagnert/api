@@ -41,6 +41,14 @@ interface UserProcessorInterface
     public function isAuthenticated();
 
     /**
+     * Returns the authenticated user.
+     *
+     * @return \AppserverIo\Apps\Api\TransferObject\UserOverviewData The user logged into the system
+     * @see \AppserverIo\Apps\Example\Service\UserProcessorInterface::getAuthenticatedUser()
+     */
+    public function getAuthenticatedUser();
+
+    /**
      * Tries to login the user with the passed name and password.
      *
      * @param string $username The username used to login
