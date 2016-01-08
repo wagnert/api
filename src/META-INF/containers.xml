@@ -20,13 +20,16 @@
                             <param name="documentRoot" type="string">internal/api</param>
                         </params>
                         <rewrites>
+                            <!-- stop rewriting for directories, files or symlinks -->
                             <rewrite condition="-d{OR}-f{OR}-l" target="" flag="L" />
+                            <!-- rewrite everything else to the matching servlet -->
+                            <rewrite condition="^/(.*)/(.*)$" target="$1.do/$2" flag="L" />
+                            <rewrite condition="^/(.*)$" target="$1.do" flag="L" />
                         </rewrites>
                         <accesses>
                             <access type="allow">
                                 <params>
-                                    <param name="X_REQUEST_URI" type="string">^.*
-                                    </param>
+                                    <param name="X_REQUEST_URI" type="string">^.*</param>
                                 </params>
                             </access>
                         </accesses>

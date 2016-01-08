@@ -58,41 +58,30 @@ class JmsSerializerEncoder extends SimpleJsonEncoder implements EncoderInterface
     public function encode($content)
     {
 
-        // this is necessary to load the PSR-4 compatible Swagger library
-        \Doctrine\Common\Annotations\AnnotationRegistry::registerLoader(array($this, 'loadClass'));
-
-        // serialize the passed content
-        return new EncodedViewData($this->getContentType(), SerializerBuilder::create()->build()->serialize($content, 'json'));
-    }
-
-    /**
-     * The annotation class loader that is necessary to load the swagger
-     * libraries annotation classes.
-     *
-     * @param string $className The name of the annotation class load
-     *
-     * @return boolean TRUE if the class has been loaded, else FALSE
-     */
-    public function loadClass($className)
-    {
-
         // load the application instance
         $application = RequestHandler::getApplicationContext();
 
-        // load the application directory
-        $webappPath = $application->getWebappPath();
-        $shortName = str_replace("Swagger\\Annotations\\", DIRECTORY_SEPARATOR, $className);
+        // this is necessary to load the PSR-4 compatible Swagger library
+        \Doctrine\Common\Annotations\AnnotationRegistry::registerLoader(function ($className) use ($application) {
 
-        // prepare the annotation filename for the Swagger annotations
-        $file = sprintf('%s/vendor/zircote/swagger-php/src/Annotations/%s.php', $webappPath, $shortName);
+            // load the application directory
+            $webappPath = $application->getWebappPath();
+            $shortName = str_replace("Swagger\\Annotations\\", DIRECTORY_SEPARATOR, $className);
 
-        // query whether the file exists or not
-        if (file_exists($file)) {
-            require $file;
-            return class_exists($className);
-        }
+            // prepare the annotation filename for the Swagger annotations
+            $file = sprintf('%s/vendor/zircote/swagger-php/src/Annotations/%s.php', $webappPath, $shortName);
 
-        // return FALSE if the class can't be loaded
-        return false;
+            // query whether the file exists or not
+            if (file_exists($file)) {
+                require $file;
+                return class_exists($className);
+            }
+
+            // return FALSE if the class can't be loaded
+            return false;
+        });
+
+        // serialize the passed content
+        return new EncodedViewData($this->getContentType(), SerializerBuilder::create()->build()->serialize($content, 'json'));
     }
 }
