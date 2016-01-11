@@ -37,7 +37,7 @@
     <!-- define the Login Configuration for this application -->
     <login-config>
         <auth-method>Form</auth-method>
-        <realm-name>php:ass/api-realm</realm-name>
+        <realm-name>api-realm</realm-name>
         <form-login-config>
             <form-login-page>/authentication.do</form-login-page>
             <form-error-page>/authentication.do</form-error-page>
