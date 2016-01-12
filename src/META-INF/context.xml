@@ -38,9 +38,9 @@
                             </loginModule -->
                             <loginModule type="AppserverIo\Appserver\ServletEngine\Authentication\LoginModules\DatabasePDOLoginModule" flag="required">
                                 <params>
-                                    <param name="lookupName" type="string">php:env/combined-appserver/ds/appserver.io-example-application</param>
+                                    <param name="lookupName" type="string">php:env/api-container/ds/appserver.io-api-application</param>
                                     <param name="principalsQuery" type="string">select password from user where username = ?</param>
-                                    <param name="rolesQuery" type="string">select r.name, from role r inner join user p on r.user_id_fk = p.user_id where p.username = ?</param>
+                                    <param name="rolesQuery" type="string">select r.name, 'Roles' from role r inner join user p on r.userIdFk = p.userId where p.username = ?</param>
                                     <param name="hashAlgorithm" type="string">SHA-512</param>
                                     <param name="hashEncoding" type="string">hex</param>
                                     <param name="password-stacking" type="string">useFirstPass</param>
