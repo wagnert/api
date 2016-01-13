@@ -25,18 +25,18 @@
     </classLoaders>
 
     <managers>
-        <manager name="AuthenticationManagerInterface" type="AppserverIo\Appserver\ServletEngine\Authentication\StandardAuthenticationManager" factory="AppserverIo\Appserver\ServletEngine\Authentication\StandardAuthenticationManagerFactory">
+        <manager name="AuthenticationManagerInterface" type="AppserverIo\Appserver\ServletEngine\Security\StandardAuthenticationManager" factory="AppserverIo\Appserver\ServletEngine\Security\StandardAuthenticationManagerFactory">
             <securityDomains>
                 <securityDomain name="api-realm">
                     <authConfig>
                         <loginModules>
-                            <!-- loginModule type="AppserverIo\Appserver\ServletEngine\Authentication\LoginModule\HtpasswdFile" flag="required">
+                            <!-- loginModule type="AppserverIo\Appserver\ServletEngine\Security\Auth\Spi\HtpasswdFileLoginModule" flag="required">
                                 <params>
                                     <param name="filename" type="string">WEB-INF/htpasswd</param>
                                     <param name="password-stacking" type="string">useFirstPass</param>
                                 </params>
                             </loginModule -->
-                            <loginModule type="AppserverIo\Appserver\ServletEngine\Authentication\LoginModules\DatabasePDOLoginModule" flag="required">
+                            <loginModule type="AppserverIo\Appserver\ServletEngine\Security\Auth\Spi\DatabasePDOLoginModule" flag="required">
                                 <params>
                                     <param name="lookupName" type="string">php:env/api-container/ds/appserver.io-api-application</param>
                                     <param name="principalsQuery" type="string">select password from user where username = ?</param>
