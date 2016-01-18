@@ -6,14 +6,14 @@
         <pointcut-pattern>call(\AppserverIo\Apps\Api\Servlets\*->do*())</pointcut-pattern>
     </pointcut>
 
-    <advice>
+    <!-- advice>
         <advice-aspect>\AppserverIo\Apps\Api\Interceptors\AuthenticationInterceptor</advice-aspect>
         <advice-name>intercept</advice-name>
         <advice-type>Around</advice-type>
         <advice-pointcuts>
             <pointcut-name>allDoMethods</pointcut-name>
         </advice-pointcuts>
-    </advice>
+    </advice -->
     
     <advice>
         <advice-aspect>\AppserverIo\Apps\Api\Interceptors\ParamsInterceptor</advice-aspect>

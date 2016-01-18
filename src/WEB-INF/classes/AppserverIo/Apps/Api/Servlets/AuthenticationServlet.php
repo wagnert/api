@@ -27,6 +27,7 @@ use AppserverIo\Apps\Api\Validation\ValidationAwareInterface;
 use AppserverIo\Apps\Api\TransferObject\ErrorOverviewData;
 use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
+use AppserverIo\Lang\String;
 
 /**
  * Servlet to handle a simple welcome page request.
@@ -157,11 +158,13 @@ class AuthenticationServlet extends AbstractServlet implements EncodingAwareInte
         try {
             // start the session, if not already done
             /** @var \AppserverIo\Psr\Servlet\Http\HttpSessionInterface $session */
+            /*
             $session = $servletRequest->getSession(true);
             $session->start();
 
             // try to login the user into the system add the result to the request
             $servletRequest->setAttribute(RequestKeys::RESULT, $this->getAuthenticationProvider()->login($this->getUsername(), $this->getPassword()));
+            */
 
         } catch (\Exception $e) {
             // log the exception
