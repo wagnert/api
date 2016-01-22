@@ -21,6 +21,7 @@
 namespace AppserverIo\Apps\Api\Interceptors;
 
 use AppserverIo\Apps\Api\Encoding\EncodingAwareInterface;
+use AppserverIo\Apps\Api\Validation\ValidationAwareInterface;
 use AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface;
 
 /**
@@ -119,6 +120,11 @@ class EncodeResultInterceptor
 
         // load the servlet instance
         $servlet = $methodInvocation->getContext();
+
+        // query whether or not we've to process errors
+        if ($servlet instanceof ValidationAwareInterface && $servlet->hasErrors()) {
+            $servlet->processErrors($this->getServletRequest(), $this->getServletResponse());
+        }
 
         // query whether or not we've to encode the request
         if ($servlet instanceof EncodingAwareInterface) {

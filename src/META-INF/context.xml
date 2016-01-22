@@ -38,6 +38,7 @@
                             </loginModule -->
                             <loginModule type="AppserverIo\Appserver\ServletEngine\Security\Auth\Spi\DatabasePDOLoginModule" flag="required">
                                 <params>
+                                    <param name="principalClass" type="string">AppserverIo\Apps\Api\TransferObject\UserPrincipal</param>
                                     <param name="lookupName" type="string">php:env/api-container/ds/appserver.io-api-application</param>
                                     <param name="principalsQuery" type="string">select password from user where username = ?</param>
                                     <param name="rolesQuery" type="string">select r.name, 'Roles' from role r inner join user p on r.userIdFk = p.userId where p.username = ?</param>

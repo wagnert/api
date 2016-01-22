@@ -20,6 +20,8 @@
 
 namespace AppserverIo\Apps\Api\Service;
 
+use AppserverIo\Psr\Security\PrincipalInterface;
+
 /**
  * An interface for SLSB implementations providing the business logic
  * to handle users.
@@ -34,27 +36,11 @@ interface UserProcessorInterface
 {
 
     /**
-     * Queries whether a user has been logged into the system or not.
+     * Login the passed principal and return a DTO representation.
      *
-     * @return boolean TRUE if a valid user is available, else FALSE
+     * @param \AppserverIo\Psr\Security\PrincipalInterface $principal The principal to login
+     *
+     * @return \AppserverIo\Apps\Api\TransferObject\UserPrincipal The user logged into the system
      */
-    public function isAuthenticated();
-
-    /**
-     * Returns the authenticated user.
-     *
-     * @return \AppserverIo\Apps\Api\TransferObject\UserOverviewData The user logged into the system
-     * @see \AppserverIo\Apps\Example\Service\UserProcessorInterface::getAuthenticatedUser()
-     */
-    public function getAuthenticatedUser();
-
-    /**
-     * Tries to login the user with the passed name and password.
-     *
-     * @param string $username The username used to login
-     * @param string $password The password used to login
-     *
-     * @return \AppserverIo\Apps\Api\TransferObject\UserOverviewData The user logged into the system
-     */
-    public function login($username, $password);
+    public function login(PrincipalInterface $principal);
 }

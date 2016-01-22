@@ -21,6 +21,8 @@
 namespace AppserverIo\Apps\Api\Servlets;
 
 use AppserverIo\Psr\Servlet\Http\HttpServlet;
+use AppserverIo\Apps\Api\Encoding\EncodingTrait;
+use AppserverIo\Apps\Api\Validation\ValidationTrait;
 
 /**
  * The abstract servlet implementation that provides basic helper functionality.
@@ -35,17 +37,9 @@ abstract class AbstractServlet extends HttpServlet
 {
 
     /**
-     * Trait that provides authentication functionality.
-     *
-     * @var \AppserverIo\Apps\Api\Servlets\AuthenticationTrait
-     */
-    use AuthenticationTrait;
-
-
-    /**
      * Trait that provides validation handling functionality.
      *
-     * @var \AppserverIo\Apps\Api\Servlets\ValidationTrait
+     * @var \AppserverIo\Apps\Api\Validation\ValidationTrait
      */
     use ValidationTrait;
 
@@ -53,7 +47,7 @@ abstract class AbstractServlet extends HttpServlet
     /**
      * Trait that provides encoding functionality.
      *
-     * @var \AppserverIo\Apps\Api\Servlets\EncodingTrait
+     * @var \AppserverIo\Apps\Api\Encoding\EncodingTrait
      */
     use EncodingTrait;
 

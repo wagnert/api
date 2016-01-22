@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Apps\Api\Servlets\AbstractServlet
+ * AppserverIo\Apps\Api\Encoding\EncodingTrait
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * @link      http://www.appserver.io
  */
 
-namespace AppserverIo\Apps\Api\Servlets;
+namespace AppserverIo\Apps\Api\Encoding;
 
 use AppserverIo\Http\HttpProtocol;
 use AppserverIo\Apps\Api\Utils\RequestKeys;
@@ -68,14 +68,17 @@ trait EncodingTrait
     public function encode(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
     {
 
-        // load the result to be encoded
-        $result = $servletRequest->getAttribute(RequestKeys::RESULT);
+        // load the servlet response status code
+        $statusCode = $servletResponse->getStatusCode();
 
-        // encode the result with the configured encoder
-        $viewData = $this->getEncodingHandler()->encode($result);
+        // load the result to be encoded, but only if we've NO redirect response (response code 300 - 399)
+        if (($statusCode < 299 || $statusCode > 399) && $result = $servletRequest->getAttribute(RequestKeys::RESULT)) {
+            // encode the result with the configured encoder
+            $viewData = $this->getEncodingHandler()->encode($result);
 
-        // add the header for the content type and append the encoded content
-        $servletResponse->addHeader(HttpProtocol::HEADER_CONTENT_TYPE, $viewData->getContentType());
-        $servletResponse->appendBodyStream($viewData->getData());
+            // add the header for the content type and append the encoded content
+            $servletResponse->addHeader(HttpProtocol::HEADER_CONTENT_TYPE, $viewData->getContentType());
+            $servletResponse->appendBodyStream($viewData->getData());
+        }
     }
 }

@@ -8,8 +8,9 @@
     <security-constraint>
         <display-name>Index and Login Page</display-name>
         <web-resource-collection>
-            <web-resource-name>Index Page</web-resource-name>
+            <web-resource-name>Index and Login Page</web-resource-name>
             <url-pattern>/index.do</url-pattern>
+            <url-pattern>/authentication.do</url-pattern>
         </web-resource-collection>
     </security-constraint>
 
@@ -35,7 +36,7 @@
         <auth-method>Form</auth-method>
         <realm-name>api-realm</realm-name>
         <form-login-config>
-            <form-login-page>/login.do</form-login-page>
+            <form-login-page>/authentication.do</form-login-page>
             <form-error-page>/error.do</form-error-page>
         </form-login-config>
     </login-config>

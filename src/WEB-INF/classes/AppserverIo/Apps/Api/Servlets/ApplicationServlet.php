@@ -21,10 +21,9 @@
 namespace AppserverIo\Apps\Api\Servlets;
 
 use AppserverIo\Apps\Api\Utils\RequestKeys;
+use AppserverIo\Apps\Api\Encoding\EncodingAwareInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
-use AppserverIo\Apps\Api\Encoding\EncodingAwareInterface;
-use AppserverIo\Apps\Api\Authentication\AuthenticationAwareInterface;
 
 /**
  * Servlet that handles all app related requests.
@@ -40,7 +39,7 @@ use AppserverIo\Apps\Api\Authentication\AuthenticationAwareInterface;
  *        description="A servlet implementation that handles all application related requests.",
  *        urlPattern={"/applications.do", "/applications.do*"})
  */
-class ApplicationServlet extends AbstractServlet implements EncodingAwareInterface, AuthenticationAwareInterface
+class ApplicationServlet extends AbstractServlet implements EncodingAwareInterface
 {
 
     /**

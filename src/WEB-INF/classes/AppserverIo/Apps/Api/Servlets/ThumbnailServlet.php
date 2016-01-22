@@ -28,7 +28,6 @@ use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
 use AppserverIo\Apps\Api\Exceptions\FileNotFoundException;
 use AppserverIo\Apps\Api\Exceptions\FileNotReadableException;
 use AppserverIo\Apps\Api\Exceptions\FoundDirInsteadOfFileException;
-use AppserverIo\Apps\Api\Authentication\AuthenticationAwareInterface;
 
 /**
  * Servlet that handles all thumbnail related requests.
@@ -44,7 +43,7 @@ use AppserverIo\Apps\Api\Authentication\AuthenticationAwareInterface;
  *        description="A servlet implementation that handles all thumbnail related requests.",
  *        urlPattern={"/thumbnails.do", "/thumbnails.do*"})
  */
-class ThumbnailServlet extends AbstractServlet implements AuthenticationAwareInterface
+class ThumbnailServlet extends AbstractServlet
 {
 
     /**

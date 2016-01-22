@@ -137,11 +137,6 @@ class ValidationInterceptor
                     $reflectionMethod->invoke($servlet);
                 }
             }
-
-            // query whether or not we've to process errors or not
-            if ($servlet->hasErrors()) {
-                return $servlet->processErrors($this->getServletRequest(), $this->getServletResponse());
-            }
         }
 
         // proceed method invocation

@@ -23,8 +23,8 @@
                             <!-- stop rewriting for directories, files or symlinks -->
                             <rewrite condition="-d{OR}-f{OR}-l" target="" flag="L" />
                             <!-- rewrite everything else to the matching servlet -->
-                            <rewrite condition="^/(.*)/(.*)$" target="$1.do/$2" flag="L" />
-                            <rewrite condition="^/(.*)$" target="$1.do" flag="L" />
+                            <!-- rewrite condition="^/(.*)/(.*)$" target="$1.do/$2" flag="L" />
+                            <rewrite condition="^/(.*)$" target="$1.do" flag="L" / -->
                         </rewrites>
                         <accesses>
                             <access type="allow">

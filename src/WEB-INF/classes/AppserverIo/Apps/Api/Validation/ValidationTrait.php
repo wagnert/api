@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Apps\Api\Servlets\ValidationTrait
+ * AppserverIo\Apps\Api\Validation\ValidationTrait
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * @link      http://www.appserver.io
  */
 
-namespace AppserverIo\Apps\Api\Servlets;
+namespace AppserverIo\Apps\Api\Validation;
 
 use AppserverIo\Http\HttpProtocol;
 use AppserverIo\Apps\Api\Utils\RequestKeys;
