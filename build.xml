@@ -89,7 +89,7 @@
         <!-- install the composer library -->
         <exec dir="${basedir}" executable="composer">
             <env key="COMPOSER_VENDOR_DIR" value="${php-target.dir}/${appserver.webapp.name}/vendor" />
-            <arg line="--no-dev --optimize-autoloader install" />
+            <arg line="--no-dev --optimize-autoloader --ignore-platform-reqs install" />
         </exec>
         <!-- remove all .git directories -->
         <delete includeemptydirs="true">
