@@ -65,6 +65,15 @@
     </target>
 
     <!-- ==================================================================== -->
+    <!-- Creates the Swagger configuration                                    -->
+    <!-- ==================================================================== -->
+    <target name="swagger-it" description="Creates the Swagger configuration.">
+        <exec executable="src/vendor/bin/swagger">
+            <arg line="${php-src.dir} --exclude ${vendor.dir} --output ${php-target.dir}/${appserver.webapp.name}/swagger.json"/>
+        </exec>
+    </target>
+
+    <!-- ==================================================================== -->
     <!-- Copies the sources to the target directory                           -->
     <!-- ==================================================================== -->
     <target name="copy" description="Copies the sources to the target directory.">
@@ -86,6 +95,8 @@
         <delete includeemptydirs="true">
             <fileset dir="${php-target.dir}/${appserver.webapp.name}" includes="**/.git/" defaultexcludes="false"/>
         </delete>
+        <!-- creates the Swagger configuration -->
+        <antcall target="swagger-it"/>
     </target>
 
     <!-- ==================================================================== -->

@@ -20,17 +20,12 @@
 
 namespace AppserverIo\Apps\Api\Servlets;
 
-use AppserverIo\Http\HttpProtocol;
-use AppserverIo\Psr\Servlet\ServletConfig;
 use AppserverIo\Psr\Servlet\Http\HttpServlet;
-use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
-use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
-use AppserverIo\Appserver\Core\InitialContext;
-use AppserverIo\Api\Service\Service;
+use AppserverIo\Apps\Api\Encoding\EncodingTrait;
+use AppserverIo\Apps\Api\Validation\ValidationTrait;
 
 /**
- * Abstract servlet that provides basic functionality for
- * all other API servlets.
+ * The abstract servlet implementation that provides basic helper functionality.
  *
  * @author    Tim Wagner <tw@appserver.io>
  * @copyright 2015 TechDivision GmbH <info@appserver.io>
@@ -42,84 +37,36 @@ abstract class AbstractServlet extends HttpServlet
 {
 
     /**
-     * Returns the servlets service class to use.
+     * Trait that provides validation handling functionality.
      *
-     * @return string The servlets service class
+     * @var \AppserverIo\Apps\Api\Validation\ValidationTrait
      */
-    abstract public function getServiceClass();
+    use ValidationTrait;
+
 
     /**
-     * Returns the actual service instance to use.
+     * Trait that provides encoding functionality.
      *
-     * @param \AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface $servletRequest The request instance
-     *
-     * @return \AppserverIo\Apps\Api\Service\Service The requested service instance
+     * @var \AppserverIo\Apps\Api\Encoding\EncodingTrait
      */
-    public function getService(HttpServletRequestInterface $servletRequest)
-    {
-        $service = $servletRequest->getContext()->newService($this->getServiceClass());
-        $service->setWebappPath($servletRequest->getContext()->getWebappPath());
-        return $service;
-    }
+    use EncodingTrait;
+
 
     /**
-     * Generic finder implementation using the actual service instance.
+     * The system logger implementation.
      *
-     * @param \AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface  $servletRequest  The request instance
-     * @param \AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface $servletResponse The response instance
-     *
-     * @return void
-     * @see \AppserverIo\Apps\Api\Service\Service::load();
-     * @see \AppserverIo\Apps\Api\Service\Service::findAll();
+     * @var \AppserverIo\Logger\Logger
+     * @Resource(lookup="php:global/log/System")
      */
-    public function find(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
-    {
-
-        // load the requested URI
-        $uri = trim($servletRequest->getUri(), '/');
-
-        // first check if a collection of ID's has been requested
-        if ($ids = $servletRequest->getParameter('ids')) {
-            // load all entities with the passed ID's
-            $content = array();
-            foreach ($ids as $id) {
-                $content[] = $this->getService($servletRequest)->load($id);
-            }
-
-        // then check if all entities has to be loaded or exactly one
-        } else {
-            // extract the ID of available, and load the requested OR all entities
-            list ($applicationName, $entity, $id) = explode('/', $uri, 3);
-            if ($id == null) {
-                $content = $this->getService($servletRequest)->findAll();
-            } else {
-                $content = $this->getService($servletRequest)->load($id);
-            }
-        }
-
-        // set the JSON encoded data in the response
-        $servletResponse->addHeader(HttpProtocol::HEADER_CONTENT_TYPE, 'application/json');
-        $servletResponse->appendBodyStream(json_encode($content));
-    }
+    protected $systemLogger;
 
     /**
-     * Returns the application's base URL for html base tag
+     * Return's the system logger instance.
      *
-     * @param \AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface $servletRequest The request instance
-     *
-     * @return string The applications base URL
+     * @return \AppserverIo\Logger\Logger The logger instance
      */
-    public function getBaseUrl(HttpServletRequestInterface $servletRequest)
+    protected function getSystemLogger()
     {
-        // initialize the base URL
-        $baseUrl = '/';
-
-        // if the application has NOT been called over a VHost configuration append application folder name
-        if (!$servletRequest->getContext()->isVhostOf($servletRequest->getServerName())) {
-            $baseUrl .= $servletRequest->getContext()->getName() . '/';
-        }
-
-        // return the base URL
-        return $baseUrl;
+        return $this->systemLogger;
     }
 }

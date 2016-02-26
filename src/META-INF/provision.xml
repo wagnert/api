@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<provision xmlns="http://www.appserver.io/appserver">
+
+    <datasource name="appserver.io-api-application"/>
+
+    <installation>
+        <steps>
+            <step type="AppserverIo\Apps\Api\Provisioning\PrepareDatabaseStep" />
+        </steps>
+    </installation>
+
+</provision>

@@ -14,18 +14,17 @@
  * @author    Tim Wagner <tw@appserver.io>
  * @copyright 2015 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      https://github.com/appserver-io/appserver
+ * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  */
 
 namespace AppserverIo\Apps\Api\Servlets;
 
-use AppserverIo\Psr\Servlet\ServletConfig;
+use AppserverIo\Http\HttpProtocol;
+use AppserverIo\Server\Dictionaries\MimeTypes;
+use AppserverIo\Psr\Servlet\Http\HttpServlet;
 use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
-use AppserverIo\WebServer\Dictionaries\MimeTypes;
-use AppserverIo\Apps\Api\Service\AppService;
-use AppserverIo\Apps\Api\Servlets\AbstractServlet;
 use AppserverIo\Apps\Api\Exceptions\FileNotFoundException;
 use AppserverIo\Apps\Api\Exceptions\FileNotReadableException;
 use AppserverIo\Apps\Api\Exceptions\FoundDirInsteadOfFileException;
@@ -36,27 +35,35 @@ use AppserverIo\Apps\Api\Exceptions\FoundDirInsteadOfFileException;
  * @author    Tim Wagner <tw@appserver.io>
  * @copyright 2015 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      https://github.com/appserver-io/appserver
+ * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
+ *
+ * @Route(name="thumbnails",
+ *        displayName="Handles thumbnail related requests",
+ *        description="A servlet implementation that handles all thumbnail related requests.",
+ *        urlPattern={"/thumbnails.do", "/thumbnails.do*"})
  */
 class ThumbnailServlet extends AbstractServlet
 {
 
     /**
-     * The service class name to use.
+     * The application processor instance.
      *
-     * @var string
+     * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
+     * @see \AppserverIo\Apps\Api\Services\ApplicationProcessorInterface
+     * @EnterpriseBean
      */
-    const SERVICE_CLASS = '\AppserverIo\Apps\Api\Service\AppService';
+    protected $applicationProcessor;
 
     /**
-     * Returns the servlets service class to use.
+     * Return's the application processor instance.
      *
-     * @return string The servlets service class
+     * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The processor proxy
+     * @see \AppserverIo\Apps\Api\Services\ApplicationProcessorInterface
      */
-    public function getServiceClass()
+    public function getApplicationProcessor()
     {
-        return ThumbnailServlet::SERVICE_CLASS;
+        return $this->applicationProcessor;
     }
 
     /**
@@ -68,20 +75,40 @@ class ThumbnailServlet extends AbstractServlet
      *
      * @return void
      * @see \AppserverIo\Psr\Servlet\Http\HttpServlet::doGet()
+     *
+     * @SWG\Get(
+     *   path="/thumbnails.do/{id}",
+     *   tags={"applications"},
+     *   summary="The application's thumbnail",
+     *   produces={"image/png"},
+     *   @SWG\Parameter(
+     *      name="id",
+     *      in="path",
+     *      description="The name of the application to load the thumbnail for",
+     *      required=true,
+     *      type="string"
+     *   ),
+     *   @SWG\Response(
+     *     response=200,
+     *     description="The application's thumbnail"
+     *   ),
+     *   @SWG\Response(
+     *     response=500,
+     *     description="Internal Server Error"
+     *   )
+     * )
      */
     public function doGet(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
     {
 
-        // explode the URI
-        $uri = trim($servletRequest->getUri(), '/');
-        list ($applicationName, $entity, $id) = explode('/', $uri, 3);
+        // load the requested path info, e. g. /api/thumbnails.do/example/
+        $pathInfo = trim($servletRequest->getPathInfo(), '/');
 
-        // set the base URL for rendering images/thumbnails
-        $this->getService($servletRequest)->setBaseUrl($this->getBaseUrl($servletRequest));
-        $this->getService($servletRequest)->setWebappPath($servletRequest->getContext()->getWebappPath());
+        // extract the entity and the ID, if available
+        list ($id, ) = explode('/', $pathInfo);
 
         // load file information and return the file object if possible
-        $fileInfo = new \SplFileInfo($path = $this->getService($servletRequest)->thumbnail($id));
+        $fileInfo = new \SplFileInfo($path = $this->getApplicationProcessor()->thumbnail($id));
         if ($fileInfo->isDir()) {
             throw new FoundDirInsteadOfFileException(sprintf("Requested file %s is a directory", $path));
         }
@@ -97,7 +124,7 @@ class ThumbnailServlet extends AbstractServlet
 
         // set mimetypes to header
         $servletResponse->addHeader(
-            'Content-Type',
+            HttpProtocol::HEADER_CONTENT_TYPE,
             MimeTypes::getMimeTypeByExtension(
                 pathinfo(
                     $file->getFilename(),
@@ -107,17 +134,17 @@ class ThumbnailServlet extends AbstractServlet
         );
 
         // set last modified date from file
-        $servletResponse->addHeader('Last-Modified', gmdate('D, d M Y H:i:s \G\M\T', $file->getMTime()));
+        $servletResponse->addHeader(HttpProtocol::HEADER_LAST_MODIFIED, gmdate('D, d M Y H:i:s \G\M\T', $file->getMTime()));
 
         // set expires date
-        $servletResponse->addHeader('Expires', gmdate('D, d M Y H:i:s \G\M\T', time() + 3600));
+        $servletResponse->addHeader(HttpProtocol::HEADER_EXPIRES, gmdate('D, d M Y H:i:s \G\M\T', time() + 3600));
 
         // check if If-Modified-Since header info is set
-        if ($servletRequest->getHeader('If-Modified-Since')) {
+        if ($servletRequest->getHeader(HttpProtocol::HEADER_IF_MODIFIED_SINCE)) {
             // check if file is modified since header given header date
-            if (strtotime($servletRequest->getHeader('If-Modified-Since')) >= $file->getMTime()) {
+            if (strtotime($servletRequest->getHeader(HttpProtocol::HEADER_IF_MODIFIED_SINCE)) >= $file->getMTime()) {
                 // send 304 Not Modified Header information without content
-                $servletResponse->addHeader('status', 'HTTP/1.1 304 Not Modified');
+                $servletResponse->addHeader(HttpProtocol::HEADER_STATUS, 'HTTP/1.1 304 Not Modified');
                 $servletResponse->appendBodyStream(PHP_EOL);
                 return;
             }

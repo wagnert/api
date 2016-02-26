@@ -4,52 +4,53 @@
     <display-name>appserver.io REST API</display-name>
     <description>Webapp that provides the appserver.io API</description>
 
-    <servlet>
-        <description><![CDATA[Returns the Virtual Host configuration data]]></description>
-        <display-name>VirtualHostServlet</display-name>
-        <servlet-name>VirtualHostServlet</servlet-name>
-        <servlet-class>\AppserverIo\Apps\Api\Servlets\VirtualHostServlet</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <description><![CDATA[Returns the container configuration data]]></description>
-        <display-name>ContainerServlet</display-name>
-        <servlet-name>ContainerServlet</servlet-name>
-        <servlet-class>\AppserverIo\Apps\Api\Servlets\ContainerServlet</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <description><![CDATA[Returns the app configuration data]]></description>
-        <display-name>AppServlet</display-name>
-        <servlet-name>AppServlet</servlet-name>
-        <servlet-class>\AppserverIo\Apps\Api\Servlets\AppServlet</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <description><![CDATA[Returns the app's thumbnail]]></description>
-        <display-name>ThumbnailServlet</display-name>
-        <servlet-name>ThumbnailServlet</servlet-name>
-        <servlet-class>\AppserverIo\Apps\Api\Servlets\ThumbnailServlet</servlet-class>
-    </servlet>
-    
-    <servlet-mapping>
-        <servlet-name>VirtualHostServlet</servlet-name>
-        <url-pattern>/virtualHosts.do*</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>ContainerServlet</servlet-name>
-        <url-pattern>/containers.do*</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>AppServlet</servlet-name>
-        <url-pattern>/apps.do*</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>ThumbnailServlet</servlet-name>
-        <url-pattern>/thumbnails.do*</url-pattern>
-    </servlet-mapping>
+    <!-- define a Security Constraint that gives unlimited access to index and login page -->
+    <security-constraint>
+        <display-name>Index and Login Page</display-name>
+        <web-resource-collection>
+            <web-resource-name>Index and Login Page</web-resource-name>
+            <url-pattern>/index.do</url-pattern>
+        </web-resource-collection>
+    </security-constraint>
+
+    <!-- define a Security Constraint on this application -->
+    <security-constraint>
+        <display-name>All other resources</display-name>
+        <web-resource-collection>
+            <web-resource-name>Protect the whole application</web-resource-name>
+            <url-pattern>/*</url-pattern>
+            <http-method>POST</http-method>
+            <http-method>GET</http-method>
+        </web-resource-collection>
+        <auth-constraint>
+            <description>Enable access for administrators/managers only</description>
+            <role-name>Administrator</role-name>
+            <role-name>Manager</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <!-- define the Login Configuration for this application -->
+    <login-config>
+        <auth-method>Form</auth-method>
+        <realm-name>api-realm</realm-name>
+        <form-login-config>
+            <form-login-page>/authentication.do</form-login-page>
+            <form-error-page>/error.do</form-error-page>
+        </form-login-config>
+    </login-config>
+
+    <!-- security roles referenced by this web application -->
+    <security-role>
+        <role-name>Administrator</role-name>
+        <description>The administrator role</description>
+    </security-role>
+    <security-role>
+        <role-name>Manager</role-name>
+        <description>The manager role</description>
+    </security-role>
+    <security-role>
+        <role-name>Guest</role-name>
+        <description>The guest role</description>
+    </security-role>
 
 </web-app>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pointcuts xmlns="http://www.appserver.io/appserver">
+
+    <pointcut>
+        <pointcut-name>allDoMethods</pointcut-name>
+        <pointcut-pattern>call(\AppserverIo\Apps\Api\Servlets\*->do*())</pointcut-pattern>
+    </pointcut>
+    
+    <advice>
+        <advice-aspect>\AppserverIo\Apps\Api\Interceptors\ParamsInterceptor</advice-aspect>
+        <advice-name>intercept</advice-name>
+        <advice-type>Around</advice-type>
+        <advice-pointcuts>
+            <pointcut-name>allDoMethods</pointcut-name>
+        </advice-pointcuts>
+    </advice>
+    
+    <advice>
+        <advice-aspect>\AppserverIo\Apps\Api\Interceptors\ValidationInterceptor</advice-aspect>
+        <advice-name>intercept</advice-name>
+        <advice-type>Around</advice-type>
+        <advice-pointcuts>
+            <pointcut-name>allDoMethods</pointcut-name>
+        </advice-pointcuts>
+    </advice>
+    
+    <advice>
+        <advice-aspect>\AppserverIo\Apps\Api\Interceptors\EncodeResultInterceptor</advice-aspect>
+        <advice-name>intercept</advice-name>
+        <advice-type>After</advice-type>
+        <advice-pointcuts>
+            <pointcut-name>allDoMethods</pointcut-name>
+        </advice-pointcuts>
+    </advice>
+
+</pointcuts>

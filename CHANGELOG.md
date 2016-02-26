@@ -1,4 +1,4 @@
-# Version 0.1.0
+# Version 0.7.0
 
 ## Bugfixes
 
@@ -6,4 +6,4 @@
 
 ## Features
 
-* Initial Release
+* Complete Refactoring, switch to json:api specification and add SwaggerUI support
