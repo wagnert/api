@@ -18,7 +18,7 @@
 		"appserver-io-psr/mop" : "~1.0",
 		"appserver-io-psr/epb" : "~1.0",
 		"appserver-io-psr/servlet" : "~1.0",
-        "appserver-io-psr/security" : "~1.0"
+		"appserver-io-psr/security" : "~1.0"
 	},
 	"config" : {
 		"vendor-dir" : "src/vendor"

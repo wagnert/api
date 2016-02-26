@@ -63,6 +63,16 @@ abstract class AbstractProcessor
     }
 
     /**
+     * Returns the initial context instance.
+     *
+     * @return \AppserverIo\Appserver\Core\InitialContext The initial context instance
+     */
+    public function getInitialContext()
+    {
+        return $this->getApplication()->getInitialContext();
+    }
+
+    /**
      * Creates a new instance of the passed service class name
      * and returns it.
      *
