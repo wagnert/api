@@ -34,8 +34,8 @@
         <auth-method>Form</auth-method>
         <realm-name>api-realm</realm-name>
         <form-login-config>
-            <form-login-page>/authentication.do</form-login-page>
-            <form-error-page>/error.do</form-error-page>
+            <form-login-page>/index.do</form-login-page>
+            <form-error-page>/index.do</form-error-page>
         </form-login-config>
     </login-config>
 

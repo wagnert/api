@@ -20,10 +20,7 @@
 
 namespace AppserverIo\Apps\Api\Servlets;
 
-use AppserverIo\Lang\String;
-use AppserverIo\Apps\Api\Utils\RequestKeys;
 use AppserverIo\Apps\Api\Encoding\EncodingAwareInterface;
-use AppserverIo\Apps\Api\Validation\ValidationAwareInterface;
 use AppserverIo\Apps\Api\TransferObject\ErrorOverviewData;
 use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
@@ -42,28 +39,8 @@ use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
  *        description="A servlet implementation that handles login/logout related requests.",
  *        urlPattern={"/authentication.do", "/authentication.do*"})
  */
-class AuthenticationServlet extends AbstractServlet implements ValidationAwareInterface, EncodingAwareInterface
+class AuthenticationServlet extends AbstractServlet implements EncodingAwareInterface
 {
-
-    /**
-     * The service providing the authentication functionality.
-     *
-     * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
-     * @see \AppserverIo\Apps\Api\Encoder\EncoderInterface
-     * @EnterpriseBean(beanName="UserProcessor")
-     */
-    protected $authenticationProvider;
-
-    /**
-     * Returns the encoder instance.
-     *
-     * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
-     * @see \AppserverIo\Apps\Api\Encoder\EncoderInterface
-     */
-    public function getAuthenticationProvider()
-    {
-        return $this->authenticationProvider;
-    }
 
     /**
      * Destroy's the actual session and log's the authenticated user out of the API.
@@ -90,11 +67,12 @@ class AuthenticationServlet extends AbstractServlet implements ValidationAwareIn
      */
     public function doGet(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
     {
-        $this->addError(ErrorOverviewData::factoryForPointer(401, 'Authentication Required'));
+        $servletRequest->logout();
     }
 
     /**
-     * Log the user into the API.
+     * Dummy function used to add Swagger annotations, because real login will be handled
+     * by the magic p_security_check.do servlet.
      *
      * @param \AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface  $servletRequest  The request instance
      * @param \AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface $servletResponse The response instance
@@ -103,9 +81,23 @@ class AuthenticationServlet extends AbstractServlet implements ValidationAwareIn
      * @see \AppserverIo\Psr\Servlet\Http\HttpServlet::doPost()
      *
      * @SWG\Post(
-     *   path="/authentication.do",
+     *   path="/p_security_check.do",
      *   tags={"authentication"},
      *   summary="Login",
+     *   @SWG\Parameter(
+     *      name="p_username",
+     *      in="formData",
+     *      description="The username to login",
+     *      required=true,
+     *      type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *      name="p_password",
+     *      in="formData",
+     *      description="The password to authenticate the user with",
+     *      required=true,
+     *      type="string"
+     *   ),
      *   @SWG\Response(
      *     response=200,
      *     description="Successfull Login"
@@ -118,11 +110,6 @@ class AuthenticationServlet extends AbstractServlet implements ValidationAwareIn
      */
     public function doPost(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
     {
-
-        // login the user principal and load the DTO representation
-        $viewData = $this->getAuthenticationProvider()->login($servletRequest->getUserPrincipal());
-
-        // set the DTO representation to the response
-        $servletRequest->setAttribute(RequestKeys::RESULT, $viewData);
+        $this->addError(ErrorOverviewData::factoryForPointer(401, 'Authentication Required'));
     }
 }

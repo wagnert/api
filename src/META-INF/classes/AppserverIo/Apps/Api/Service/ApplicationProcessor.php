@@ -117,14 +117,15 @@ class ApplicationProcessor extends AbstractProcessor implements ApplicationProce
     /**
      * Uploads the passed file to the application servers deploy directory.
      *
-     * @param string $filename The filename
+     * @param string $containerId The ID of the container to deploy the PHAR archive to
+     * @param string $filename    The filename
      *
      * @return void
      * @see \AppserverIo\Apps\Example\Service\ApplicationProcessorInterface::upload()
      */
-    public function upload($filename)
+    public function upload($containerId, $filename)
     {
-        $this->getApplicationRepository()->upload($filename);
+        $this->getApplicationRepository()->upload($containerId, $filename);
     }
 
     /**

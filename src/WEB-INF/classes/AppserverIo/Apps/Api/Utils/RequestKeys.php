@@ -59,4 +59,11 @@ class RequestKeys
      * @return string
      */
     const PASSWORD = 'password';
+
+    /**
+     * The ID of the container.
+     *
+     * @var string
+     */
+    const CONTAINER_ID = 'containerId';
 }
