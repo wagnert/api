@@ -22,6 +22,8 @@ namespace AppserverIo\Apps\Api\Servlets;
 
 use AppserverIo\Apps\Api\Utils\RequestKeys;
 use AppserverIo\Apps\Api\Encoding\EncodingAwareInterface;
+use AppserverIo\Apps\Api\Validation\ValidationAwareInterface;
+use AppserverIo\Apps\Api\TransferObject\ErrorOverviewData;
 use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
 
@@ -39,7 +41,7 @@ use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
  *        description="A servlet implementation that handles all application related requests.",
  *        urlPattern={"/applications.do", "/applications.do*"})
  */
-class ApplicationServlet extends AbstractServlet implements EncodingAwareInterface
+class ApplicationServlet extends AbstractServlet implements ValidationAwareInterface, EncodingAwareInterface
 {
 
     /**
@@ -155,6 +157,13 @@ class ApplicationServlet extends AbstractServlet implements EncodingAwareInterfa
      *   summary="Create's a new application",
      *   consumes={"multipart/form-data"},
      *   @SWG\Parameter(
+     *      name="containerId",
+     *      in="formData",
+     *      description="The ID of the container to deploy the PHAR archive to",
+     *      required=true,
+     *      type="string"
+     *   ),
+     *   @SWG\Parameter(
      *      name="file",
      *      in="formData",
      *      description="The PHAR archive containing the application",
@@ -174,15 +183,23 @@ class ApplicationServlet extends AbstractServlet implements EncodingAwareInterfa
     public function doPost(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
     {
 
-        // load the HTTP part
-        $pharArchive = $servletRequest->getPart(ApplicationServlet::UPLOADED_PHAR_FILE);
+        // query whether we've found an container ID and the PHAR archive
+        if ($servletRequest->hasParameter(RequestKeys::CONTAINER_ID) &&
+            $pharArchive = $servletRequest->getPart(ApplicationServlet::UPLOADED_PHAR_FILE)
+        ) {
+            // save file to appserver's upload tmp folder with a temporary name
+            $pharArchive->init();
+            $pharArchive->write($pharArchive->getFilename());
 
-        // save file to appserver's upload tmp folder with a temporary name
-        $pharArchive->init();
-        $pharArchive->write($pharArchive->getFilename());
+            // upload the file
+            $this->getApplicationProcessor()->upload(
+                $servletRequest->getParameter(RequestKeys::CONTAINER_ID),
+                $pharArchive->getFilename()
+            );
 
-        // upload the file
-        $this->getApplicationProcessor()->upload($pharArchive->getFilename());
+        } else {
+            $this->addError(ErrorOverviewData::factoryForPointer(500, 'Missing container ID or corrupt PHAR archive'));
+        }
     }
 
     /**

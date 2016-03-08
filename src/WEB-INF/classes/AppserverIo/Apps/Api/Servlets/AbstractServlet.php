@@ -43,14 +43,12 @@ abstract class AbstractServlet extends HttpServlet
      */
     use ValidationTrait;
 
-
     /**
      * Trait that provides encoding functionality.
      *
      * @var \AppserverIo\Apps\Api\Encoding\EncodingTrait
      */
     use EncodingTrait;
-
 
     /**
      * The system logger implementation.

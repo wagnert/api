@@ -62,11 +62,12 @@ interface ApplicationProcessorInterface
     /**
      * Uploads the passed file to the application servers deploy directory.
      *
-     * @param string $filename The filename
+     * @param string $containerId The ID of the container to deploy the PHAR archive to
+     * @param string $filename    The filename
      *
      * @return void
      */
-    public function upload($filename);
+    public function upload($containerId, $filename);
 
     /**
      * Deletes the app node with the passed ID from the system configuration.

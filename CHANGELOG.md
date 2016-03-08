@@ -1,3 +1,14 @@
+# Version 0.7.2
+
+## Bugfixes
+
+* Fixed invalid annotations for login/logout
+* Fixed application upload functionality
+
+## Features
+
+* None
+
 # Version 0.7.1
 
 ## Bugfixes

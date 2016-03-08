@@ -52,6 +52,27 @@ class ApplicationRepository extends AbstractRepository implements ApplicationRep
     const THUMBNAIL_PLACEHOLDER = 'app-placeholder-300x200.png';
 
     /**
+     * The proxy for the container repository.
+     *
+     * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy The container repository instance
+     * @see \AppserverIo\Apps\Api\Repository\ContainerRepositoryInterface
+     *
+     * @EnterpriseBean
+     */
+    protected $containerRepository;
+
+    /**
+     * Return's the proxy for the container repository.
+     *
+     * @return \AppserverIo\RemoteMethodInvocation\RemoteProxy The container repository instance
+     * @see \AppserverIo\Apps\Api\Repository\ContainerRepositoryInterface
+     */
+    protected function getContainerRepository()
+    {
+        return $this->containerRepository;
+    }
+
+    /**
      * Returns the application node with the passed ID.
      *
      * @param string $id The ID of the application node to be returned
@@ -78,14 +99,20 @@ class ApplicationRepository extends AbstractRepository implements ApplicationRep
     /**
      * Uploads the passed file to the application servers deploy directory.
      *
-     * @param string $filename The filename
+     * @param string $containerId The ID of the container to deploy the PHAR archive to
+     * @param string $filename    The filename
      *
      * @return void
      * @see \AppserverIo\Apps\Api\Service\ApplicationRepositoryInterface::upload()
      */
-    public function upload($filename)
+    public function upload($containerId, $filename)
     {
-        $this->newService(ServiceKeys::APPLICATION)->soak(new \SplFileInfo($filename));
+
+        // load the container node, needed to bound the application to
+        $containerNode = $this->getContainerRepository()->load($containerId);
+
+        // soak the passed archive and restart the container
+        $this->newService(ServiceKeys::APPLICATION)->soak($containerNode, new \SplFileInfo($filename));
     }
 
     /**
