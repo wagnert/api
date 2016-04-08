@@ -1,3 +1,13 @@
+# Version 0.7.3
+
+## Bugfixes
+
+* Fixed failure that results in an endless when login with invalid credentials
+
+## Features
+
+* None
+
 # Version 0.7.2
 
 ## Bugfixes
