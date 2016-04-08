@@ -21,6 +21,7 @@
 namespace AppserverIo\Apps\Api\Servlets;
 
 use AppserverIo\Apps\Api\Encoding\EncodingAwareInterface;
+use AppserverIo\Apps\Api\Validation\ValidationAwareInterface;
 use AppserverIo\Apps\Api\TransferObject\ErrorOverviewData;
 use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
@@ -39,7 +40,7 @@ use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
  *        description="A servlet implementation that handles login/logout related requests.",
  *        urlPattern={"/authentication.do", "/authentication.do*"})
  */
-class AuthenticationServlet extends AbstractServlet implements EncodingAwareInterface
+class AuthenticationServlet extends AbstractServlet implements EncodingAwareInterface, ValidationAwareInterface
 {
 
     /**
