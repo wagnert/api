@@ -8,13 +8,14 @@
                         <headers>
                             <header type="response" name="Content-Type" value="application/json"/>
                             <header type="response" name="Access-Control-Allow-Origin" value="*"/>
-                            <header type="response" name="Access-Control-Allow-Methods" value="GET, POST, DELETE, PUT, PATCH, OPTIONS"/>
+                            <header type="response" name="Access-Control-Allow-Credentials" value="true"/>
                             <header type="response" name="Access-Control-Allow-Headers" value="Content-Type, api_key, Authorization"/>
+                            <header type="response" name="Access-Control-Allow-Methods" value="GET, POST, DELETE, PUT, PATCH, OPTIONS"/>
                         </headers>
                     </location>
                 </locations>
                 <virtualHosts>
-                    <virtualHost name="${webapp.name}.dev www.${webapp.name}.local">
+                    <virtualHost name="${webapp.name}.dev www.${webapp.name}.dev">
                         <params>
                             <param name="admin" type="string">info@appserver.io</param>
                             <param name="documentRoot" type="string">${host.appBase.dir}/${webapp.name}</param>
@@ -36,9 +37,13 @@
                         <headers>
                             <header type="response" name="Content-Type" value="application/json"/>
                             <header type="response" name="Access-Control-Allow-Origin" value="*"/>
-                            <header type="response" name="Access-Control-Allow-Methods" value="GET, POST, DELETE, PUT, PATCH, OPTIONS"/>
+                            <header type="response" name="Access-Control-Allow-Credentials" value="true"/>
                             <header type="response" name="Access-Control-Allow-Headers" value="Content-Type, api_key, Authorization"/>
+                            <header type="response" name="Access-Control-Allow-Methods" value="GET, POST, DELETE, PUT, PATCH, OPTIONS"/>
                         </headers>
+                        <environmentVariables>
+                            <environmentVariable condition="" definition="LOGGER_ACCESS=${container.name}/${webapp.name}/Access" />
+                        </environmentVariables>
                     </virtualHost>
                 </virtualHosts>
             </server>

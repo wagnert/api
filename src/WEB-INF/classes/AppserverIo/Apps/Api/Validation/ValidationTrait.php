@@ -22,11 +22,12 @@ namespace AppserverIo\Apps\Api\Validation;
 
 use AppserverIo\Http\HttpProtocol;
 use AppserverIo\Apps\Api\Utils\RequestKeys;
+use AppserverIo\Apps\Api\TransferObject\ErrorOverviewData;
 use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
 
 /**
- * The abstract servlet implementation that provides basic encoding functionality.
+ * Trait that provides validation functionality and error handling.
  *
  * @author    Tim Wagner <tw@appserver.io>
  * @copyright 2015 TechDivision GmbH <info@appserver.io>
@@ -106,6 +107,26 @@ trait ValidationTrait
      */
     public function processErrors(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
     {
-        $servletRequest->setAttribute(RequestKeys::RESULT, $this->getErrorHandler()->processErrors($this->getErrors()));
+
+        // add the transfer object containing the errors as requeset attribute
+        $servletRequest->setAttribute(RequestKeys::RESULT, $to = $this->getErrorHandler()->processErrors($this->getErrors()));
+
+        // sort the errors ascending to load the most generally applicable HTTP error code
+        usort($errors = $to->getErrors(), function (ErrorOverviewData $e1, ErrorOverviewData $e2) {
+            // compare the status codes
+            if ($e1->getStatus() > $e2->getStatus()) {
+                return 1;
+            }
+            if ($e1->getStatus() < $e2->getStatus()) {
+                return -1;
+            }
+            return 0;
+        });
+
+        // set the most generally applicable HTTP error code
+        foreach ($errors as $error) {
+            $servletResponse->setStatusCode($error->getStatus());
+            break;
+        }
     }
 }

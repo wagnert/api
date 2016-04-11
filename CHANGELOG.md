@@ -1,3 +1,13 @@
+# Version 0.7.4
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Implement basic JWT authenticator functionality
+
 # Version 0.7.3
 
 ## Bugfixes

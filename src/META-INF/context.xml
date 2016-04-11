@@ -6,6 +6,9 @@
 
     <managers>
         <manager name="AuthenticationManagerInterface" type="AppserverIo\Appserver\ServletEngine\Security\StandardAuthenticationManager" factory="AppserverIo\Appserver\ServletEngine\Security\StandardAuthenticationManagerFactory">
+            <authenticators>
+                <authenticator name="Form" type="AppserverIo\Apps\Api\Authenticator\TokenBasedFormAuthenticator" />
+            </authenticators>
             <securityDomains>
                 <securityDomain name="api-realm">
                     <authConfig>

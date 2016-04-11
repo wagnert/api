@@ -116,4 +116,14 @@ class ErrorViewData
     {
         return $this->errors;
     }
+
+    /**
+     * Return's the size of the errors.
+     *
+     * @return integer The error size
+     */
+    public function size()
+    {
+        return sizeof($this->errors);
+    }
 }

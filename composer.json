@@ -6,7 +6,8 @@
 		"tobscure/json-api" : "0.2.*",
 		"respect/validation" : "~1.0",
 		"zircote/swagger-php" : "*",
-		"jms/serializer" : "1.1.0 as 0.16.0"
+		"jms/serializer" : "1.1.0 as 0.16.0",
+		"lcobucci/jwt" : "~3.0"
 	},
 	"require-dev" : {
 		"appserver-io/phar" : "~1.0",

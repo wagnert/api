@@ -38,10 +38,18 @@ class ErrorOverviewData
 {
 
     /**
+     * The HTTP status code.
+     *
+     * @var integer
+     * @SWG\Property(property="status", type="integer")
+     */
+    protected $status;
+
+    /**
      * The error code.
      *
      * @var integer
-     * @SWG\Property(property="code", type="string")
+     * @SWG\Property(property="code", type="integer")
      */
     protected $code;
 
@@ -73,46 +81,80 @@ class ErrorOverviewData
      * Initializes the DTO with the passed data.
      *
      * @param \AppserverIo\Apps\Api\TransferObject\SourceViewData $source The error source
-     * @param integer                                             $code   The error code
+     * @param integer                                             $status The HTTP status code to use
      * @param string                                              $title  The error title
+     * @param integer|null                                        $code   The error code
      * @param string|null                                         $detail The error detail
      */
-    protected function __construct(SourceViewData $source, $code, $title, $detail)
+    protected function __construct(SourceViewData $source, $status, $title, $code = null, $detail = null)
     {
-        $this->setCode($code);
-        $this->setTitle($title);
+
+        // initialize the mandatory members
         $this->setSource($source);
-        $this->setDetail($detail);
+        $this->setStatus($status);
+        $this->setTitle($title);
+
+        // initialize the optional members
+        if ($code) {
+            $this->setCode($code);
+        }
+        if ($detail) {
+            $this->setDetail($detail);
+        }
     }
 
     /**
      * Factory method to create a new DTO for the passed error details.
      *
-     * @param integer     $code   The error code
-     * @param string      $title  The error title
-     * @param string|null $source The error source
-     * @param string|null $detail The error detail
+     * @param integer      $status The HTTP status code to use
+     * @param string       $title  The error title
+     * @param integer|null $code   The error code
+     * @param string|null  $source The error source
+     * @param string|null  $detail The error detail
      *
      * @return \AppserverIo\Apps\Api\TransferObject\ErrorOverviewData The initialized DTO
      */
-    public static function factoryForPointer($code, $title, $source = null, $detail = null)
+    public static function factoryForPointer($status, $title, $code = null, $source = null, $detail = null)
     {
-        return new ErrorOverviewData(new SourceViewData($source), $code, $title, $detail);
+        return new ErrorOverviewData(new SourceViewData($source), $status, $title, $code, $detail);
     }
 
     /**
      * Factory method to create a new DTO for the passed error details.
      *
-     * @param integer     $code   The error code
-     * @param string      $title  The error title
-     * @param string|null $source The error source
-     * @param string|null $detail The error detail
+     * @param integer      $status The HTTP status code to use
+     * @param string       $title  The error title
+     * @param integer|null $code   The error code
+     * @param string|null  $source The error source
+     * @param string|null  $detail The error detail
      *
      * @return \AppserverIo\Apps\Api\TransferObject\ErrorOverviewData The initialized DTO
      */
-    public static function factoryForParameter($code, $title, $source = null, $detail = null)
+    public static function factoryForParameter($status, $title, $code = null, $source = null, $detail = null)
     {
-        return new ErrorOverviewData(new SourceViewData(null, $source), $code, $title, $detail);
+        return new ErrorOverviewData(new SourceViewData(null, $source), $status, $title, $code, $detail);
+    }
+
+    /**
+     * Set's the HTTP status code.
+     *
+     * @param integer $status The HTTP status code
+     *
+     * @return void
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * Return's the HTTP status code.
+     *
+     * @return integer The HTTP status code
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 
     /**
@@ -130,7 +172,7 @@ class ErrorOverviewData
     /**
      * Return's the error's code.
      *
-     * @return integer The error's code
+     * @return integer|null The error's code
      */
     public function getCode()
     {
@@ -152,7 +194,7 @@ class ErrorOverviewData
     /**
      * Return's the error's title.
      *
-     * @return string The error's title
+     * @return string|null The error's title
      */
     public function getTitle()
     {
@@ -196,7 +238,7 @@ class ErrorOverviewData
     /**
      * Return's the error's detail.
      *
-     * @return string The error's detail
+     * @return string|null The error's detail
      */
     public function getDetail()
     {
