@@ -244,4 +244,17 @@ class ApplicationServlet extends AbstractServlet implements ValidationAwareInter
         // undeploy the application
         $this->getApplicationProcessor()->delete($id);
     }
+
+    /**
+     * Delete the requested application.
+     *
+     * @param \AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface  $servletRequest  The request instance
+     * @param \AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface $servletResponse The response instance
+     *
+     * @return void
+     * @see \AppserverIo\Psr\Servlet\Http\HttpServlet::doOptions()
+     */
+    public function doOptions(HttpServletRequestInterface $servletRequest, HttpServletResponseInterface $servletResponse)
+    {
+    }
 }
