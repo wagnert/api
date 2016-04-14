@@ -23,16 +23,15 @@ namespace AppserverIo\Apps\Api\Authenticator;
 use Rhumsaa\Uuid\Uuid;
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Builder;
+use Lcobucci\JWT\ValidationData;
 use AppserverIo\Psr\HttpMessage\Protocol;
 use AppserverIo\Psr\Security\PrincipalInterface;
 use AppserverIo\Server\Dictionaries\ServerVars;
+use AppserverIo\Apps\Api\Security\JwtPrincipalDecorator;
 use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
 use AppserverIo\Appserver\ServletEngine\Authenticator\Utils\FormKeys;
 use AppserverIo\Appserver\ServletEngine\Authenticator\FormAuthenticator;
-use AppserverIo\Collections\ArrayList;
-use AppserverIo\Lang\String;
-use  AppserverIo\Appserver\ServletEngine\Security\GenericPrincipal;
 
 /**
  * Custom RESTFul API optimized form authenticator.
@@ -45,6 +44,20 @@ use  AppserverIo\Appserver\ServletEngine\Security\GenericPrincipal;
  */
 class TokenBasedFormAuthenticator extends FormAuthenticator
 {
+
+    /**
+     * The claim containing the principal data.
+     *
+     * @var string
+     */
+    const CLAIM_PRINCIPAL = 'principal';
+
+    /**
+     * The token type we're using here.
+     *
+     * @var string
+     */
+    const TOKEN_TYPE = 'jwt';
 
     /**
      * Try to authenticate the user making this request, based on the specified login configuration.
@@ -66,22 +79,21 @@ class TokenBasedFormAuthenticator extends FormAuthenticator
 
         // query whether or not a token can be found
         if ($jwt) {
-            // parse the token and register the found principal in the request
+            // parse the token
             $token = (new Parser())->parse((string) $jwt);
 
-            $principal = $token->getClaim('principal');
+            // use the current time to validate (iat, nbf and exp)
+            $data = new ValidationData();
+            $data->setIssuer($servletRequest->getServerName());
+            $data->setAudience($servletRequest->getServerVar(ServerVars::REMOTE_ADDR));
 
-            $username = new String($principal->username);
-
-            $roles = new ArrayList();
-            foreach ($principal->roles as $role) {
-                $roles->add(new String($role));
+            // validate the token
+            if ($token->validate($data)) {
+                // register the principal found as token claim in the request
+                $userPrincipal = JwtPrincipalDecorator::fromClaim($token->getClaim(TokenBasedFormAuthenticator::CLAIM_PRINCIPAL));
+                $this->register($servletRequest, $servletResponse, $userPrincipal);
+                return true;
             }
-
-            $userPrincipal = new GenericPrincipal($username, null, $roles);
-
-            $this->register($servletRequest, $servletResponse, $userPrincipal);
-            return true;
         }
 
         // is this the action request from the login page?
@@ -128,24 +140,16 @@ class TokenBasedFormAuthenticator extends FormAuthenticator
         HttpServletResponseInterface $servletResponse
     ) {
 
-        $roles = array();
-        foreach ($userPrincipal->getRoles() as $role) {
-            $roles[] = $role->__toString();
-        }
-
-        $principal = array(
-            'username' => $userPrincipal->getUsername()->__toString(),
-            'roles'    => $roles
-        );
+        // create a decorated principal, that supports JSON encoding
+        $principal = new JwtPrincipalDecorator($userPrincipal);
 
         // configure the JWT token
         $token = (new Builder())->setIssuer($servletRequest->getServerName())                         // configures the issuer (iss claim)
-                                ->setAudience($servletRequest->getServerVar(ServerVars::REMOTE_HOST)) // configures the audience (aud claim)
-                                ->setId(Uuid::uuid4(), true)                                          // configures the id (jti claim), replicating as a header item
+                                ->setAudience($servletRequest->getServerVar(ServerVars::REMOTE_ADDR)) // configures the audience (aud claim)
                                 ->setIssuedAt(time())                                                 // configures the time that the token was issue (iat claim)
-                                ->setNotBefore(time() + 60)                                           // configures the time that the token can be used (nbf claim)
+                                ->setNotBefore(time())                                                // configures the time that the token can be used (nbf claim)
                                 ->setExpiration(time() + 3600)                                        // configures the expiration time of the token (exp claim)
-                                ->set('principal', $principal)                                        // configures a new claim, called "principal"
+                                ->set(TokenBasedFormAuthenticator::CLAIM_PRINCIPAL, $principal)       // configures a new claim, called "principal"
                                 ->getToken();                                                         // retrieves the generated token
 
         // append the JWT token to the response body
@@ -153,7 +157,7 @@ class TokenBasedFormAuthenticator extends FormAuthenticator
             json_encode(
                 array(
                     'accessToken' => $token->__toString(),
-                    'tokenType'   => 'jwt',
+                    'tokenType'   => TokenBasedFormAuthenticator::TOKEN_TYPE,
                     'expiresIn'   => 3600
                 )
             )
@@ -163,6 +167,6 @@ class TokenBasedFormAuthenticator extends FormAuthenticator
         $servletRequest->setDispatched(true);
 
         // add the user principal and the authentication type to the request
-        $this->register($servletRequest, $servletResponse, $userPrincipal);
+        $this->register($servletRequest, $servletResponse, $principal);
     }
 }

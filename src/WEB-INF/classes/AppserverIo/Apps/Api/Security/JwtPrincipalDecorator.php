@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Apps\Api\Security\GenericPrincipalDecorator
+ * AppserverIo\Apps\Api\Security\JwtPrincipalDecorator
  *
  * NOTICE OF LICENSE
  *
@@ -20,10 +20,12 @@
 
 namespace AppserverIo\Apps\Api\Security;
 
+use AppserverIo\Lang\String;
+use AppserverIo\Collections\ArrayList;
 use AppserverIo\Psr\Security\PrincipalInterface;
-use AppserverIo\Appserver\ServletEngine\Security\GenericPrincipal;
-use Guzzle\Common\FromConfigInterface;
 use AppserverIo\Psr\Security\Auth\Login\LoginContextInterface;
+use AppserverIo\Appserver\ServletEngine\Security\SimplePrincipal;
+use AppserverIo\Appserver\ServletEngine\Security\GenericPrincipal;
 
 /**
  * Docrator for a GenericPrincipal object.
@@ -34,7 +36,7 @@ use AppserverIo\Psr\Security\Auth\Login\LoginContextInterface;
  * @link       http://github.com/appserver-io-apps/api
  * @link       http://www.appserver.io
  */
-class GenericPrincipalDecorator implements PrincipalInterface, \JsonSerializable
+class JwtPrincipalDecorator implements PrincipalInterface, \JsonSerializable
 {
 
     /**
@@ -132,7 +134,7 @@ class GenericPrincipalDecorator implements PrincipalInterface, \JsonSerializable
      */
     public function getUserPrincipal()
     {
-        return $this->getPrincipal()->getUserPrincipal()
+        return $this->getPrincipal()->getUserPrincipal();
     }
 
     /**
@@ -155,27 +157,40 @@ class GenericPrincipalDecorator implements PrincipalInterface, \JsonSerializable
     public function jsonSerialize()
     {
 
+        // load the roles
         $roles = array();
-        foreach ($userPrincipal->getRoles() as $role) {
+        foreach ($this->getRoles() as $role) {
             $roles[] = $role->__toString();
         }
 
-        $principal = array(
-            'username' => $userPrincipal->getUsername()->__toString(),
+        // return the principal data as JSON serializable array
+        return array(
+            'username' => $this->getUsername()->__toString(),
             'roles'    => $roles
         );
     }
 
     /**
      * Initializes and returns a new instance with the data
-     * of the passed JSON string.
+     * of the passed claim which is a \stdClass instance.
      *
-     * @param string $json The JSON string to extract the data from
+     * @param stdClass $stdClass The \stdClass with the data to initialize the principal with
      *
-     * @return void
+     * @return \AppserverIo\Apps\Api\Security\JwtPrincipalDecorator The initialized decorator instance
      */
-    public static function fromJson($json, LoginContextInterface $loginContext)
+    public static function fromClaim(\stdClass $stdClass)
     {
 
+        // initialize the username
+        $username = new String($stdClass->username);
+
+        // initialize the roles
+        $roles = new ArrayList();
+        foreach ($stdClass->roles as $role) {
+            $roles->add(new String($role));
+        }
+
+        // restore and return the generic principal decorator instance
+        return new JwtPrincipalDecorator(new GenericPrincipal($username, null, $roles, new SimplePrincipal($username)));
     }
 }
