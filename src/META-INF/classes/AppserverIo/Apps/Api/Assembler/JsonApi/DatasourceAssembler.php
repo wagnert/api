@@ -92,7 +92,7 @@ class DatasourceAssembler implements DatasourceAssemblerInterface
         $document = new Document($collection);
 
         // add metadata and links
-        $document->addMeta('total', count($datasources));
+        $document->addMeta('total', $datasources->size());
 
         // return the JSON-API representation
         return $document;
