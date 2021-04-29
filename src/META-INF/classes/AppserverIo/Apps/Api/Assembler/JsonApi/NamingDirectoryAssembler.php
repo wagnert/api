@@ -95,7 +95,7 @@ class NamingDirectoryAssembler implements NamingDirectoryAssemblerInterface
         $document = new Document($collection);
 
         // add metadata and links
-        $document->addMeta('total', count($namingDirectories));
+        $document->addMeta('total', $namingDirectories->size());
 
         // return the JSON-API representation
         return $document;

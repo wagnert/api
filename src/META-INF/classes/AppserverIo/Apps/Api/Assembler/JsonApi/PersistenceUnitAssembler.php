@@ -93,7 +93,7 @@ class PersistenceUnitAssembler implements PersistenceUnitAssemblerInterface
         $document = new Document($collection);
 
         // add metadata and links
-        $document->addMeta('total', count($persistenceUnits));
+        $document->addMeta('total', $persistenceUnits->size());
 
         // return the stdClass representation of the naming directories
         return $document;

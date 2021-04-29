@@ -93,7 +93,7 @@ class ContainerAssembler implements ContainerAssemblerInterface
         $document = new Document($collection);
 
         // add metadata and links
-        $document->addMeta('total', count($containers));
+        $document->addMeta('total', $containers->size());
 
         // return the JSON-API representation
         return $document;

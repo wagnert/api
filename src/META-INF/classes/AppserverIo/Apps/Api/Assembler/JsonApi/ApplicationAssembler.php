@@ -93,7 +93,7 @@ class ApplicationAssembler implements ApplicationAssemblerInterface
         $document = new Document($collection);
 
         // add metadata and links
-        $document->addMeta('total', count($applications));
+        $document->addMeta('total', $applications->size());
 
         // return the JSON-API representation
         return $document;

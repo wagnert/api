@@ -94,7 +94,7 @@ class VirtualHostAssembler implements VirtualHostAssemblerInterface
         $document = new Document($collection);
 
         // add metadata and links
-        $document->addMeta('total', count($virtualHosts));
+        $document->addMeta('total', $virtualHosts->size());
 
         // return the stdClass representation of the naming directories
         return $document;
