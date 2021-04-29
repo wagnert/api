@@ -20,10 +20,13 @@
 
 namespace AppserverIo\Apps\Api\Servlets;
 
+use Swagger\Annotations as SWG;
 use AppserverIo\Apps\Api\Utils\RequestKeys;
 use AppserverIo\Apps\Api\Encoding\EncodingAwareInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
+use AppserverIo\Psr\Servlet\Annotations as SRV;
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
 
 /**
  * Servlet that handles all persistence unit related requests.
@@ -34,7 +37,7 @@ use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Route(name="persistenceUnits",
+ * @SRV\Route(name="persistenceUnits",
  *        displayName="Handles persistence unit related requests",
  *        description="A servlet implementation that handles all persistence unit related requests.",
  *        urlPattern={"/persistenceUnits.do", "/persistenceUnits.do*"})
@@ -47,7 +50,7 @@ class PersistenceUnitServlet extends AbstractServlet implements EncodingAwareInt
      *
      * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
      * @see \AppserverIo\Apps\Api\Services\PersistenceUnitProcessorInterface
-     * @EnterpriseBean
+     * @EPB\EnterpriseBean
      */
     protected $persistenceUnitProcessor;
 

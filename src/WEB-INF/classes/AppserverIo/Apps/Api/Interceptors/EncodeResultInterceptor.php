@@ -23,6 +23,7 @@ namespace AppserverIo\Apps\Api\Interceptors;
 use AppserverIo\Apps\Api\Encoding\EncodingAwareInterface;
 use AppserverIo\Apps\Api\Validation\ValidationAwareInterface;
 use AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface;
+use AppserverIo\Psr\MetaobjectProtocol\Aop\Annotations as AOP;
 
 /**
  * Interceptor to encode the response data.
@@ -33,7 +34,7 @@ use AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Aspect
+ * @AOP\Aspect
  */
 class EncodeResultInterceptor
 {

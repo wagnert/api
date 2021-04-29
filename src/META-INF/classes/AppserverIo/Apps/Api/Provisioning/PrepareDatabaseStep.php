@@ -20,7 +20,8 @@
 
 namespace AppserverIo\Apps\Api\Provisioning;
 
-use AppserverIo\Appserver\Provisioning\Steps\AbstractStep;
+use AppserverIo\Provisioning\Steps\AbstractStep;
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
 
 /**
  * An step implementation that creates a database and login credentials
@@ -31,9 +32,19 @@ use AppserverIo\Appserver\Provisioning\Steps\AbstractStep;
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io/api
  * @link      http://www.appserver.io
+ *
+ * @EPB\Inject(shared=false)
  */
 class PrepareDatabaseStep extends AbstractStep
 {
+
+    /**
+     * The schema processor instance.
+     *
+     * @var \AppserverIo\Apps\Api\Service\SchemaProcessor
+     * @EPB\EnterpriseBean
+     */
+    protected $schemaProcessor;
 
     /**
      * Executes the functionality for this step, in this case the execution of
@@ -52,12 +63,9 @@ class PrepareDatabaseStep extends AbstractStep
                 'Now start to prepare database using SchemaProcessor!'
             );
 
-            // load the schema processor of our application
-            $schemaProcessor = $this->getApplication()->search('SchemaProcessor');
-
             // create schema, default products + login credentials
-            $schemaProcessor->createSchema();
-            $schemaProcessor->createDefaultCredentials();
+            $this->schemaProcessor->createSchema();
+            $this->schemaProcessor->createDefaultCredentials();
 
             // log a message that provisioning has been successfull
             $this->getApplication()->getInitialContext()->getSystemLogger()->info(

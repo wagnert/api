@@ -20,6 +20,8 @@
 
 namespace AppserverIo\Apps\Api\Errors;
 
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
+
 /**
  * A simple error handler implementation.
  *
@@ -29,7 +31,7 @@ namespace AppserverIo\Apps\Api\Errors;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Stateless
+ * @EPB\Stateless
  */
 class ErrorHandler implements ErrorHandlerInterface
 {
@@ -37,7 +39,7 @@ class ErrorHandler implements ErrorHandlerInterface
     /**
      * The assembler to convert the errors.
      *
-     * @EnterpriseBean
+     * @EPB\EnterpriseBean
      */
     protected $errorAssembler;
 

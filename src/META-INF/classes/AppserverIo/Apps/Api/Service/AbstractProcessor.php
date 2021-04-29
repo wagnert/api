@@ -22,6 +22,8 @@ namespace AppserverIo\Apps\Api\Service;
 
 use AppserverIo\Psr\Application\ApplicationInterface;
 
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
+
 /**
  * An abstract SLSB implementation providing the basic business logic to handle requests.
  *
@@ -38,7 +40,7 @@ abstract class AbstractProcessor
      * The application instance that provides the entity manager.
      *
      * @var \AppserverIo\Psr\Application\ApplicationInterface
-     * @Resource(name="ApplicationInterface")
+     * @EPB\Resource(name="ApplicationInterface")
      */
     protected $application;
 

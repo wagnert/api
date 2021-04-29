@@ -23,6 +23,7 @@ namespace AppserverIo\Apps\Api\Service;
 use Doctrine\ORM\Tools\SchemaTool;
 use AppserverIo\Collections\ArrayList;
 use Doctrine\Common\Collections\ArrayCollection;
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
 
 /**
  * A singleton session bean implementation that handles the
@@ -34,7 +35,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Stateless
+ * @EPB\Stateless
  */
 class SchemaProcessor extends AbstractPersistenceProcessor implements SchemaProcessorInterface
 {
@@ -43,7 +44,8 @@ class SchemaProcessor extends AbstractPersistenceProcessor implements SchemaProc
      * The DIC provider instance.
      *
      * @var \AppserverIo\Appserver\DependencyInjectionContainer\Interfaces\ProviderInterface $provider
-     * @Resource(name="ProviderInterface")
+     *
+     * @EPB\Resource(name="ProviderInterface")
      */
     protected $providerInterface;
 
@@ -62,7 +64,8 @@ class SchemaProcessor extends AbstractPersistenceProcessor implements SchemaProc
      * Example method that should be invoked after constructor.
      *
      * @return void
-     * @PostConstruct
+     *
+     * @EPB\PostConstruct
      */
     public function initialize()
     {

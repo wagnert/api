@@ -21,6 +21,7 @@
 namespace AppserverIo\Apps\Api\Repository;
 
 use AppserverIo\Psr\Application\ApplicationInterface;
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
 
 /**
  * A SLSB implementation providing the business logic to handle persistence units.
@@ -31,7 +32,7 @@ use AppserverIo\Psr\Application\ApplicationInterface;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Stateless
+ * @EPB\Stateless
  */
 class PersistenceUnitRepository extends AbstractRepository implements PersistenceUnitRepositoryInterface
 {
@@ -41,7 +42,7 @@ class PersistenceUnitRepository extends AbstractRepository implements Persistenc
      *
      * @param string $id The ID of the persistence unit to be returned
      *
-     * @return \AppserverIo\Appserver\Core\Api\Node\PersistenceUnitNodeInterface The requested persistence node representation
+     * @return \AppserverIo\Description\Configuration\PersistenceUnitConfigurationInterface The requested persistence node representation
      */
     public function load($id)
     {

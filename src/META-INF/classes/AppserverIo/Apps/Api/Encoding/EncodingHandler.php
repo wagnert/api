@@ -23,6 +23,7 @@ namespace AppserverIo\Apps\Api\Encoding;
 use AppserverIo\Collections\ArrayList;
 use AppserverIo\Apps\Api\Encoding\Encoder\SimpleJsonEncoder;
 use AppserverIo\Apps\Api\Encoding\Encoder\JmsSerializerEncoder;
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
 
 /**
  * A SLSB implementation providing the business logic to encode data.
@@ -33,7 +34,7 @@ use AppserverIo\Apps\Api\Encoding\Encoder\JmsSerializerEncoder;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Stateless
+ * @EPB\Stateless
  */
 class EncodingHandler implements EncodingHandlerInterface
 {

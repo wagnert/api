@@ -6,19 +6,22 @@
 		"tobscure/json-api" : "0.2.*",
 		"respect/validation" : "~1.0",
 		"zircote/swagger-php" : "*",
+        "doctrine/orm": "2.5.*",
 		"jms/serializer" : "1.1.0 as 0.16.0"
 	},
 	"require-dev" : {
 		"appserver-io/phar" : "~1.0",
-		"appserver-io/build" : "~1.0",
-		"appserver-io/messaging" : "~1.0",
-		"appserver-io/http" : "~1.0",
-		"appserver-io/lang" : "~1.0",
+		"appserver-io/build" : "~2.0",
+		"appserver-io/messaging" : "~4.0",
+		"appserver-io/http" : "~2.0",
+		"appserver-io/lang" : "~3.0",
+        "appserver-io/description": "13.0.*",
 		"appserver-io/collections" : "~1.0",
-		"appserver-io-psr/mop" : "~1.0",
-		"appserver-io-psr/epb" : "~1.0",
-		"appserver-io-psr/servlet" : "~1.0",
-		"appserver-io-psr/security" : "~1.0"
+		"appserver-io-psr/mop" : "~2.0",
+		"appserver-io-psr/epb" : "~7.0",
+		"appserver-io-psr/servlet" : "~4.0",
+		"appserver-io-psr/security" : "~1.0",
+        "appserver-io-psr/application-server": "~2.0"
 	},
 	"config" : {
 		"vendor-dir" : "src/vendor"

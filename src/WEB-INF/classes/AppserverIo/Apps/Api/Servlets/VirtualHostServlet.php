@@ -20,10 +20,13 @@
 
 namespace AppserverIo\Apps\Api\Servlets;
 
+use Swagger\Annotations as SWG;
 use AppserverIo\Apps\Api\Utils\RequestKeys;
 use AppserverIo\Apps\Api\Encoding\EncodingAwareInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
+use AppserverIo\Psr\Servlet\Annotations as SRV;
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
 
 /**
  * Servlet that handles all virtual host related requests.
@@ -34,7 +37,7 @@ use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Route(name="virtualHosts",
+ * @SRV\Route(name="virtualHosts",
  *        displayName="Handles virtual host related requests",
  *        description="A servlet implementation that handles all virtual host related requests.",
  *        urlPattern={"/virtualHosts.do", "/virtualHosts.do*"})
@@ -47,7 +50,7 @@ class VirtualHostServlet extends AbstractServlet implements EncodingAwareInterfa
      *
      * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
      * @see \AppserverIo\Apps\Api\Services\VirtualHostProcessorInterface
-     * @EnterpriseBean
+     * @EPB\EnterpriseBean
      */
     protected $virtualHostProcessor;
 

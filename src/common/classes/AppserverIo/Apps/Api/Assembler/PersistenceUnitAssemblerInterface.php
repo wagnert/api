@@ -20,8 +20,6 @@
 
 namespace AppserverIo\Apps\Api\Assembler;
 
-use AppserverIo\Appserver\Core\Api\Node\PersistenceUnitNodeInterface;
-
 /**
  * Interface for persistence unit assemblers.
  *

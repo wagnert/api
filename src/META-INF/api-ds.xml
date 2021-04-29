@@ -36,7 +36,7 @@
             <driver>pdo_sqlite</driver>
             <user>appserver</user>
             <password>appserver</password>
-            <path>META-INF/data/appserver_Api.sqlite</path>
+            <path>${base.dir}/${host.tmpBase.dir}/${webapp.name}/data/appserver_Api.sqlite</path>
             <memory>false</memory>
         </database>
     </datasource>

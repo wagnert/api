@@ -5,7 +5,7 @@
 
     <installation>
         <steps>
-            <step type="AppserverIo\Apps\Api\Provisioning\PrepareDatabaseStep" />
+            <step type="PrepareDatabaseStep" />
         </steps>
     </installation>
 

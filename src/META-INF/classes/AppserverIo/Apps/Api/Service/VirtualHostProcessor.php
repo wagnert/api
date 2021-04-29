@@ -20,6 +20,8 @@
 
 namespace AppserverIo\Apps\Api\Service;
 
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
+
 /**
  * A SLSB implementation providing the business logic to handle virtual hosts.
  *
@@ -29,7 +31,7 @@ namespace AppserverIo\Apps\Api\Service;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Stateless
+ * @EPB\Stateless
  */
 class VirtualHostProcessor extends AbstractProcessor implements DatasourceProcessorInterface
 {
@@ -40,7 +42,7 @@ class VirtualHostProcessor extends AbstractProcessor implements DatasourceProces
      * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy The virtual host assembler instance
      * @var \AppserverIo\Apps\Api\Assembler\JsonApi\VirtualHostAssembler
      *
-     * @EnterpriseBean
+     * @EPB\EnterpriseBean
      */
     protected $virtualHostAssembler;
 

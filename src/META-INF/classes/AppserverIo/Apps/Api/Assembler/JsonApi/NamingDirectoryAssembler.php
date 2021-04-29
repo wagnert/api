@@ -28,6 +28,7 @@ use AppserverIo\Psr\NamingDirectory\NamingDirectoryInterface;
 use AppserverIo\Apps\Api\Assembler\NamingDirectoryAssemblerInterface;
 use AppserverIo\Apps\Api\Assembler\JsonApi\Serializer\NamingDirectoryViewSerializer;
 use AppserverIo\Apps\Api\Assembler\JsonApi\Serializer\NamingDirectoryOverviewSerializer;
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
 
 /**
  * A SLSB implementation providing the business logic to assemble naming directories
@@ -39,7 +40,7 @@ use AppserverIo\Apps\Api\Assembler\JsonApi\Serializer\NamingDirectoryOverviewSer
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Stateless
+ * @EPB\Stateless
  */
 class NamingDirectoryAssembler implements NamingDirectoryAssemblerInterface
 {
@@ -49,7 +50,8 @@ class NamingDirectoryAssembler implements NamingDirectoryAssemblerInterface
      *
      * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
      * @see \AppserverIo\Apps\Api\Assembler\NamingDirectoryAssemblerInterface
-     * @EnterpriseBean
+     *
+     * @EPB\EnterpriseBean
      */
     protected $namingDirectoryTransferObjectAssembler;
 

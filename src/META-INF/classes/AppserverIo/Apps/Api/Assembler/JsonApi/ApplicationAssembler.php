@@ -27,6 +27,7 @@ use AppserverIo\Collections\CollectionInterface;
 use AppserverIo\Psr\Application\ApplicationInterface;
 use AppserverIo\Apps\Api\Assembler\ApplicationAssemblerInterface;
 use AppserverIo\Apps\Api\Assembler\JsonApi\Serializer\ApplicationSerializer;
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
 
 /**
  * A SLSB implementation providing the business logic to assemble applications
@@ -38,7 +39,7 @@ use AppserverIo\Apps\Api\Assembler\JsonApi\Serializer\ApplicationSerializer;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Stateless
+ * @EPB\Stateless
  */
 class ApplicationAssembler implements ApplicationAssemblerInterface
 {
@@ -48,7 +49,7 @@ class ApplicationAssembler implements ApplicationAssemblerInterface
      *
      * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
      * @see \AppserverIo\Apps\Api\Assembler\ApplicationAssemblerInterface
-     * @EnterpriseBean
+     * @EPB\EnterpriseBean
      */
     protected $applicationTransferObjectAssembler;
 

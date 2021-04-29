@@ -44,7 +44,6 @@ class ApplicationOverviewData
      */
     protected $id;
 
-
     /**
      * The application name.
      *

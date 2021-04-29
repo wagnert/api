@@ -24,7 +24,8 @@ use AppserverIo\Collections\ArrayList;
 use AppserverIo\Apps\Api\TransferObject\PersistenceUnitViewData;
 use AppserverIo\Apps\Api\TransferObject\PersistenceUnitOverviewData;
 use AppserverIo\Apps\Api\Assembler\PersistenceUnitAssemblerInterface;
-use AppserverIo\Appserver\Core\Api\Node\PersistenceUnitNodeInterface;
+use AppserverIo\Description\Configuration\PersistenceUnitConfigurationInterface;
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
 
 /**
  * A SLSB implementation providing the business logic to assemble persistence units into DTOs.
@@ -35,7 +36,7 @@ use AppserverIo\Appserver\Core\Api\Node\PersistenceUnitNodeInterface;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Stateless
+ * @EPB\Stateless
  */
 class PersistenceUnitTransferObjectAssembler implements PersistenceUnitAssemblerInterface
 {
@@ -44,7 +45,7 @@ class PersistenceUnitTransferObjectAssembler implements PersistenceUnitAssembler
      * The persistence unit repository instance.
      *
      * @var \AppserverIo\Apps\Api\Repository\PersistenceRepositoryInterface
-     * @EnterpriseBean
+     * @EPB\EnterpriseBean
      */
     protected $persistenceUnitRepository;
 
@@ -53,7 +54,7 @@ class PersistenceUnitTransferObjectAssembler implements PersistenceUnitAssembler
      *
      * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
      * @see \AppserverIo\Apps\Api\Assembler\DatasourceAssemblerInterface
-     * @EnterpriseBean
+     * @EPB\EnterpriseBean
      */
     protected $datasourceTransferObjectAssembler;
 
@@ -82,11 +83,11 @@ class PersistenceUnitTransferObjectAssembler implements PersistenceUnitAssembler
     /**
      * Convert's the passed persistence unit node into a DTO.
      *
-     * @param \AppserverIo\Appserver\Core\Api\Node\PersistenceUnitNodeInterface $persistenceUnitNode The persistence unit node to convert
+     * @param \AppserverIo\Description\Configuration\PersistenceUnitConfigurationInterface $persistenceUnitNode The persistence unit node to convert
      *
      * @return \AppserverIo\Apps\Api\TransferObject\PersistenceUnitViewData The DTO
      */
-    public function toPersistenceUnitViewData(PersistenceUnitNodeInterface $persistenceUnitNode)
+    public function toPersistenceUnitViewData(PersistenceUnitConfigurationInterface $persistenceUnitNode)
     {
         $viewData = new PersistenceUnitViewData();
         $viewData->setId($persistenceUnitNode->getPrimaryKey());
@@ -98,11 +99,11 @@ class PersistenceUnitTransferObjectAssembler implements PersistenceUnitAssembler
     /**
      * Convert's the passed persistence unit node into a DTO.
      *
-     * @param \AppserverIo\Appserver\Core\Api\Node\PersistenceUnitNodeInterface $persistenceUnitNode The persistence unit node to convert
+     * @param \c $persistenceUnitNode The persistence unit node to convert
      *
      * @return \AppserverIo\Apps\Api\TransferObject\PersistenceUnitOverviewData The DTO
      */
-    public function toPersistenceUnitOverviewData(PersistenceUnitNodeInterface $persistenceUnitNode)
+    public function toPersistenceUnitOverviewData(PersistenceUnitConfigurationInterface $persistenceUnitNode)
     {
         $overviewData = new PersistenceUnitOverviewData();
         $overviewData->setId($persistenceUnitNode->getPrimaryKey());

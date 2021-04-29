@@ -20,10 +20,13 @@
 
 namespace AppserverIo\Apps\Api\Servlets;
 
+use Swagger\Annotations as SWG;
 use AppserverIo\Apps\Api\Utils\RequestKeys;
 use AppserverIo\Apps\Api\Encoding\EncodingAwareInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
+use AppserverIo\Psr\Servlet\Annotations as SRV;
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
 
 /**
  * Servlet that handles all container related requests.
@@ -34,7 +37,7 @@ use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Route(name="namingDirectories",
+ * @SRV\Route(name="namingDirectories",
  *        displayName="Handles naming directory related requests",
  *        description="A servlet implementation that handles all naming directory related requests.",
  *        urlPattern={"/namingDirectories.do", "/namingDirectories.do*"})
@@ -47,7 +50,7 @@ class NamingDirectoryServlet extends AbstractServlet implements EncodingAwareInt
      *
      * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
      * @see \AppserverIo\Apps\Api\Services\NamingDirectoryProcessorInterface
-     * @EnterpriseBean
+     * @EPB\EnterpriseBean
      */
     protected $namingDirectoryProcessor;
 

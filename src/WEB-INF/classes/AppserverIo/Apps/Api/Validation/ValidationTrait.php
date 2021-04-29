@@ -24,6 +24,7 @@ use AppserverIo\Http\HttpProtocol;
 use AppserverIo\Apps\Api\Utils\RequestKeys;
 use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
 
 /**
  * The abstract servlet implementation that provides basic encoding functionality.
@@ -42,7 +43,7 @@ trait ValidationTrait
      *
      * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
      * @see \AppserverIo\Apps\Api\Errors\ErrorInterface
-     * @EnterpriseBean(beanName="ErrorHandler")
+     * @EPB\EnterpriseBean(beanName="ErrorHandler")
      */
     protected $errorHandler;
 

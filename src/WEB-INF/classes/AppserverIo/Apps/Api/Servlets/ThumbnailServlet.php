@@ -20,6 +20,7 @@
 
 namespace AppserverIo\Apps\Api\Servlets;
 
+use Swagger\Annotations as SWG;
 use AppserverIo\Http\HttpProtocol;
 use AppserverIo\Server\Dictionaries\MimeTypes;
 use AppserverIo\Psr\Servlet\Http\HttpServlet;
@@ -28,6 +29,8 @@ use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
 use AppserverIo\Apps\Api\Exceptions\FileNotFoundException;
 use AppserverIo\Apps\Api\Exceptions\FileNotReadableException;
 use AppserverIo\Apps\Api\Exceptions\FoundDirInsteadOfFileException;
+use AppserverIo\Psr\Servlet\Annotations as SRV;
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
 
 /**
  * Servlet that handles all thumbnail related requests.
@@ -38,7 +41,7 @@ use AppserverIo\Apps\Api\Exceptions\FoundDirInsteadOfFileException;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Route(name="thumbnails",
+ * @SRV\Route(name="thumbnails",
  *        displayName="Handles thumbnail related requests",
  *        description="A servlet implementation that handles all thumbnail related requests.",
  *        urlPattern={"/thumbnails.do", "/thumbnails.do*"})
@@ -51,7 +54,7 @@ class ThumbnailServlet extends AbstractServlet
      *
      * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
      * @see \AppserverIo\Apps\Api\Services\ApplicationProcessorInterface
-     * @EnterpriseBean
+     * @EPB\EnterpriseBean
      */
     protected $applicationProcessor;
 

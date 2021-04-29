@@ -20,6 +20,8 @@
 
 namespace AppserverIo\Apps\Api\Service;
 
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
+
 /**
  * A SLSB implementation providing the business logic to handle
  * persistence units.
@@ -30,7 +32,7 @@ namespace AppserverIo\Apps\Api\Service;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Stateless
+ * @EPB\Stateless
  */
 class PersistenceUnitProcessor extends AbstractProcessor implements PersistenceUnitProcessorInterface
 {
@@ -39,7 +41,8 @@ class PersistenceUnitProcessor extends AbstractProcessor implements PersistenceU
      * The persistence unit assembler instance.
      *
      * @var \AppserverIo\Apps\Api\Assembler\JsonApi\PersistenceUnitAssembler
-     * @EnterpriseBean
+     *
+     * @EPB\EnterpriseBean
      */
     protected $persistenceUnitAssembler;
 
@@ -47,7 +50,8 @@ class PersistenceUnitProcessor extends AbstractProcessor implements PersistenceU
      * The persistence unit repository instance.
      *
      * @var \AppserverIo\Apps\Api\Repository\PersistenceUnitRepositoryInterface
-     * @EnterpriseBean
+     *
+     * @EPB\EnterpriseBean
      */
     protected $persistenceUnitRepository;
 

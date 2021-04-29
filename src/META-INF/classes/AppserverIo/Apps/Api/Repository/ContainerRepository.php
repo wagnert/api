@@ -21,6 +21,7 @@
 namespace AppserverIo\Apps\Api\Repository;
 
 use AppserverIo\Apps\Api\Utils\ServiceKeys;
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
 
 /**
  * A SLSB implementation providing the business logic to handle containers.
@@ -31,7 +32,7 @@ use AppserverIo\Apps\Api\Utils\ServiceKeys;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Stateless
+ * @EPB\Stateless
  */
 class ContainerRepository extends AbstractRepository implements ContainerRepositoryInterface
 {
@@ -41,7 +42,7 @@ class ContainerRepository extends AbstractRepository implements ContainerReposit
      *
      * @param string $id The ID of the container node to be returned
      *
-     * @return \AppserverIo\Appserver\Core\Api\Node\ContainerNodeInterface The requested container node
+     * @return \AppserverIo\Psr\ApplicationServer\Configuration\ContainerConfigurationInterface The requested container node
      */
     public function load($id)
     {

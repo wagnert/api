@@ -22,6 +22,7 @@ namespace AppserverIo\Apps\Api\Repository;
 
 use \AppserverIo\Psr\Naming\NamingDirectoryInterface;
 use AppserverIo\Appserver\Core\Api\Node\DatasourceNode;
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
 
 /**
  * A SLSB implementation providing the business logic to handle datasource nodes.
@@ -32,7 +33,7 @@ use AppserverIo\Appserver\Core\Api\Node\DatasourceNode;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Stateless
+ * @EPB\Stateless
  */
 class DatasourceRepository extends AbstractRepository implements DatasourceRepositoryInterface
 {
@@ -42,7 +43,7 @@ class DatasourceRepository extends AbstractRepository implements DatasourceRepos
      *
      * @param string $id The ID of the datasource node to be returned
      *
-     * @return \AppserverIo\Appserver\Core\Api\Node\DatasourceNodeInterface The requested datasource node
+     * @return \AppserverIo\Psr\ApplicationServer\Configuration\DatasourceConfigurationInterface The requested datasource node
      * @see \AppserverIo\Apps\Api\Service\DatasourceRepositoryInterface::load()
      */
     public function load($id)

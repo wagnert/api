@@ -1,3 +1,13 @@
+# Version 0.8.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Updates appserver.io v1.1.*
+
 # Version 0.7.3
 
 ## Bugfixes

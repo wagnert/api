@@ -22,7 +22,8 @@ namespace AppserverIo\Apps\Api\Assembler\TransferObject;
 
 use AppserverIo\Apps\Api\TransferObject\DatabaseOverviewData;
 use AppserverIo\Apps\Api\Assembler\DatabaseAssemblerInterface;
-use AppserverIo\Appserver\Core\Api\Node\DatabaseNodeInterface;
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
+use AppserverIo\Psr\ApplicationServer\Configuration\DatabaseConfigurationInterface;
 
 /**
  * A SLSB implementation providing the business logic to assemble database nodes into DTOs.
@@ -33,7 +34,7 @@ use AppserverIo\Appserver\Core\Api\Node\DatabaseNodeInterface;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Stateless
+ * @EPB\Stateless
  */
 class DatabaseTransferObjectAssembler implements DatabaseAssemblerInterface
 {
@@ -41,11 +42,11 @@ class DatabaseTransferObjectAssembler implements DatabaseAssemblerInterface
     /**
      * Convert's the passed database node into a DTO.
      *
-     * @param \AppserverIo\Appserver\Core\Api\Node\DatabaseNodeInterface $databaseNode The datgabase node to convert
+     * @param \AppserverIo\Psr\ApplicationServer\Configuration\DatabaseConfigurationInterface $databaseNode The datgabase node to convert
      *
      * @return \AppserverIo\Apps\Api\TransferObject\DatabaseOverviewData The DTO
      */
-    public function toDatabaseOverviewData(DatabaseNodeInterface $databaseNode)
+    public function toDatabaseOverviewData(DatabaseConfigurationInterface $databaseNode)
     {
         $overviewData = new DatabaseOverviewData();
         $overviewData->setId($databaseNode->getPrimaryKey());

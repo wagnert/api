@@ -20,6 +20,8 @@
 
 namespace AppserverIo\Apps\Api\Repository;
 
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
+
 /**
  * A SLSB implementation providing the business logic to handle naming directories.
  *
@@ -29,7 +31,7 @@ namespace AppserverIo\Apps\Api\Repository;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Stateless
+ * @EPB\Stateless
  */
 class NamingDirectoryRepository extends AbstractRepository implements NamingDirectoryRepositoryInterface
 {

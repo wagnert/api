@@ -21,6 +21,7 @@
 namespace AppserverIo\Apps\Api\Repository;
 
 use AppserverIo\Apps\Api\Utils\ServiceKeys;
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
 
 /**
  * A SLSB implementation providing the business logic to handle virtual hosts.
@@ -31,7 +32,7 @@ use AppserverIo\Apps\Api\Utils\ServiceKeys;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Stateless
+ * @EPB\Stateless
  */
 class VirtualHostRepository extends AbstractRepository implements VirtualHostRepositoryInterface
 {

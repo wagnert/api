@@ -20,6 +20,8 @@
 
 namespace AppserverIo\Apps\Api\Service;
 
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
+
 /**
  * A SLSB implementation providing the business logic to handle naming directories.
  *
@@ -29,7 +31,7 @@ namespace AppserverIo\Apps\Api\Service;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Stateless
+ * @EPB\Stateless
  */
 class NamingDirectoryProcessor extends AbstractProcessor implements NamingDirectoryProcessorInterface
 {
@@ -38,7 +40,8 @@ class NamingDirectoryProcessor extends AbstractProcessor implements NamingDirect
      * The naming directory assembler instance.
      *
      * @var \AppserverIo\Apps\Api\Assembler\JsonApi\NamingDirectoryAssembler
-     * @EnterpriseBean
+     *
+     * @EPB\EnterpriseBean
      */
     protected $namingDirectoryAssembler;
 

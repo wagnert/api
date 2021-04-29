@@ -24,7 +24,8 @@ use AppserverIo\Collections\ArrayList;
 use AppserverIo\Apps\Api\TransferObject\ContainerViewData;
 use AppserverIo\Apps\Api\TransferObject\ContainerOverviewData;
 use AppserverIo\Apps\Api\Assembler\ContainerAssemblerInterface;
-use AppserverIo\Appserver\Core\Api\Node\ContainerNodeInterface;
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
+use AppserverIo\Psr\ApplicationServer\Configuration\ContainerConfigurationInterface;
 
 /**
  * A SLSB implementation providing the business logic to assemble containers into DTOs.
@@ -35,7 +36,7 @@ use AppserverIo\Appserver\Core\Api\Node\ContainerNodeInterface;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Stateless
+ * @EPB\Stateless
  */
 class ContainerTransferObjectAssembler implements ContainerAssemblerInterface
 {
@@ -44,7 +45,7 @@ class ContainerTransferObjectAssembler implements ContainerAssemblerInterface
      * The container repository instance.
      *
      * @var \AppserverIo\Apps\Api\Repository\ContainerRepositoryInterface
-     * @EnterpriseBean
+     * @EPB\EnterpriseBean
      */
     protected $containerRepository;
 
@@ -62,11 +63,11 @@ class ContainerTransferObjectAssembler implements ContainerAssemblerInterface
     /**
      * Convert's the passed container node into a DTO.
      *
-     * @param \AppserverIo\Appserver\Core\Api\Node\ContainerNodeInterface $containerNode The container node to convert
+     * @param \AppserverIo\Psr\ApplicationServer\Configuration\ContainerConfigurationInterface  $containerNode The container node to convert
      *
      * @return \AppserverIo\Apps\Api\TransferObject\ContainerViewData The DTO
      */
-    public function toContainerViewData(ContainerNodeInterface $containerNode)
+    public function toContainerViewData(ContainerConfigurationInterface $containerNode)
     {
         $viewData = new ContainerViewData();
         $viewData->setId($containerNode->getPrimaryKey());
@@ -77,11 +78,11 @@ class ContainerTransferObjectAssembler implements ContainerAssemblerInterface
     /**
      * Convert's the passed container node into a DTO.
      *
-     * @param \AppserverIo\Appserver\Core\Api\Node\ContainerNodeInterface $containerNode The container node to convert
+     * @param \AppserverIo\Psr\ApplicationServer\Configuration\ContainerConfigurationInterface  $containerNode The container node to convert
      *
      * @return \AppserverIo\Apps\Api\TransferObject\ContainerOverviewData The DTO
      */
-    public function toContainerOverviewData(ContainerNodeInterface $containerNode)
+    public function toContainerOverviewData(ContainerConfigurationInterface $containerNode)
     {
         $overviewData = new ContainerOverviewData();
         $overviewData->setId($containerNode->getPrimaryKey());

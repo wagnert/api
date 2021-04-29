@@ -20,12 +20,15 @@
 
 namespace AppserverIo\Apps\Api\Servlets;
 
+use Swagger\Annotations as SWG;
 use AppserverIo\Apps\Api\Utils\RequestKeys;
 use AppserverIo\Apps\Api\Encoding\EncodingAwareInterface;
 use AppserverIo\Apps\Api\Validation\ValidationAwareInterface;
 use AppserverIo\Apps\Api\TransferObject\ErrorOverviewData;
 use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
+use AppserverIo\Psr\Servlet\Annotations as SRV;
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
 
 /**
  * Servlet that handles all app related requests.
@@ -36,7 +39,7 @@ use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Route(name="applications",
+ * @SRV\Route(name="applications",
  *        displayName="Handles application related requests",
  *        description="A servlet implementation that handles all application related requests.",
  *        urlPattern={"/applications.do", "/applications.do*"})
@@ -56,7 +59,7 @@ class ApplicationServlet extends AbstractServlet implements ValidationAwareInter
      *
      * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
      * @see \AppserverIo\Apps\Api\Services\ApplicationProcessorInterface
-     * @EnterpriseBean
+     * @EPB\EnterpriseBean
      */
     protected $applicationProcessor;
 

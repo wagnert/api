@@ -23,6 +23,7 @@ namespace AppserverIo\Apps\Api\Servlets;
 use AppserverIo\Psr\Servlet\Http\HttpServlet;
 use AppserverIo\Apps\Api\Encoding\EncodingTrait;
 use AppserverIo\Apps\Api\Validation\ValidationTrait;
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
 
 /**
  * The abstract servlet implementation that provides basic helper functionality.
@@ -54,7 +55,7 @@ abstract class AbstractServlet extends HttpServlet
      * The system logger implementation.
      *
      * @var \AppserverIo\Logger\Logger
-     * @Resource(lookup="php:global/log/System")
+     * @EPB\Resource(lookup="php:global/log/System")
      */
     protected $systemLogger;
 

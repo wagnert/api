@@ -22,6 +22,7 @@ namespace AppserverIo\Apps\Api\Service;
 
 use AppserverIo\Apps\Api\TransferObject\UserOverviewData;
 use AppserverIo\Psr\Security\PrincipalInterface;
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
 
 /**
  * A SLSB implementation providing the business logic to handle users.
@@ -32,7 +33,7 @@ use AppserverIo\Psr\Security\PrincipalInterface;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Stateful
+ * @EPB\Stateful
  */
 class UserProcessor implements UserProcessorInterface
 {

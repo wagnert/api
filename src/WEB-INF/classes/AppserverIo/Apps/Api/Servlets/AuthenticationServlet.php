@@ -20,11 +20,14 @@
 
 namespace AppserverIo\Apps\Api\Servlets;
 
+use Swagger\Annotations as SWG;
 use AppserverIo\Apps\Api\Encoding\EncodingAwareInterface;
 use AppserverIo\Apps\Api\Validation\ValidationAwareInterface;
 use AppserverIo\Apps\Api\TransferObject\ErrorOverviewData;
 use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
+use AppserverIo\Psr\Servlet\Annotations as SRV;
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
 
 /**
  * Servlet to handle a simple welcome page request.
@@ -35,7 +38,7 @@ use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Route(name="authentication",
+ * @SRV\Route(name="authentication",
  *        displayName="Handles login/logout requests",
  *        description="A servlet implementation that handles login/logout related requests.",
  *        urlPattern={"/authentication.do", "/authentication.do*"})

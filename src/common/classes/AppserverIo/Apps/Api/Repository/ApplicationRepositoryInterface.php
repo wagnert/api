@@ -38,7 +38,7 @@ interface ApplicationRepositoryInterface
      *
      * @param string $id The ID of the application node to be returned
      *
-     * @return \AppserverIo\Appserver\Core\Api\Node\AppNodeInterface The requested application node
+     * @return \AppserverIo\Psr\ApplicationServer\Configuration\AppConfigurationInterface The requested application node
      */
     public function load($id);
 

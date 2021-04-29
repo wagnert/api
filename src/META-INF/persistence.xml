@@ -6,30 +6,26 @@
         <persistenceUnit name="ApiEntityManager"
             interface="Doctrine\ORM\EntityManagerInterface"
             type="Doctrine\ORM\EntityManager"
-            factory="AppserverIo\Appserver\PersistenceContainer\Doctrine\EntityManagerFactory">
-            
-            <metadataConfiguration type="annotation">
-                <directories>
-                    <directory>/common/classes/AppserverIo/Apps/Api/Entities</directory>
-                </directories>
-
-                <params>
-                    <param name="isDevMode" type="boolean">true</param>
-                    <param name="useSimpleAnnotationReader" type="boolean">false</param>
-                    <param name="proxyDir" type="string">false</param>
-                </params>
-
-            </metadataConfiguration>
+            factory="AppserverIo\Appserver\PersistenceContainer\Doctrine\V2\EntityManagerFactory">
 
             <datasource name="appserver.io-api-application"/>
 
-            <annotationRegistries>
-                <annotationRegistry namespace="JMS\Serializer\Annotation">
-                    <directories>
-                        <directory>/vendor/jms/serializer/src</directory>
-                    </directories>
-                </annotationRegistry>
-            </annotationRegistries>
+            <metadataConfiguration factory="AppserverIo\Appserver\PersistenceContainer\Doctrine\V2\DriverFactories\AnnotationDriverFactory">
+                <directories>
+                    <directory>${webapp.dir}/common/classes/AppserverIo/Apps/Api/Entities</directory>
+                </directories>
+                <params>
+                    <param name="proxyNamespace" 
+                           type="string">Appserver\Apps\Api</param>
+                    <param name="proxyDir" 
+                           type="string">${webapp.cache.dir}</param>
+                    <param name="useSimpleAnnotationReader" 
+                           type="boolean">false</param>
+                    <param name="autoGenerateProxyClasses" 
+                           constant="true" 
+                           type="integer">Doctrine\Common\Proxy\AbstractProxyFactory::AUTOGENERATE_FILE_NOT_EXISTS</param>
+                </params>
+            </metadataConfiguration>
 
         </persistenceUnit>
 

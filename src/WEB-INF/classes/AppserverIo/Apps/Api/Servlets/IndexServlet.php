@@ -25,6 +25,8 @@ use AppserverIo\Apps\Api\Encoding\EncodingAwareInterface;
 use AppserverIo\Apps\Api\Validation\ValidationAwareInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
+use AppserverIo\Psr\Servlet\Annotations as SRV;
+use Swagger\Annotations as SWG;
 
 /**
  * Servlet to handle a simple welcome page request.
@@ -35,7 +37,7 @@ use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Route(name="index",
+ * @SRV\Route(name="index",
  *        displayName="Handles API information requests",
  *        description="A servlet implementation that handles API information requests.",
  *        urlPattern={"/index.do", "/index.do*"})

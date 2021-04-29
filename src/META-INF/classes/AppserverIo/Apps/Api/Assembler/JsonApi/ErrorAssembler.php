@@ -25,6 +25,7 @@ use Tobscure\JsonApi\Collection;
 use AppserverIo\Apps\Api\TransferObject\ErrorViewData;
 use AppserverIo\Apps\Api\Assembler\ErrorAssemblerInterface;
 use AppserverIo\Apps\Api\Assembler\JsonApi\Serializer\ErrorSerializer;
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
 
 /**
  * A SLSB implementation providing the business logic to assemble virtual hosts
@@ -36,7 +37,7 @@ use AppserverIo\Apps\Api\Assembler\JsonApi\Serializer\ErrorSerializer;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Stateless
+ * @EPB\Stateless
  */
 class ErrorAssembler implements ErrorAssemblerInterface
 {

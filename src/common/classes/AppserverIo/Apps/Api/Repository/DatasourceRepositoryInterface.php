@@ -38,7 +38,7 @@ interface DatasourceRepositoryInterface
      *
      * @param string $id The ID of the datasource node to be returned
      *
-     * @return \AppserverIo\Appserver\Core\Api\DatasourceNodeInterface The requested datasource node
+     * @return \AppserverIo\Psr\ApplicationServer\Configuration\DatasourceConfigurationInterface The requested datasource node
      * @see \AppserverIo\Apps\Api\Service\DatasourceRepositoryInterface::load()
      */
     public function load($id);

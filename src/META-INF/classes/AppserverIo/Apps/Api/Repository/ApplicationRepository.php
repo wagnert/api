@@ -21,7 +21,8 @@
 namespace AppserverIo\Apps\Api\Repository;
 
 use AppserverIo\Apps\Api\Utils\ServiceKeys;
-use AppserverIo\Appserver\Core\Api\Node\AppNodeInterface;
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
+use AppserverIo\Psr\ApplicationServer\Configuration\AppConfigurationInterface;
 
 /**
  * A SLSB implementation providing the business logic to handle applications.
@@ -32,7 +33,7 @@ use AppserverIo\Appserver\Core\Api\Node\AppNodeInterface;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Stateless
+ * @EPB\Stateless
  */
 class ApplicationRepository extends AbstractRepository implements ApplicationRepositoryInterface
 {
@@ -57,7 +58,7 @@ class ApplicationRepository extends AbstractRepository implements ApplicationRep
      * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy The container repository instance
      * @see \AppserverIo\Apps\Api\Repository\ContainerRepositoryInterface
      *
-     * @EnterpriseBean
+     * @EPB\EnterpriseBean
      */
     protected $containerRepository;
 
@@ -77,7 +78,7 @@ class ApplicationRepository extends AbstractRepository implements ApplicationRep
      *
      * @param string $id The ID of the application node to be returned
      *
-     * @return \AppserverIo\Appserver\Core\Api\Node\AppNodeInterface The requested application node
+     * @return \AppserverIo\Psr\ApplicationServer\Configuration\AppConfigurationInterface The requested application node
      * @see \AppserverIo\Apps\Api\Service\ApplicationRepositoryInterface::load()
      */
     public function load($id)
@@ -145,11 +146,11 @@ class ApplicationRepository extends AbstractRepository implements ApplicationRep
     /**
      * Returns the full path to the application's thumbnail.
      *
-     * @param \AppserverIo\Appserver\Core\Api\Node\AppNodeInterface $appNode The application node to return the thumbnail path for
+     * @param \AppserverIo\Psr\ApplicationServer\Configuration\AppConfigurationInterface $appNode The application node to return the thumbnail path for
      *
      * @return string The absolute path to the app's thumbnail
      */
-    protected function getThumbnailPath(AppNodeInterface $appNode)
+    protected function getThumbnailPath(AppConfigurationInterface $appNode)
     {
 
         // prepare the thumbnail path of the passed app node

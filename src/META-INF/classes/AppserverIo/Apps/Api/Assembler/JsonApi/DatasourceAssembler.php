@@ -24,9 +24,9 @@ use Tobscure\JsonApi\Resource;
 use Tobscure\JsonApi\Document;
 use Tobscure\JsonApi\Collection;
 use AppserverIo\Collections\CollectionInterface;
-use AppserverIo\Appserver\Core\Api\Node\DatasourceNodeInterface;
 use AppserverIo\Apps\Api\Assembler\DatasourceAssemblerInterface;
 use AppserverIo\Apps\Api\Assembler\JsonApi\Serializer\DatasourceSerializer;
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
 
 /**
  * A SLSB implementation providing the business logic to assemble datasource nodes
@@ -38,7 +38,7 @@ use AppserverIo\Apps\Api\Assembler\JsonApi\Serializer\DatasourceSerializer;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Stateless
+ * @EPB\Stateless
  */
 class DatasourceAssembler implements DatasourceAssemblerInterface
 {
@@ -48,7 +48,8 @@ class DatasourceAssembler implements DatasourceAssemblerInterface
      *
      * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
      * @see \AppserverIo\Apps\Api\Assembler\DatasourceAssemblerInterface
-     * @EnterpriseBean
+     *
+     * @EPB\EnterpriseBean
      */
     protected $datasourceTransferObjectAssembler;
 

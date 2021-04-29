@@ -25,6 +25,7 @@ use AppserverIo\Apps\Api\TransferObject\VirtualHostViewData;
 use AppserverIo\Apps\Api\TransferObject\VirtualHostOverviewData;
 use AppserverIo\Apps\Api\Assembler\VirtualHostAssemblerInterface;
 use AppserverIo\Appserver\Core\Api\Node\VirtualHostNodeInterface;
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
 
 /**
  * A SLSB implementation providing the business logic to assemble virtual hosts into DTOs.
@@ -35,7 +36,7 @@ use AppserverIo\Appserver\Core\Api\Node\VirtualHostNodeInterface;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Stateless
+ * @EPB\Stateless
  */
 class VirtualHostTransferObjectAssembler implements VirtualHostAssemblerInterface
 {
@@ -44,7 +45,7 @@ class VirtualHostTransferObjectAssembler implements VirtualHostAssemblerInterfac
      * The virtual host repository instance.
      *
      * @var \AppserverIo\Apps\Api\Repository\VirtualHostRepositoryInterface
-     * @EnterpriseBean
+     * @EPB\EnterpriseBean
      */
     protected $virtualHostRepository;
 

@@ -24,9 +24,9 @@ use AppserverIo\Collections\ArrayList;
 use AppserverIo\Apps\Api\TransferObject\DatasourceViewData;
 use AppserverIo\Apps\Api\TransferObject\DatabaseOverviewData;
 use AppserverIo\Apps\Api\TransferObject\DatasourceOverviewData;
-use AppserverIo\Appserver\Core\Api\Node\DatabaseNodeInterface;
-use AppserverIo\Appserver\Core\Api\Node\DatasourceNodeInterface;
 use AppserverIo\Apps\Api\Assembler\DatasourceAssemblerInterface;
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
+use AppserverIo\Psr\ApplicationServer\Configuration\DatasourceConfigurationInterface;
 
 /**
  * A SLSB implementation providing the business logic to assemble datasource nodes into DTOs.
@@ -37,7 +37,7 @@ use AppserverIo\Apps\Api\Assembler\DatasourceAssemblerInterface;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Stateless
+ * @EPB\Stateless
  */
 class DatasourceTransferObjectAssembler implements DatasourceAssemblerInterface
 {
@@ -46,7 +46,7 @@ class DatasourceTransferObjectAssembler implements DatasourceAssemblerInterface
      * The datasource repository instance.
      *
      * @var \AppserverIo\Apps\Api\Repository\DatasourceRepositoryInterface
-     * @EnterpriseBean
+     * @EPB\EnterpriseBean
      */
     protected $datasourceRepository;
 
@@ -55,7 +55,7 @@ class DatasourceTransferObjectAssembler implements DatasourceAssemblerInterface
      *
      * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
      * @see \AppserverIo\Apps\Api\Assembler\DatabaseAssemblerInterface
-     * @EnterpriseBean
+     * @EPB\EnterpriseBean
      */
     protected $databaseTransferObjectAssembler;
 
@@ -84,11 +84,11 @@ class DatasourceTransferObjectAssembler implements DatasourceAssemblerInterface
     /**
      * Convert's the passed datasource node into a DTO.
      *
-     * @param \AppserverIo\Appserver\Core\Api\Node\DatasourceNodeInterface $datasourceNode The datasource node to convert
+     * @param \AppserverIo\Psr\ApplicationServer\Configuration\DatasourceConfigurationInterface $datasourceNode The datasource node to convert
      *
      * @return \AppserverIo\Apps\Api\TransferObject\DatasourceViewData The DTO
      */
-    public function toDatasourceViewData(DatasourceNodeInterface $datasourceNode)
+    public function toDatasourceViewData(DatasourceConfigurationInterface $datasourceNode)
     {
         $viewData = new DatasourceViewData();
         $viewData->setId($datasourceNode->getPrimaryKey());
@@ -100,11 +100,11 @@ class DatasourceTransferObjectAssembler implements DatasourceAssemblerInterface
     /**
      * Convert's the passed datasource node into a DTO.
      *
-     * @param \AppserverIo\Appserver\Core\Api\Node\DatasourceNodeInterface $datasourceNode The datasource node to convert
+     * @param \AppserverIo\Psr\ApplicationServer\Configuration\DatasourceConfigurationInterface $datasourceNode The datasource node to convert
      *
      * @return \AppserverIo\Apps\Api\TransferObject\DatasourceOverviewData The DTO
      */
-    public function toDatasourceOverviewData(DatasourceNodeInterface $datasourceNode)
+    public function toDatasourceOverviewData(DatasourceConfigurationInterface $datasourceNode)
     {
         $overviewData = new DatasourceOverviewData();
         $overviewData->setId($datasourceNode->getPrimaryKey());

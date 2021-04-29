@@ -20,6 +20,8 @@
 
 namespace AppserverIo\Apps\Api\Service;
 
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
+
 /**
  * A SLSB implementation providing the business logic to handle datasources.
  *
@@ -29,7 +31,7 @@ namespace AppserverIo\Apps\Api\Service;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Stateless
+ * @EPB\Stateless
  */
 class DatasourceProcessor extends AbstractProcessor implements DatasourceProcessorInterface
 {
@@ -38,7 +40,8 @@ class DatasourceProcessor extends AbstractProcessor implements DatasourceProcess
      * The application assembler instance.
      *
      * @var \AppserverIo\Apps\Api\Assembler\JsonApi\DatasourceAssembler
-     * @EnterpriseBean
+     *
+     * @EPB\EnterpriseBean
      */
     protected $datasourceAssembler;
 

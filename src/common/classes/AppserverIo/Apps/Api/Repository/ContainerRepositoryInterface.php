@@ -38,7 +38,7 @@ interface ContainerRepositoryInterface
      *
      * @param string $id The ID of the container node to be returned
      *
-     * @return \AppserverIo\Appserver\Core\Api\Node\ContainerNodeInterface The requested container node
+     * @return \AppserverIo\Psr\ApplicationServer\Configuration\ContainerConfigurationInterface The requested container node
      */
     public function load($id);
 

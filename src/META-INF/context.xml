@@ -4,6 +4,40 @@
     type="AppserverIo\Appserver\Application\Application"
     xmlns="http://www.appserver.io/appserver">
 
+    <annotationRegistries>
+        <annotationRegistry
+            type="AppserverIo\Appserver\PersistenceContainer\Doctrine\V2\AnnotationRegistries\FileAnnotationRegistry"
+            file="${webapp.dir}/vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php" />
+        <annotationRegistry 
+            type="AppserverIo\Appserver\PersistenceContainer\Doctrine\V2\AnnotationRegistries\NamespaceAnnotationRegistry"
+            namespace="AppserverIo\Psr\EnterpriseBeans\Annotations">
+            <directories>
+                <directory>${webapp.dir}/vendor/appserver-io-psr/epb/src</directory>
+            </directories>
+        </annotationRegistry>
+        <annotationRegistry 
+            type="AppserverIo\Appserver\PersistenceContainer\Doctrine\V2\AnnotationRegistries\NamespaceAnnotationRegistry"
+            namespace="AppserverIo\Psr\Servlet\Annotations">
+            <directories>
+                <directory>${base.dir}/vendor/appserver-io-psr/servlet/src</directory>
+            </directories>
+        </annotationRegistry>
+        <annotationRegistry
+            type="AppserverIo\Appserver\PersistenceContainer\Doctrine\V2\AnnotationRegistries\NamespaceAnnotationRegistry"
+            namespace="AppserverIo\Psr\MetaobjectProtocol">
+            <directories>
+                <directory>${webapp.dir}/vendor/appserver-io-psr/mop/src</directory>
+            </directories>
+        </annotationRegistry>
+        <annotationRegistry 
+            type="AppserverIo\Appserver\PersistenceContainer\Doctrine\V2\AnnotationRegistries\Psr4AnnotationRegistry"
+            namespace="Swagger\">
+            <directories>
+                <directory>${webapp.dir}/vendor/zircote/swagger-php/src</directory>
+            </directories>
+        </annotationRegistry>
+    </annotationRegistries>
+
     <managers>
         <manager name="AuthenticationManagerInterface" type="AppserverIo\Appserver\ServletEngine\Security\StandardAuthenticationManager" factory="AppserverIo\Appserver\ServletEngine\Security\StandardAuthenticationManagerFactory">
             <securityDomains>

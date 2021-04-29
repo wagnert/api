@@ -26,6 +26,7 @@ use Tobscure\JsonApi\Collection;
 use AppserverIo\Collections\CollectionInterface;
 use AppserverIo\Apps\Api\Assembler\ContainerAssemblerInterface;
 use AppserverIo\Apps\Api\Assembler\JsonApi\Serializer\ContainerSerializer;
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
 
 /**
  * A SLSB implementation providing the business logic to assemble virtual hosts
@@ -37,7 +38,7 @@ use AppserverIo\Apps\Api\Assembler\JsonApi\Serializer\ContainerSerializer;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Stateless
+ * @EPB\Stateless
  */
 class ContainerAssembler implements ContainerAssemblerInterface
 {
@@ -47,7 +48,8 @@ class ContainerAssembler implements ContainerAssemblerInterface
      *
      * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
      * @see \AppserverIo\Apps\Api\Assembler\ContainerAssemblerInterface
-     * @EnterpriseBean
+     *
+     * @EPB\EnterpriseBean
      */
     protected $containerTransferObjectAssembler;
 

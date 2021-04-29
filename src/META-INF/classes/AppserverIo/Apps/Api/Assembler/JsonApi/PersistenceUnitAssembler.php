@@ -24,9 +24,9 @@ use Tobscure\JsonApi\Resource;
 use Tobscure\JsonApi\Document;
 use Tobscure\JsonApi\Collection;
 use AppserverIo\Collections\CollectionInterface;
-use AppserverIo\Appserver\Core\Api\Node\PersistenceUnitNodeInterface;
 use AppserverIo\Apps\Api\Assembler\PersistenceUnitAssemblerInterface;
 use AppserverIo\Apps\Api\Assembler\JsonApi\Serializer\PersistenceUnitSerializer;
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
 
 /**
  * A SLSB implementation providing the business logic to assemble persistence units
@@ -38,7 +38,7 @@ use AppserverIo\Apps\Api\Assembler\JsonApi\Serializer\PersistenceUnitSerializer;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Stateless
+ * @EPB\Stateless
  */
 class PersistenceUnitAssembler implements PersistenceUnitAssemblerInterface
 {
@@ -48,7 +48,8 @@ class PersistenceUnitAssembler implements PersistenceUnitAssemblerInterface
      *
      * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
      * @see \AppserverIo\Apps\Api\Assembler\DatasourceAssemblerInterface
-     * @EnterpriseBean
+     *
+     * @EPB\EnterpriseBean
      */
     protected $persistenceUnitTransferObjectAssembler;
 

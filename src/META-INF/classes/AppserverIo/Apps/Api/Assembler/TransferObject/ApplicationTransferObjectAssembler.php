@@ -21,10 +21,11 @@
 namespace AppserverIo\Apps\Api\Assembler\TransferObject;
 
 use AppserverIo\Collections\ArrayList;
-use AppserverIo\Appserver\Core\Api\Node\AppNodeInterface;
 use AppserverIo\Apps\Api\TransferObject\ApplicationViewData;
 use AppserverIo\Apps\Api\TransferObject\ApplicationOverviewData;
 use AppserverIo\Apps\Api\Assembler\ApplicationAssemblerInterface;
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
+use AppserverIo\Psr\ApplicationServer\Configuration\AppConfigurationInterface;
 
 /**
  * A SLSB implementation providing the business logic to assemble applications into DTOs.
@@ -35,7 +36,7 @@ use AppserverIo\Apps\Api\Assembler\ApplicationAssemblerInterface;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Stateless
+ * @EPB\Stateless
  */
 class ApplicationTransferObjectAssembler implements ApplicationAssemblerInterface
 {
@@ -45,7 +46,7 @@ class ApplicationTransferObjectAssembler implements ApplicationAssemblerInterfac
      *
      * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
      * @see \AppserverIo\Apps\Api\Repository\ApplicationRepositoryInterface
-     * @EnterpriseBean
+     * @EPB\EnterpriseBean
      */
     protected $applicationRepository;
 
@@ -63,11 +64,11 @@ class ApplicationTransferObjectAssembler implements ApplicationAssemblerInterfac
     /**
      * Convert's the passed application into a DTO.
      *
-     * @param \AppserverIo\Appserver\Core\Api\Node\AppNodeInterface $appNode The application node to convert
+     * @param \AppserverIo\Psr\ApplicationServer\Configuration\AppConfigurationInterface $appNode The application node to convert
      *
      * @return \AppserverIo\Apps\Api\TransferObject\ApplicationViewData The DTO
      */
-    public function toApplicationViewData(AppNodeInterface $appNode)
+    public function toApplicationViewData(AppConfigurationInterface $appNode)
     {
         $viewData = new ApplicationViewData();
         $viewData->setId($appNode->getPrimaryKey());
@@ -79,11 +80,11 @@ class ApplicationTransferObjectAssembler implements ApplicationAssemblerInterfac
     /**
      * Convert's the passed application into a DTO.
      *
-     * @param \AppserverIo\Appserver\Core\Api\Node\AppNodeInterface $appNode The application node to convert
+     * @param \AppserverIo\Psr\ApplicationServer\Configuration\AppConfigurationInterface $appNode The application node to convert
      *
      * @return \AppserverIo\Apps\Api\TransferObject\ApplicationOverviewData The DTO
      */
-    public function toApplicationOverviewData(AppNodeInterface $appNode)
+    public function toApplicationOverviewData(AppConfigurationInterface $appNode)
     {
         $overviewData = new ApplicationOverviewData();
         $overviewData->setId($appNode->getPrimaryKey());

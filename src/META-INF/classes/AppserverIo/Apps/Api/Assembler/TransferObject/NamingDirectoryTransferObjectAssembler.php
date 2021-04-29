@@ -25,6 +25,7 @@ use AppserverIo\Psr\Naming\NamingDirectoryInterface;
 use AppserverIo\Apps\Api\TransferObject\NamingDirectoryViewData;
 use AppserverIo\Apps\Api\TransferObject\NamingDirectoryOverviewData;
 use AppserverIo\Apps\Api\Assembler\NamingDirectoryAssemblerInterface;
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
 
 /**
  * A SLSB implementation providing the business logic to assemble naming directories into DTOs.
@@ -35,7 +36,7 @@ use AppserverIo\Apps\Api\Assembler\NamingDirectoryAssemblerInterface;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Stateless
+ * @EPB\Stateless
  */
 class NamingDirectoryTransferObjectAssembler implements NamingDirectoryAssemblerInterface
 {
@@ -44,7 +45,7 @@ class NamingDirectoryTransferObjectAssembler implements NamingDirectoryAssembler
      * The datasource repository instance.
      *
      * @var \AppserverIo\Apps\Api\Repository\NamingDirectoryRepositoryInterface
-     * @EnterpriseBean
+     * @EPB\EnterpriseBean
      */
     protected $namingDirectoryRepository;
 

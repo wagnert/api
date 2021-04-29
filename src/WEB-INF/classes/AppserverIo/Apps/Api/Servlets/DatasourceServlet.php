@@ -20,10 +20,13 @@
 
 namespace AppserverIo\Apps\Api\Servlets;
 
+use Swagger\Annotations as SWG;
 use AppserverIo\Apps\Api\Utils\RequestKeys;
 use AppserverIo\Apps\Api\Encoding\EncodingAwareInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletRequestInterface;
 use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
+use AppserverIo\Psr\Servlet\Annotations as SRV;
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
 
 /**
  * Servlet that handles all app related requests.
@@ -34,7 +37,7 @@ use AppserverIo\Psr\Servlet\Http\HttpServletResponseInterface;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Route(name="datasources",
+ * @SRV\Route(name="datasources",
  *        displayName="Handles datasource related requests",
  *        description="A servlet implementation that handles all datasource related requests.",
  *        urlPattern={"/datasources.do", "/datasources.do*"})
@@ -47,7 +50,7 @@ class DatasourceServlet extends AbstractServlet implements EncodingAwareInterfac
      *
      * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy
      * @var \AppserverIo\Apps\Api\Services\DatasourceProcessorInterface
-     * @EnterpriseBean
+     * @EPB\EnterpriseBean
      */
     protected $datasourceProcessor;
 

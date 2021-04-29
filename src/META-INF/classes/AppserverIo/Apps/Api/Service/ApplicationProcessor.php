@@ -20,6 +20,8 @@
 
 namespace AppserverIo\Apps\Api\Service;
 
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
+
 /**
  * A SLSB implementation providing the business logic to handle applications.
  *
@@ -29,7 +31,7 @@ namespace AppserverIo\Apps\Api\Service;
  * @link      https://github.com/appserver-io-apps/api
  * @link      http://www.appserver.io
  *
- * @Stateless
+ * @EPB\Stateless
  */
 class ApplicationProcessor extends AbstractProcessor implements ApplicationProcessorInterface
 {
@@ -40,7 +42,7 @@ class ApplicationProcessor extends AbstractProcessor implements ApplicationProce
      * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy The application assembler instance
      * @see \AppserverIo\Apps\Api\Assembler\ApplicationAssemblerInterface
      *
-     * @EnterpriseBean
+     * @EPB\EnterpriseBean
      */
     protected $applicationAssembler;
 
@@ -50,7 +52,7 @@ class ApplicationProcessor extends AbstractProcessor implements ApplicationProce
      * @var \AppserverIo\RemoteMethodInvocation\RemoteProxy The application repository instance
      * @see \AppserverIo\Apps\Example\Repository\ApplicationRepositoryInterface
      *
-     * @EnterpriseBean
+     * @EPB\EnterpriseBean
      */
     protected $applicationRepository;
 

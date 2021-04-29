@@ -22,6 +22,8 @@ namespace AppserverIo\Apps\Api\Repository;
 
 use AppserverIo\Psr\Application\ApplicationInterface;
 
+use AppserverIo\Psr\EnterpriseBeans\Annotations as EPB;
+
 /**
  * An abstract SLSB implementation that provides basic helper functionality.
  *
@@ -38,7 +40,7 @@ abstract class AbstractRepository
      * The application instance that provides the entity manager.
      *
      * @var \AppserverIo\Psr\Application\ApplicationInterface
-     * @Resource(name="ApplicationInterface")
+     * @EPB\Resource(name="ApplicationInterface")
      */
     protected $application;
 
@@ -78,7 +80,7 @@ abstract class AbstractRepository
      *
      * @param string $serviceClass The service class name to return the instance for
      *
-     * @return \AppserverIo\AppServer\Core\Api\ServiceInterface The service class instance
+     * @return \AppserverIo\Psr\ApplicationServer\ServiceInterface The service class instance
      */
     public function newService($serviceClass)
     {
